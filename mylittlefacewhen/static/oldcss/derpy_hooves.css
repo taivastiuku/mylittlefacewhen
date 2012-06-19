@@ -1,0 +1,125 @@
+﻿#style by GuyWithPasta
+
+span.tagcloud img:hover, span.thumb img:hover, img.single:hover, .listimage img:hover
+{   
+    background-color: #91a1be; /*derpy body stroke*/
+    color: #a6b2c8; /*derpy body shadow*/
+    box-shadow: 2px 2px 5px black;
+    -webkit-transform: scale(1.25) rotate(-135deg);/*Transform: Manipulate a picture (Types of edits [Scale: Grow picture in scale format by number times | Rotate: Rotate picture number degrees clockwise]) | -webkit-= Safari's personalized custom coding; everybody using Safari will see this*/
+	-moz-transform: scale(1.25) rotate(-135deg);/*Transform: Manipulate a picture (Types of edits [Scale: Grow picture in scale format by number times | Rotate: Rotate picture number degrees clockwise]) | -moz-= Mozilla Firefox's personalized custom coding; everybody using Firefox will see this*/
+	-o-transform: scale(1.25) rotate(-135deg);/*Transform: Manipulate a picture (Types of edits [Scale: Grow picture in scale format by number times | Rotate: Rotate picture number degrees clockwise]) | -o-= Google Chrome's personalized custom coding; everybody using Chrome will see this*/
+}
+ul#lower li:hover, ul#lower li.focused
+{
+    background-color: #91a1be; /*derpy body stroke*/
+    color: #c6d2e1; /*derpy body*/
+}
+
+span.thumb img, span.tagcloud div, img.single, a.page, .listimage img 
+{
+    background-color: #c6d2e1; /*derpy body*/
+    box-shadow: 2px 2px 5px #91a1be; /*derpy body stroke*/
+    -webkit-transition: -webkit-transform .2s ease-in-out;/*Transition: Manuvering an object (Type of transition, time, how to transition. | -webkit-= Safari's personalized custom coding; everybody using Safari will see this*/
+	-moz-transition: -moz-transform .2s ease-in-out;/*Transition: Manuvering an object (Type of transition, time, how to transition. | -moz-= Mozilla Firefox's personalized custom coding; everybody using Firefox will see this*/
+	-o-transition: -o-transform .2s ease-in-out;/*Transition: Manuvering an object (Type of transition, time, how to transition. | -o-= Google Chrome's personalized custom coding; everybody using Chrome will see this*/
+	transition: transform .2s ease-in-out;/*Transition: Manuvering an object (Type of transition, time, how to transition.*/
+}   
+
+div#top
+{
+    background: #f3de74;
+    background: -moz-linear-gradient(top, #f3de74 0%, #e7e189 50%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f3de74), color-stop(50%,#e7e189));
+    background: -webkit-linear-gradient(top,  #f3de74 0%, #e7e189 50%);
+    background: -o-linear-gradient(top,  #f3de74 0%, #e7e189 50%);
+    background: -ms-linear-gradient(top,  #f3de74 0%, #e7e189 50%);
+    background: linear-gradient(top,  #f3de74 0%, #e7e189 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f3de74', endColorstr='#e7e189',GradientType=0 ); /*But seriously, who uses IE 6-9?*/
+}
+
+span.widget span.thumbs
+{
+    background-color: #fff591 /*derpy eye gradient 2*/; 
+}
+
+ul#lower li, #logo
+{   
+    color: #c6d2e1; /*derpy body*/
+}  
+
+a.tag:hover, a.page:hover
+{
+    color: #784c00; /*derpy eye gradient 1*/
+    background-color: #fff591 /*derpy eye gradient 2*/; /*twilight cutie mark secondary*/
+    box-shadow: 2px 2px 5px black;
+}
+
+a.tag, a.page
+{
+    background-color: #784c00; /*derpy eye gradient 1*/
+    color: #fff591 /*derpy eye gradient 2*/; /*twilight cutie mark secondary*/
+
+}
+
+a.tag, a.page, a.logo, ul#lower li, input#tagssubmit, a
+{
+    text-shadow: 2px 1px 1px black;
+} 
+
+input#tagssubmit, ul#lower li.selected
+{   
+    color: #91a1be; /*derpy body stroke*/
+    background-color: #c6d2e1; /*derpy body*/
+}
+
+body, html
+{
+    color: #3f3a66; /*twilight hair*/
+    background-color: #c6d2e1; /*derpy body*/
+}
+
+a
+{
+    color: #e7e189; /*derpy hair*/
+}
+
+span.widget.odd
+{
+    border-color: #e7e189; /*derpy hair*/
+}
+span.widget.even
+{
+    border-color: #fff591 /*derpy eye gradient 2*/; /*twilight cutie mark secondary*/
+}
+
+hr 
+{
+    color: #91a1be; /*derpy body stroke*/
+    border-color: #91a1be; /*derpy body stroke*/
+    background-color: #91a1be; /*derpy body stroke*/ 
+}
+
+#upload_list li:nth-of-type(2n+1)
+{   
+    background-color: #91a1be; /*derpy body stroke*/
+}
+
+#drop_zone 
+{
+    border: 2px dashed #91a1be; /*derpy body stroke*/;
+}
+
+#upload:hover
+{
+    background-color: #784c00; /*derpy eye gradient 1*/
+}
+
+none
+{
+    color: #e7e189; /*derpy hair*/
+    color: #f3de74; /*derpy hair stroke*/
+    color: #c6d2e1; /*derpy body*/
+    color: #91a1be; /*derpy body stroke*/
+    color: #784c00; /*derpy eye gradient 1*/
+    color: #fff591; /*derpy eye gradient 2*/
+}

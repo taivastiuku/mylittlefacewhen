@@ -1,0 +1,61 @@
+$fluttershy_body:         #FFF797
+$fluttershy_body_stroke:  #DDB304
+$fluttershy_hair:         #F8B9CF
+$fluttershy_hair_stroke:  #E57EB3
+
+span.tagcloud img:hover, input#tagssubmit, span.thumb img:hover, a.page:hover, img.single:hover, a.tag:hover, .listimage img:hover
+  color: $fluttershy_hair
+  background-color: $fluttershy_hair_stroke
+  box-shadow: 2px 2px 5px black
+
+ul#lower li
+  &:hover, &.focused
+    background-color: $fluttershy_body_stroke
+    color: $fluttershy_hair
+
+div#top
+  /* http://www.colorzilla.com/gradient-editor/ */
+  background: $fluttershy_hair_stroke
+  background: -moz-linear-gradient(top, $fluttershy_hair_stroke 0%, $fluttershy_hair 33%)
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,$fluttershy_hair_stroke), color-stop(33%,$fluttershy_hair))
+  background: -webkit-linear-gradient(top, $fluttershy_hair_stroke 0%,$fluttershy_hair 33%)
+  background: -o-linear-gradient(top, $fluttershy_hair_stroke 0%,$fluttershy_hair 33%)
+  background: -ms-linear-gradient(top, $fluttershy_hair_stroke 0%,$fluttershy_hair 33%)
+  background: linear-gradient(top, $fluttershy_hair_stroke 0%,$fluttershy_hair 33%)
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$fluttershy_hair_stroke', endColorstr='$fluttershy_hair',GradientType=0 )
+
+a.tag, a.page
+  background-color: $fluttershy_hair
+
+ul#lower li, a.tag, #logo, a.page
+  color: $fluttershy_hair_stroke
+
+a.tag, body, html, a.page, a.logo, ul#lower li, input#tagssubmit
+  text-shadow: 1px 1px 0 black
+
+ul#lower li.selected, body, html
+  color: $fluttershy_body_stroke
+  background-color: $fluttershy_body
+
+a
+  color: $fluttershy_body_stroke
+
+span.thumb img, span.tagcloud div, img.single, a.page, .listimage img
+  background-color: $fluttershy_hair
+  box-shadow: 2px 2px 5px $fluttershy_hair_stroke
+
+hr
+  color: $fluttershy_body_stroke
+  border-color: $fluttershy_body_stroke
+  background-color: $fluttershy_body_stroke
+
+#upload_list li:nth-of-type(2n+1)
+  background-color: $fluttershy_body_stroke
+  color: $fluttershy_body
+
+#drop_zone 
+  border: 2px dashed $fluttershy_body_stroke
+
+#upload:hover
+  background-color: $fluttershy_hair
+

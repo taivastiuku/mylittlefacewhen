@@ -1,0 +1,172 @@
+[
+    {
+        "fields": {
+            "country": "brazil", 
+            "filename": "brazil.jpg", 
+            "language_code": "es-br", 
+            "thumbnail": "brazil_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 1
+    }, 
+    {
+        "fields": {
+            "country": "bronies", 
+            "filename": "bronies.jpg", 
+            "language_code": "brony", 
+            "thumbnail": "bronies_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 2
+    }, 
+    {
+        "fields": {
+            "country": "denmark", 
+            "filename": "denmark.jpg", 
+            "language_code": "da", 
+            "thumbnail": "denmark_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 3
+    }, 
+    {
+        "fields": {
+            "country": "england", 
+            "filename": "england.jpg", 
+            "language_code": "en", 
+            "thumbnail": "england_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 4
+    }, 
+    {
+        "fields": {
+            "country": "finland", 
+            "filename": "finland.jpg", 
+            "language_code": "fi", 
+            "thumbnail": "finland_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 5
+    }, 
+    {
+        "fields": {
+            "country": "france", 
+            "filename": "france.jpg", 
+            "language_code": "fr", 
+            "thumbnail": "france_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 6
+    }, 
+    {
+        "fields": {
+            "country": "germany", 
+            "filename": "germany.jpg", 
+            "language_code": "de", 
+            "thumbnail": "germany_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 7
+    }, 
+    {
+        "fields": {
+            "country": "hungary", 
+            "filename": "hungary.jpg", 
+            "language_code": "hu", 
+            "thumbnail": "hungary_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 8
+    }, 
+    {
+        "fields": {
+            "country": "mexico", 
+            "filename": "mexico.jpg", 
+            "language_code": "es-mx", 
+            "thumbnail": "mexico_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 9
+    },
+    {
+        "fields": {
+            "country": "netherlands", 
+            "filename": "netherlands.jpg", 
+            "language_code": "nl", 
+            "thumbnail": "netherlands_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 10
+    }, 
+    {
+        "fields": {
+            "country": "norway", 
+            "filename": "norway.jpg", 
+            "language_code": "nb", 
+            "thumbnail": "norway_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 11
+    }, 
+    {
+        "fields": {
+            "country": "poland", 
+            "filename": "poland.jpg", 
+            "language_code": "pl", 
+            "thumbnail": "poland_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 12
+    }, 
+    {
+        "fields": {
+            "country": "russia", 
+            "filename": "russia.jpg", 
+            "language_code": "ru", 
+            "thumbnail": "russia_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 13
+    }, 
+    {
+        "fields": {
+            "country": "spain", 
+            "filename": "spain.jpg", 
+            "language_code": "es", 
+            "thumbnail": "spain_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 14
+    }, 
+    {
+        "fields": {
+            "country": "sweden", 
+            "filename": "sweden.jpg", 
+            "language_code": "sv", 
+            "thumbnail": "sweden_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 15
+    }, 
+    {
+        "fields": {
+            "country": "uk", 
+            "filename": "uk.jpg", 
+            "language_code": "en-gb", 
+            "thumbnail": "uk_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 16
+    }, 
+    {
+        "fields": {
+            "country": "usa", 
+            "filename": "usa.jpg", 
+            "language_code": "en-us", 
+            "thumbnail": "usa_thumb.jpg"
+        }, 
+        "model": "viewer.salute", 
+        "pk": 17
+    }
+]

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block description %}Login page for mylittlefacewhen.com{% endblock %}
+
+{% block content %}
+<div id="dialog">
+        <h2>Please log in</h2>
+        {{ form.non_field_errors }}
+        <form method="post" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table>
+                {% for field in form %}
+                <tr>
+                    <td>{{ field.label_tag }}</td>
+                    <td>{{ field }}</td>
+                </tr>
+                {% if field.errors %}
+                <tr>
+                    <td></td><td>{{ field.errors }}</td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+                <tr><td></td><td><input type="submit" value="Submit" /></td></tr>
+            </table>
+        </form>
+</div>
+{% endblock %}

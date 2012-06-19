@@ -1,0 +1,68 @@
+<p class="text-center">If you have any questions, suggestions or notice any bugs please contact with <a href="taivastiuku@mylittlefacewhen.com">e-mail</a>.</p>
+<h2 class="text-center">THIS API VERSION IS DEPRECATED PLEASE SEE <a class="navigate" href="/develop/api/v2/">version 2</a></h2> 
+
+<table id="apidoc">
+    <tr>
+        <th>Resource</th>
+        <th>GET arguments</th>
+        <th>Explanation</th>
+        <th>Example</th>
+    </tr>
+    <tr>
+        <td>/api/faces/</td>
+        <td>
+            <ul>
+                <li>limit=&lt;integer&gt;</li>
+                <li>order=(-id, id, -views, views, random)</li>
+                <li>page=&lt;integer&gt;</li>
+            </ul>
+        </td>
+        <td class="explanation">Collection of all the reaction faces on the service. Default number of fetched records (limit) is 30 except with 'random' order which has the default limit of 1. Maximum limit is 100. Offset can be given with page argument so that page=2 will return records from 31 to 60 by default. Offset depends on limit. All arguments are optional.</td>
+        <td>
+            <ul>
+                <li><a rel="nofollow" href="/api/faces/?order=-views&limit=10">/api/faces/?order=-views&amp;limit=50</a></li>
+                <li><a rel="nofollow" href="/api/faces/?page=2">/api/faces?page=2</a></li>
+            </ul>
+        </td>
+    </tr>
+    <tr>
+        <td>/api/faces/&lt;id&gt;/</td>
+        <td></td>
+        <td class="explanation">Fetch the reaction face with specified id.</td>
+        <td><ul><li><a rel="nofollow" href="/api/faces/34/">/api/faces/34/</a></li></ul></td>
+    </tr>
+    <tr>
+        <td>/api/search/</td>
+        <td>
+            <ul>
+                <li>tags=["tag", "another tag"]</li>
+                <li>limit=&lt;integer&gt;</li>
+                <li>order=random</li>
+            </ul>
+        </td>
+        <td class="explanation">The tags argument should contain a JSON list of tags. Any 1 character tags will be ignored. The search first tries to find all images with exact "tag" AND "another tag" if no hits are found then search tries to find images that have tags that have a substring of "tag" AND "another tag". The order tag is optional and has the default limit of 1. Other queries return all the hits by default (may change in the future).</td> 
+        <td>
+            <ul>
+                <li><a rel="nofollow" href='/api/search/?tags=["twilight sparkle", "no"]'>/api/search/?tags=["twilight sparkle", "no"]</a></li>
+                <li><a rel="nofollow" href='/api/search/?tags=["twi", "no"]'>/api/search/?tags=["twi", "no"]</a></li> 
+            </td>
+        </td>
+    </tr>
+    <tr>
+        <td>/api/tags/</td>
+        <td><ul>
+                <li>term=&lt;string&gt;</li>
+                <li>mode=startswith</li>
+        </ul></td>
+        <td class="explanation">Fetch all tags known by the service, return tags that contain given term or return tags that start with "startswith".</td>
+        <td>
+            <ul>
+                <li><a rel="nofollow" href="/api/tags/">/api/tags/</a></li>
+                <li><a rel="nofollow" href="/api/tags/?term=pinkie">/api/tags/?term=pinkie</a></li>
+                <li><a rel="nofollow" href="/api/tags/?term=pinkie&mode=startswith">/api/tags/?term=pinkie&mode=startswith</a>
+            </ul>
+        </td>
+    </tr>
+</table>
+
+

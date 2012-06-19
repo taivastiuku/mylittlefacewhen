@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}taglog{% endblock %}
+{% block description %}Log for tag edits{% endblock %}
+
+{% block content %}
+{% if undo != None %}
+Undo was {% if undo %}<font class="green">success!</font>{% else %}<font class="red">failure!</font>{% endif %}
+{% endif %}
+
+{% for item in zip %}
+    <form method="post" action="">
+        {% csrf_token %} 
+        <input type="hidden" name="id" value="{{ item.0.id }}" />
+        <span>{{ item.0.age }} ago</span>
+        <a href="/f/{{ item.1.id }}">
+            <img src="{{ item.1.thumb.url }}" alt=""{%if item.1.gif %} onMouseOver="this.src='{{ item.1.gif.url }}';" onMouseOut="this.src='{{ item.1.thumb.url }}';"{% endif %} />{{item.1.id}}
+        </a>
+        <span>{% for same in item.0.same %}|{{ same.name }} {% endfor %}</span>
+        <span class="green">{% for added in item.0.added %}+{{ added.name }} {% endfor %}</span>
+        <span class="red">{% for removed in item.0.removed %}-{{ removed.name }} {% endfor %}</span>
+       <input type="submit" value="undo" />
+    </form>
+{% endfor %}
+{% endblock %}

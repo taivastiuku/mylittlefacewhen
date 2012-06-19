@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Accept submissions{% endblock %}
+{% block description %}Tool for accepting submissions{% endblock %}
+
+{% block content %}
+
+{% for face in faces %}
+<div id="{{face.id}}">
+    <span>{{ face.age }} </span>
+    <a href="/f/{{ face.id}}">
+        {% if face.thumb %}
+        <img src="{{ face.thumb.url }}" alt="" class="edit"{%if face.gif %} onMouseOver="this.src='{{ face.gif.url }}';" onMouseOut="this.src='{{ face.thumb.url }}';"{% endif %} />
+        {% else %}
+        <span>No Thumbnail</span>
+        {% endif %}
+    </a>
+    <span>
+        <button class='accept'>Accept</button>
+        <button class='delete'>Delete</button>
+    </span>
+</div>
+{% endfor %}
+<script type="text/javascript">
+    $('div button.accept').click(function() {
+            var parent = $(this).parent();
+            parent.html("")
+            var request = $.ajax("/api/faces/" + parent.parent().attr('id') + "/",{"type":"PUT"});
+            request.done(function(msg) {
+                parent.html("<em class='green'>Accepted!</em>");
+                });
+            request.fail(function(jqXHR, textStatus) {
+                parent.html("<em class='red'>Failure: " + textStatus + "</em>");
+                });
+            })
+
+    $('div button.delete').click(function() {
+            var parent = $(this).parent();
+            parent.html("<em class='red'>Deleted!</em>");
+            $.ajax("/api/faces/" + parent.parent().attr('id') + "/",{"type":"DELETE"});
+            })
+</script>
+{% endblock %}

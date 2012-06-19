@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}500: Internal Server Error{% endblock %}
+{% block description %}Is this a real bug, is this just feature? Caught in a landslide.{% endblock %}
+{% block content %}
+<h1 class="text-center error">500 ponies: server had internal confounded by ponies error</h1>
+<h4 class="text-center">What went wrong?</h4>
+    <div id="errorForm">
+        <form method="post" action="/feedback/" enctype="multipart/form-data">
+            {% include "viewer/tableform.html" %}
+	</form>
+    </div>
+<img id="error" src="/static/errors/derpy-500.png" />
+
+{% endblock %}

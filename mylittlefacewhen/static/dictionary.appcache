@@ -1,0 +1,32 @@
+CACHE MANIFEST
+#2012-04-24 20:47:01
+CACHE:
+/static/favicon.ico
+/static/empty.gif
+/static/dash.gif
+/static/black.jpg
+/static/errors/derpy-404.png
+/static/errors/derpy-500.png
+/static/icons/red_flag_24.png
+/static/icons/white_flag_24.png
+/static/offline.html
+/static/js/app.js
+/static/lib/underscore-min.js
+/static/lib/jquery.lazyload.min.js
+/static/lib/jquery-1.7.1.min.js
+/static/lib/backbone-min.js
+/static/lib/jquery-ui-1.8.18.custom.min.js
+NETWORK:
+*
+http://*
+https://*
+/api/
+FALLBACK:
+/submit/ /static/offline.html
+/f/ /static/offline.html
+/develop/ /static/offline.html
+/feedback/ /static/offline.html
+/tags/ /static/offline.html
+/toplist/ /static/offline.html
+/search/ /static/offline.html
+/randoms/ /static/offline.html

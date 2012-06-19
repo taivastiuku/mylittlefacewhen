@@ -1,0 +1,587 @@
+<p>
+<h3>Following things are on the devlopment agenda:</h3>
+<ol>
+    <li>Automated tests
+    <li>Advertisements?
+    <li>Handling of duplicates, redirection
+    <li>Reason for delete/rejection
+    <li>Tag editor - list all images with *tag* (untagged by default)
+    <li>User accounts
+    <ul>
+        <li>django-social-auth
+        <li>favorites
+        <li>voting
+        <li>settings
+        <li>facebook login
+        <li>twitter login
+        <li>score for favourable actions
+        <li>priviledges for high score users
+    </ul>
+    <li>Apache error pages for 404, 500 and 502
+    <li>caption editor like roflbot
+</ol>
+<p>
+  <h4>v2.2.0 - 18.6.2012</h4>
+  <ul>
+      <li>Replaced Django- and underscore.js templates with Mustaches :{D
+      <li>First page is server rendered when user enters the service
+      <li>Code cleanups
+      <li>Error reporting
+      <li>IE7 and IE8 can view image pages
+      <li>mail admin on errors
+      <li>added link to API to topbar
+  </ul>
+</p>
+
+<p>
+  <h4>v2.1.3 - 30.5.2012</h4>
+  <ul>
+      <li>Fixed some metadata
+  </ul>
+</p>
+
+<p>
+  <h4>v2.1.2 - 23.5.2012</h4>
+  <ul>
+      <li>IE9 tag styling fix
+      <li>Search for tag with one result fixed
+  </ul>
+</p>
+
+<p>
+  <h4>v2.1.1 - 18.5.2012</h4>
+  <ul>
+      <li>Fixed feedback-form
+      <li>Fixed APIv2 random ordering of search results 
+  </ul>
+</p>
+
+<p>
+  <h4>v2.1.0 - 17.5.2012</h4>
+  <ul>
+      <li>New version of the <a href="/develop/api/v2/">API</a>, created with django-tastypie
+      <li>Added logging of useragent to feedback
+      <li>Fixed middle-click in main view
+      <li>dash.gif for single image randoms in case of long load time
+  </ul>
+</p>
+
+<p>
+  <h4>v2.0.10 - 12.5.2012</h4>
+  <ul>
+      <li>Fixed link/navigation problem for IE9
+      <li>Django template for single images, maybe google will like me again
+  </ul>
+</p>
+
+
+<p>
+  <h4>v2.0.9 - 29.4.2012</h4>
+  <ul>
+      <li>Upgraded to Django 1.4
+      <li>Upgraded to underscore 1.3.3
+      <li>Moved some js libraries to shared cdn hosting
+      <li>compressed the rest of js libraries and almost all css into the app.js
+  </ul>
+</p>
+
+<p>
+  <h4>v2.0.8 - 23.4.2012</h4>
+  <ul>
+      <li>IE9 support fuck yeah
+      <li>No pushstate if IE
+      <li>Forbid caching of api calls (why would you even consider this, IE?)
+  </ul>
+</p>
+
+<p>
+  <h4>v2.0.7 - 23.4.2012</h4>
+  <ul>
+      <li>Fixed tag editing for Firefox/Safari
+      <li>Fixed issue with tag edits going to wrong places
+  </ul>
+</p>
+
+<p>
+  <h4>v2.0.6 - 21.4.2012</h4>
+  <ul>
+      <li>fixed metadata about canonical urls
+  </ul>
+</p>
+
+<p>
+  <h4>v2.0.5 - 21.4.2012</h4>
+  <ul>
+      <li>Short link fits on one line with firefox
+      <li>Hopefully fixed things a bit for IE users
+      <li>Restricted image height on single view
+      <li>refactored and reviewed codebase
+  </ul>
+</p>
+
+<p>
+  <h4>v2.0.4 - 20.4.2012</h4>
+  <ul>
+      <li>Modified load-balancing to avoid cross domain access control errors
+      <li>Fixes to tag and source editing user experience
+      <li>Fixed drag&amp;drop uploading
+      <li>Readded thumb to resizes on sigle image pages
+      <li>re-enabled .webp for Chrome
+  </ul>
+</p>
+
+<p>
+  <h4>v2.0.3 - 18.4.2012</h4>
+  <ul>
+      <li>readded trailing slashes, will this satisfy the Google gods?
+  </ul>
+</p>
+
+<p>
+  <h4>v2.0.2 - 14.4.2012</h4>
+  <ul>
+      <li>fixed tag links containing 'com'
+      <li>fixed search for multiple tags
+      <li>fixed admin consoles
+      <li>fixed/added checkboxes for fanart/transparent/screenshot tags to uploader
+      <li>fixed 'criteria for acceptance' button
+      <li>fixed bugs related to google analytics 
+  </ul>
+</p>
+
+<p>
+  <h4>v2.0.1 - 13.4.2012</h4>
+  <ul>
+      <li>fixed tag links in images (serach -&gt; search)
+  </ul>
+</p>
+
+
+<p>
+  <h4>v2.0.0 - 12.4.2012</h4>
+  <ul>
+      <li>backbone.js implementation
+      <li>load balancing between image servers
+      <li>remember position at /new/
+      <li>rainbow dash salute disabled
+  </ul>
+</p>
+
+
+<p>
+  <h4>v1.6.11 - 20-3-2012</h4>
+  <ul>
+      <li>fixed shortlinks
+      <li>fixed centering on login dialog
+  </ul>
+</p>
+
+<p>
+  <h4>v1.6.10 - 18-3-2012</h4>
+  <ul>
+    <li>Re-added HTML5 AppCache for non-firefox browsers, hopefully it'll work better now
+    <li>added offline page with AppCache
+    <li>Removed cloudsdale preview due to bugs by layout changes
+    <li>Minified CSS
+    <li>Submit instructions are hidden by default
+    <li>Serving .webp images correctly as image/webp
+  </ul>
+</p>
+
+<p>
+  <h4>v1.6.9 - 15-3-2012</h4>
+  <ul>
+    <li>Responsive CSS
+    <li>Restructured top of the site
+    <li>Disabled themes that are not supported currently
+    <li>opacity everywhere
+    <li>fixed width problems with tags in single images
+    <li>removed settings
+  </ul>
+</p>
+
+<p>
+  <h4>v1.6.8 - 14-3-2012</h4>
+  <ul>
+    <li>320px width fixes for mobiles
+    <li>Fixed Opera mobile width problems with single images
+    <li>Made feedback and settings forms mobile friendly
+  </ul>
+</p>
+
+<p>
+<h4>v1.6.7 - 13-3-2012</h4>
+<ul>
+  <li>a long due CSS cleanup
+  <li>Fixed Opera Mobile support
+  <li>Fixed /randoms/ for mobile clients
+  <li>Fixed width problems in /tags/
+  <li>Optimized sizes of images in /randoms/
+  <li>Added width and height info on images
+</ul>
+</p>
+
+<p>
+<h4>v1.6.6 - 12-3-2012</h4>
+<ul>
+  <li>Using .sass as development format for css
+  <li>Admin API access for re-generating resizes and thumbnails
+  <li>Tweaks to make google show different title for image pages
+</ul>
+</p>
+
+<p>
+<h4>v1.6.5 - 6-3-2012</h4>
+<ul>
+  <li>Autocomplete added to tag-editor in uploader
+  <li>Updated submission instructions
+  <li>Hided logged in functions until i get logging in released
+  <li>Updated API to search tags that start with given term
+</ul>
+</p>
+
+<p>
+<h4>v1.6.4 - 2-3-2012</h4>
+<ul>
+  <li>CSS transformation scale for thumbnails
+  <li>Fixed meta tags for images
+  <li>Updated page descriptions and titles Y SO HATE GOOGLE?!
+  <li>Deleted out-commented code.
+</ul>
+</p>
+
+<p>
+<h4>v1.6.3 - 24-2-2012</h4>
+<ul>
+  <li>Removed /toplist/ from menu due to it not updating
+  <li>UI logic for stars, vote and administration.
+</ul>
+</p>
+
+<p>
+<h4>v1.6.2 - 22-2-2012</h4>
+<ul>
+  <li><a href="http://www.cloudsdale.org/">cloudsdale</a> preview
+  <li>flag and cloudsdale cloud are now accessible with keyboard
+  <li>New media server is in use
+</ul>
+</p>
+
+
+<p>
+<h4>v1.6.1 - 21-2-2012</h4>
+<ul>
+  <li>Added new style: Twilight Sparkle - thanks for GuyWithPasta
+</ul>
+</p>
+
+
+<p>
+<h4>v1.6.0 - 20-2-2012</h4>
+<ul>
+  <li>Added /randoms/ - endless list of random images.
+  <li>Flagging of duplicates and other images is now possible.
+  <li>Reports are handed straight to pony police!
+</ul>
+</p>
+
+<p>
+<h4>v1.5.5 - 19-2-2012</h4>
+<ul>
+  <li>Re-enabled the uploader for Firefox, Chrome and Opera
+  <li>Firefox had problems due to buggy restful module I'm using
+  <li>Moved some of the image processing to images server
+  <li>All /media/ is now loaded from images server
+  <li>Image processing script moved to /media/ server from dev environment
+  <li>Back to smaller images in feed
+  <li>Uploader errors are shown
+  <li>Uploading dash goes away when everything is processed
+</ul>
+</p>
+
+<p>
+<h4>v1.5.4 - 18-2-2012</h4>
+<ul>
+  <li>Fixed another upload renaming bug caused by v1.3.2
+  <li>Reprocessed all images: changed thumb size and changed resize siszes
+  <li>Dedicated /media/ server
+  <li>disabled the new uploader until it works better
+  <li>Autodetect tags and source in the old uploader
+</ul>
+</p>
+
+<p>
+<h4>v1.5.3 - 16-2-2012</h4>
+<ul>
+  <li>Fixed an upload bug caused by v1.5.2
+</ul>
+</p>
+
+<p>
+<h4>v1.5.2 - 15-2-2012</h4>
+<ul>
+  <li>Fixed og:image for salute pages and og:url for everywhere
+  <li>Added <a href="http://www.cloudsdale.org/">cloudsdale.org</a> specific meta tag
+</ul>
+</p>
+
+<p>
+<h4>v1.5.1 - 11-2-2012</h4>
+<ul>
+  <li>Uploader doesn't work with FF10 for some reason on the production server
+  <li>no uploader for firefox users then
+</ul>
+</p>
+
+<p>
+<h4>v1.5.0 - 10-2-2012</h4>
+<ul>
+  <li>New uploader!
+  <ul>
+    <li>Drag &amp; Drop support
+    <li>Select multiple files dialog
+    <li>Detected tags and sources are shown before uploading
+    <li>Preview images before uploading
+    <li>Works with recent versions of Chrome and Firefox
+    <li>May work with Safari and Opera
+    <li>old submit as a fallback for IE
+  </ul>
+  <li>dash.gif loader
+</ul>
+</p>
+
+<p>
+<h4>v1.4.1 - 7-2-2012</h4>
+<ul>
+  <li>Added link rel=image_src
+  <li>Trying to save bandwidth by limiting max-width
+  <li>fixed tags o_o' Y U NO TESTING
+  <li>non-animated GIF thumbnails are now jpg/webp due to bandwidth concerns
+  <li>image processing is not done by service anymore
+</ul>
+</p>
+
+<p>
+<h4>v1.4.0 - 31-1-2012</h4>
+<ul>
+  <li>Lazy loading for thumbnails everywhere
+  <li>Lazy load fadeIn is disabled for others than webkit due to slowness
+  <li>Removed code for paginated pages
+  <li>JavaScript is now required for toplist and new images list
+  <li>Updated jQuery to 1.7.1
+  <li>Updated jQuery UI to 1.8.17
+  <li>removed extraneous settings
+  <li>removed image from feedback form, image submissions with submit plz
+  <li>removed appcache
+  <li><a href="/errors/404/">derpified 404 error</a>
+  <li><a href="/errors/500/">derpified 500 error</a>
+</ul>
+</p>
+
+<p>
+<h4>v1.3.11 - 30-1-2012</h4>
+<ul>
+  <li>Updated API
+  <li>Created a better <a href="/develop/api/">API documentation</a>.
+</ul>
+</p>
+
+<p>
+<h4>v1.3.10 - 28-1-2012</h4>
+<ul>
+  <li>Load images as users scroll down
+  <li>Updated 404 and 500 error pages
+</ul>
+</p>
+
+<p>
+<h4>v1.3.9 - 26-1-2012</h4>
+<ul>
+  <li>Changed to HTML5
+  <li>Using appcache to cache some stuff if front page gets loaded
+  <li>HTML5 form validation for required input fields
+</ul>
+</p>
+
+<p>
+<h4>v1.3.8 - 24-1-2012</h4>
+<ul>
+  <li>Fixed tag import from ponibooru
+  <li>Image size limit raised a bit
+</ul>
+</p>
+
+<p>
+<h4>v1.3.7 - 20-1-2012</h4>
+<ul>
+  <li>Reprocessed all images and thumbnails.
+  <li>refactored image processing methods
+  <li>Fixed script that handled png processing
+  <li>Wondered how much effort will I use to avoid 5€ of fees for exceeding bandwidth cap
+</ul>
+</p>
+
+<p>
+<h4>v1.3.6 - 16-1-2012</h4>
+<ul>
+  <li>"No results" page for search
+  <li>Multiple submits by repeatedly pressing submit on submit page is no logner possible
+  <li>Searchbox is automatically focused
+  <li>Fixed minimalis theme
+  <li>Made onFocus and onBlur work like onHover on menu items
+</ul>
+</p>
+
+<p>
+<h4>v1.3.5 - 2-1-2012</h4>
+<ul>
+  <li>Added more directions on submit page
+  <li>Fixed history problems with random images
+</ul>
+</p>
+
+<p>
+<h4>v1.3.4 - 28-12-2011</h4>
+<ul>
+  <li>Fixed tags page...
+</ul>
+</p>
+
+<p>
+<h4>v1.3.3 - 25-12-2011</h4>
+<ul>
+  <li>Removed XMLHttpRequests for tag and source edits. I hate it when stuff works differently in dev and production environments... I need a staging service.
+  <li>Removed #ajaxbutton alert 'o_o
+  <li>Added directions to submit page
+</ul>
+</p>
+
+<p>
+<h4>v1.3.2 - 24-12-2011</h4>
+<ul>
+  <li>Refactored some code to follow more closely MVC design pattern
+  <li>Added "contact"-field to feedback form.
+  <li>XMLHttpRequest for tag edits and source edits.
+  <li>API iterface for editing tags and sources, submitting images and fetching templates.
+  <li>Populate last query into searchbar in search view
+  <li>small style tweaks
+</ul>
+</p>
+
+<p>
+<h4>v1.3.1 - 18-12-2011</h4>
+<ul>
+  <li>animated, transparent and untagged -tags are added correctly to submitted images
+  <li>No empty entries for editlogs
+</ul>
+</p>
+
+<p>
+<h4>v1.3.0 - 16-12-2011</h4>
+<ul>
+  <li>Wrote image processing script into a service
+  <li>User submitted images are added right away
+  <li>Require password for admin portions
+  <li>Added support for user accounts (registration not enabled)
+  <li>Tool for accepting image submissions
+  <li>Detect images from <a href="http://ponilauta.fi">ponilauta.fi</a> and <a href="http://magicznastajnia.pl">magicznastajnia.pl</a>
+</ul>
+</p>
+
+<p>
+<h4>v1.2.6</h4>
+<ul>
+  <li>Internal changes in preparation to v1.3
+</ul>
+</p>
+
+
+
+<p>
+<h4>v1.2.5</h4>
+<ul>
+  <li>Gif thumbnails load on mouseover in search
+  <li>links won't be accepted as tags
+</ul>
+</p>
+
+
+<p>
+<h4>v1.2.4</h4>
+<ul>
+  <li>There never was no dashboard.
+  <li>Gif thumbnails load on mouseover
+  <li>Minimalis-theme
+  <li>CSS tweaks
+  <li>re-enabled facebook button
+  <li>Nokia, Symbian, MeeGo, Maemo and some BlackBerry mobile clients should be detected.
+</ul>
+</p>
+
+<p>
+<h4>v1.2.3</h4>
+<ul>
+  <li>Fixed a bug in best pony middleware that caused domain redirections to fail
+  <li>Gradients!
+  <li>API and html site use both (almost) the same search function.
+  <li>autocomplete.js, now works on every page.
+  <li>Partial tag hits for autocomplete (and search)
+</ul>
+</p>
+
+<p>
+<h4>v1.2.2</h4>
+<ul>
+  <li>Removed code no longer needed by new styling and cleaned the CSS.
+  <li>Best pony selector
+</ul>
+</p>
+<p>
+<h4>v1.2.1</h4>
+<ul>
+  <li>Rarity theme
+  <li>Detect ponychan images (only new ones)
+</ul>
+</p>
+<p>
+<h4>v1.2</h4>
+<ul>
+  <li>First version of the new style, fluttershy theme ~yay
+  <li>script for importing author from deviantART images
+  <li>added sources from deviantART
+  <li>detect tumblr-service, no idea how to find correct blog
+  <li>Only 120 thumbnails per page by default for desktops, 60 for mobiles
+  <li>Thumbnail animation disabled by default
+</ul>
+</p>
+
+<p>
+<h4>v1.1.2</h4>
+<ul>
+  <li>script for importing tags and sources from ponibooru images
+  <li>added sources and tags from ponibooru
+</ul>
+</p>
+
+<p>
+<h4>v1.1.1</h4>
+<ul>
+  <li>script for figuring out images that came from imgur
+  <li>added source info to images that came from imgur
+</ul>
+</p>
+
+<p>
+<h4>v1.1.0</h4>
+<ul>
+  <li>Added a changelog
+  <li>Added links to resizes to face resources in api
+  <li>Added SpacelessHTML middleware to remove whitespaces from page sources
+  <li>Added editable source-field for images
+  <li>Added management tools for source-field edits
+  <li>Added v2.0 featurelist
+  <li>CSS tweaking
+  <li>Changed back to XHTML 1.0 TRANSITIONAL from HTML5 due to different rendering of img tags
+</ul>
+</p>
+

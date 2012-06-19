@@ -1,0 +1,118 @@
+﻿/* style by GuyWithPasta */
+
+span.tagcloud img:hover, span.thumb img:hover, img.single:hover, .listimage img:hover
+{   
+    background-color: #a74dc3; /*twilight body stroke*/
+    color: #c78cda; /*twilight body shadow*/
+    box-shadow: 2px 2px 5px black;
+}
+ul#lower li:hover, ul#lower li.focused
+{
+    background-color: #a74dc3; /*twilight body stroke*/
+    color: #d7aae3; /*twilight body*/
+}
+
+span.thumb img, span.tagcloud div, img.single, a.page, .listimage img 
+{
+    background-color: #d7aae3; /*twilight body*/
+    box-shadow: 2px 2px 5px #a74dc3; /*twilight body stroke*/
+}   
+
+div#top
+{
+    background: #002942;
+    background: -moz-linear-gradient(left, #002942 0%, #3F3A75 10%, #3F3A75 45%, #712785 60%, #E1477D 75%, #3F3A75 90%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#002942), color-stop(10%,#3f3a75), color-stop(60%,#712785), color-stop(75%,#e1477d), color-stop(90%,#3f3a75));
+    background: -webkit-linear-gradient(left,  #002942 0%,#3F3A75 10%, #3F3A75 45%,#712785 60%,#E1477D 75%,#3F3A75 90%);
+    background: -o-linear-gradient(left,  #002942 0%,#3F3A75 10%, #3F3A75 45%,#712785 60%,#E1477D 75%,#3F3A75 90%);
+    background: -ms-linear-gradient(left,  #002942 0%,#3F3A75 10%, #3F3A75 45%,#712785 60%,#E1477D 75%,#3F3A75 70%);
+    background: linear-gradient(left,  #002942 0%,#3F3A75 10%, #3F3A75 45%,#712785 60%,#E1477D 75%,#3F3A75 90%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#002942', endColorstr='#3f3a75',GradientType=1 ); /*But seriously, who uses IE 6-9?*/
+}
+
+span.widget span.thumbs
+{
+    background-color: white; 
+}
+
+ul#lower li, #logo
+{   
+    color: #d7aae3; /*twilight body*/
+}  
+
+a.tag:hover, a.page:hover
+{
+    color: #e1477d; /*twilight cutie mark*/
+    background-color: white; /*twilight cutie mark secondary*/
+    box-shadow: 2px 2px 5px black;
+}
+
+a.tag, a.page
+{
+    background-color: #e1477d; /*twilight cutie mark*/
+    color: white; /*twilight cutie mark secondary*/
+
+}
+
+a.tag, a.page, a.logo, ul#lower li, input#tagssubmit, a
+{
+    text-shadow: 1px 1px 0 black;
+} 
+
+input#tagssubmit, ul#lower li.selected
+{   
+    color: #a74dc3; /*twilight body stroke*/
+    background-color: #d7aae3; /*twilight body*/
+}
+
+body, html
+{
+    color: #3f3a66; /*twilight hair*/
+    background-color: #d7aae3; /*twilight body*/
+}
+
+a
+{
+    color: #3f3a75; /*twilight hair*/
+}
+
+span.widget.odd
+{
+    border-color: #3f3a75; /*twilight hair*/
+}
+span.widget.even
+{
+    border-color: white; /*twilight cutie mark secondary*/
+}
+
+hr 
+{Â 
+    color: #a74dc3; /*twilight body stroke*/
+    border-color: #a74dc3; /*twilight body stroke*/
+    background-color: #a74dc3; /*twilight body stroke*/ 
+}
+
+#upload_list li:nth-of-type(2n+1)
+{   
+    background-color: #a74dc3; /*twilight body stroke*/
+}
+
+#drop_zone 
+{
+    border: 2px dashed #a74dc3;
+}
+
+#upload:hover
+{
+    background-color: #e1477d; /*twilight cutie mark*/
+}
+
+none
+{
+    color: #3f3a75; /*twilight hair*/
+    color: #002942; /*twilight hair stroke*/
+    color: #d7aae3; /*twilight body*/
+    color: #a74dc3; /*twilight body stroke*/
+    color: #e1477d; /*twilight cutie mark*/
+    color: white; /*twilight cutie mark secondary*/
+}

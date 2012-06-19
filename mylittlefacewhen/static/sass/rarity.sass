@@ -1,0 +1,86 @@
+$rarity_hair:               #6152A3
+$rarity_hair_stroke:        #4E1A63
+$rarity_body:               #EEF2F3
+$rarity_body_stroke:        #C2C6C8
+$rarity_cutie_mark:         #81D7F8
+$rarity_cutie_mark_stroke:  #55B2D8
+
+span.thumb img, span.tagcloud div, img.single, .listimage img 
+  background-color: $rarity_body
+  box-shadow: 2px 2px 5px $rarity_body_stroke
+  &:hover
+    background-color: $rarity_body_stroke
+    color: $rarity_hair_stroke
+    box-shadow: 2px 2px 5px black
+
+#search
+  background-color: white
+  color: $rarity_hair
+  input
+    background-color: white
+    color: $rarity_hair_stroke
+
+  input[type="submit"]
+    background-color: transparent
+
+  input[type="submit"]:hover
+    text-shadow: 1px 1px 2px black
+
+#topmenu div
+  color: $rarity_body
+  &:hover, &.focused
+    background-color: $rarity_body
+    background-color: rgba($rarity_body, 0.5)
+    color: lighten($rarity_hair_stroke, 10%)
+  &.selected
+    background-color: lighten($rarity_body_stroke, 10%)
+    color: $rarity_hair_stroke
+
+#top_front
+  background-color: $rarity_hair
+  background-color: rgba($rarity_hair, 0.6)
+
+#content
+  background-color: lighten($rarity_body_stroke, 10%)
+
+#logo a
+  color: lighten($rarity_hair, 5%)
+  -webkit-transition: color .17s ease-in-out
+  -moz-transition: color .17s ease-in-out
+  -ms-transition: color .17s ease-in-out
+  -o-transition: color .17s ease-in-out
+  transition: color .17s ease-in-out
+  &:hover
+    color: $rarity_hair
+
+a.tag
+  background-color: $rarity_cutie_mark
+  color: $rarity_cutie_mark_stroke
+  text-shadow: 1px 1px 0 black
+  &:hover
+    color: $rarity_cutie_mark
+    background-color: $rarity_cutie_mark_stroke
+    box-shadow: 2px 2px 5px black
+
+
+#logo a, #topmenu div, input#tagssubmit, a
+  text-shadow: 1px 1px 0 darken($rarity_body_stroke, 10%)
+
+body, html
+  color: $rarity_hair
+  background-color: $rarity_body
+
+a
+  color: $rarity_hair
+
+#upload_list li:nth-of-type(2n+1)
+  background-color: $rarity_body_stroke
+
+#dropzone 
+  border: 2px dashed $rarity_body_stroke
+
+#upload:hover
+  background-color: $rarity_cutie_mark
+
+::selection, ::-moz-selection
+  background: $rarity_cutie_mark
