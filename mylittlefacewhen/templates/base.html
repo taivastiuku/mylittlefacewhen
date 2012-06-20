@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"{% block manifest %}{%endblock%}>
+    <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel="shortcut icon" href="{% get_static_prefix %}favicon.ico">
+        <link rel="stylesheet" href="{% get_static_prefix %}css/normalize.css" type="text/css">
+        <link rel="stylesheet" href="{% get_static_prefix %}css/responsive.css" type="text/css">
+        <link rel="stylesheet" href="{% get_static_prefix %}css/rainbow_dash_always_dresses_in.css" type="text/css">
+        <!--        <link rel="stylesheet" href="{% get_static_prefix %}css/{{ request.best_pony }}.css" type="text/css">-->
+        <link rel="stylesheet" href="{% get_static_prefix %}css/rarity.css" type="text/css">
+	<link rel="canonical" href="http://mylittlefacewhen.com{% firstof path request.path '/' %}">
+        <title>MyLittleFaceWhen - {% block title %}Pony Reaction Pictures{% endblock %}</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <link rel="alternate" type="application/rss+xml" title="MyLittleFaceWhen.com latest images" href="http://MyLittleFaceWhen.com/feed/">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width, height=device-height">        
+	<meta name="description" content="{% block description %}Lots of well-taggged pony reaction images.{% endblock %}">
+	<meta property="og:title" content="MyLittleFaceWhen.com">
+	<meta property="og:type" content="website">
+        <meta property="og:url" content="http://mylittlefacewhen.com{{request.path}}">
+	<meta property="og:image" content="{% block default_image %}http://mylittlefacewhen.com/static/cherilee-square-300.png{% endblock %}">
+        <meta property="og:site_name" content="MyLittleFaceWhen.com">
+        <meta property="cd:layout" content="banner">
+    
+        <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/themes/base/jquery-ui.css" type="text/css" media="all">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js" type="text/javascript"></script>
+        <script src="{% get_static_prefix %}js/auto.js" type="text/javascript"></script>
+        <script src="{% get_static_prefix %}js/focused.js" type="text/javascript"></script>
+        {% block head %}
+        {% endblock %}
+	<!-- Google analytics -->
+<!--remove	
+<script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-24732595-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+remove-->
+    </head>
+    <body>
+        {% block top %}
+	<div id="top">
+	    <div id="social">
+		<span><iframe src="http://www.facebook.com/plugins/like.php?href=http%3A%2F%2Fmylittlefacewhen.com%2F&amp;send=false&amp;layout=button_count&amp;width=100&amp;show_faces=false&amp;action=like&amp;colorscheme=light&amp;font&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:100px; height:21px;" allowTransparency="true"></iframe></span>
+            </div>
+            <div id="top_back">
+                <div id="top_hack">
+                    <div id="logo"><a href="/" class="no_decoration">MyLittleFaceWhen.com</a></div>
+                    <div id="search"><form method="get" action="/search/"><input id="searchbar" class="tags" name="tags" value="{{query}}" type="search" placeholder="search tags, separated by comma, " tabindex="1" required /><input id="tagssubmit" type="submit" value="GO" /></form></div>
+                </div>
+            </div>
+            <div id="top_front">
+                <div id="topmenu">
+                    <a href="/submit/"><div id="m_submit"{% if request.path == "/submit/"%} class="selected"{% endif %}>submit</div></a>
+                    <a href="/"><div id="m_new"{% if path == "/" %} class="selected"{% endif %}>new</div></a>
+                    <!--<a href="/toplist/"><div{% if path == "/toplist/" %} class="selected"{% endif %}>popular</div></a>-->
+                    <a href="/randoms/"><div id="m_randoms"{% if request.path == "/randoms/" %} class="selected"{% endif %}>randoms</div></a>
+                    <a href="/tags/"><div id="m_tags"{% if request.path == "/tags/" %} class="selected"{% endif %}>tags</div></a>
+                    <!--<a href="/settings/"><div{% if request.path == "/settings/" %} class="selected"{% endif %}>settings</div></a>-->
+                    <a href="/feedback/"><div id="m_feedback"{% if request.path == "/feedback/" %} class="selected"{% endif %}>feedback</div></a>
+                    <a href="/develop/"><div id="m_develop"{% if request.path == "/develop/" %} class="selected"{% endif %}>info</div></a>
+                </div>
+	    </div>
+        </div>
+        {% endblock %}
+
+        
+        <div id="content">
+        {% block content %}
+        {% endblock %}
+        </div>
+    
+        {% block bottom %}
+        {% endblock %}
+    </body>
+</html>
