@@ -42,7 +42,7 @@ def main(request, listing="normal"):
             "path" : path,
             "not_firefox" : not_firefox,
             "content": "main.mustache",
-            "content_data": {"static_prfix":STATIC_PREFIX},
+            "content_data": {"static_prefix":STATIC_PREFIX},
             "metadata": DEFAULT_META,
             }
     

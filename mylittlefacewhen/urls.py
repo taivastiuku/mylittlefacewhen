@@ -31,6 +31,7 @@ urlpatterns = patterns('',
     (r'^search/$', "viewer.views.search"),
 #    (r'^(f|face)/(?P<face_id>\d+)/qr/$', "viewer.views.qr"),
     (r'^f/(?P<face_id>\d+)/?', "viewer.views.single"),
+    (r'^face/(?P<face_id>\d+)/?', "viewer.views.single"),
     (r'^randoms/?$', "viewer.views.randoms"),
     # I wanted to do (f|face|random) but it had some problem.
     (r'^random/?$', "viewer.views.rand"),
