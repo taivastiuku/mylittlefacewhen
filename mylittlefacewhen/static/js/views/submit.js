@@ -23,7 +23,7 @@ window.SubmitView = Backbone.View.extend({
   updateMeta: function() {
     $("title").html("Submit Images - MyLittleFaceWhen");
     $("meta[name=description]").attr("content", "Upload more images to the service");
-    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cherilee-square-300.png");
+    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
     $("#cd-layout").remove();
     return $("link[rel=image_src]").remove();
   },

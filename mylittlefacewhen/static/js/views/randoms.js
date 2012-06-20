@@ -31,7 +31,7 @@ window.RandomsView = Backbone.View.extend({
   updateMeta: function() {
     $("title").html("Random images - MyLittleFaceWhen");
     $("meta[name=description]").attr("content", "Endless list of random pony-related reaction images. Goes on-and-on-and-on-and...");
-    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cherilee-square-300.png");
+    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
     $("#cd-layout").remove();
     return $("link[rel=image_src]").remove();
   },

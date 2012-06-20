@@ -21,7 +21,7 @@ window.APIDocView = Backbone.View.extend({
   updateMeta: function() {
     $("title").html("API" + this.options.version + " Documentation - MyLittleFaceWhen");
     $("meta[name=description]").attr("content", "Information about API for mylittlefacewhen. It can be used to fetch data from the service and for maintanence by administrator.");
-    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cherilee-square-300.png");
+    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
     $("#cd-layout").remove();
     return $("link[rel=image_src]").remove();
   }
@@ -46,7 +46,7 @@ window.DevelopView = Backbone.View.extend({
   updateMeta: function() {
     $("title").html("Information - MyLittleFaceWhen");
     $("meta[name=description]").attr("content", "How and why this service exists. API, feed, etc.");
-    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cherilee-square-300.png");
+    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
     $("#cd-layout").remove();
     return $("link[rel=image_src]").remove();
   },
@@ -69,7 +69,7 @@ window.ChangesView = Backbone.View.extend({
   updateMeta: function() {
     $("title").html("Changelog - MyLittleFaceWhen");
     $("meta[name=description]").attr("content", "List of changes to the service.");
-    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cherilee-square-300.png");
+    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
     $("#cd-layout").remove();
     return $("link[rel=image_src]").remove();
   }

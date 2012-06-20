@@ -60,7 +60,7 @@ window.SearchView = Backbone.View.extend
     updateMeta: ->
         $("title").html "#{tags} - MyLittleFaceWhen"
         $("meta[name=description]").attr "content", "Search reslut for pony reaction tag '#{tags}'"
-        $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cherilee-square-300.png"
+        $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
         $("#cd-layout").remove()
         $("link[rel=image_src]").remove()
 

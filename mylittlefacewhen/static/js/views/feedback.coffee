@@ -17,7 +17,7 @@ window.FeedbackView = Backbone.View.extend
     updateMeta: ->
         $("title").html "Feedback - MyLittleFaceWhen"
         $("meta[name=description]").attr "content", "Any suggestions or other feedback is more than welcome."
-        $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cherilee-square-300.png"
+        $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
         $("#cd-layout").remove()
         $("link[rel=image_src]").remove()
 
