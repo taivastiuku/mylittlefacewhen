@@ -83,7 +83,9 @@ def search(request):
    
 
     meta = DEFAULT_META.copy()
-    meta["title"] = "Search for " + str(tags)
+    meta["title"] = "Search for "
+    for tag in tags:
+        meta["title"] += tag + ", "
     meta["description"] = "You can search ponies with one or more tags"
 
     to_template = {
