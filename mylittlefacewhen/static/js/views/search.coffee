@@ -18,7 +18,7 @@ window.SearchView = Backbone.View.extend
       @$el.html Mustache.render(@template, to_template)
       return @
      
-    to_template = 
+    to_template =
       query: tags
       static_prefix: static_prefix
     @$el.html Mustache.render(@template, to_template)
