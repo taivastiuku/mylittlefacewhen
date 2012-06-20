@@ -347,7 +347,7 @@ class ReportHandler(BaseHandler):
     allowed_method = ("POST",)
 
     def create(self, request):
-        user_agent = request.META.get("HTTP_USER_AGENT")
+        user_agent = request.META.get("HTTP_USER_AGENT", "")
         face_id = request.META.get("HTTP_REFERER")
         report = request.POST.get("report")
         if not all((face_id, report)):

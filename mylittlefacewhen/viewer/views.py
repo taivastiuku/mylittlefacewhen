@@ -29,7 +29,7 @@ def main(request, listing="normal"):
     Handles index and toplist listings.
     """
     # No appcache for firefox due to suspicious popups
-    not_firefox = request.META["HTTP_USER_AGENT"].lower().find("firefox") == -1
+    not_firefox = request.META.get("HTTP_USER_AGENT", "").lower().find("firefox") == -1
 
     if listing == "normal":
         path = "/"

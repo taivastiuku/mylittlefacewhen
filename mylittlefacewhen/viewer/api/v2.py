@@ -140,7 +140,7 @@ class FeedbackResource(ModelResource):
         feedback = {
             "text": bundle.data["feedback"],
             "contact": bundle.data.get("contact"),
-            "useragent": request.META.get("HTTP_USER_AGENT"),
+            "useragent": request.META.get("HTTP_USER_AGENT", ""),
             }
         form = forms.FeedbackForm(feedback)
         
@@ -183,7 +183,7 @@ class FlagResource(ModelResource):
 
 
     def obj_create(self, bundle, request=None, **kwargs):
-        user_agent = request.META.get("HTTP_USER_AGENT")
+        user_agent = request.META.get("HTTP_USER_AGENT", "")
         face_id = request.META.get("HTTP_REFERER").strip("/")
         reason = bundle.data.get("reason")
         if not all((face_id, reason)):
