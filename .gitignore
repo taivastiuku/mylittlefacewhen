@@ -1,4 +1,5 @@
 *.pyc
 *.swp
+*.swo
 secrets.py
 app.js
