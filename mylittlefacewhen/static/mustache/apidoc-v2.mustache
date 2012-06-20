@@ -2,61 +2,61 @@
 <p class="text-center">The <a class="navigate" href="/develop/api/v1/">old api</a> is still available but it will get removed in near future.</p>
 
 <table id="apidoc">
-    <tr>
-        <th>Resource</th>
-        <th>GET arguments</th>
-        <th>Explanation</th>
-        <th>Example</th>
-    </tr>
-    <tr>
-        <td>/api/v2/face/</td>
-        <td>
-            <ul>
-                <li>limit=&lt;integer&gt;</li>
-                <li>order=(-id, id, random)</li>
-                <li>offset=&lt;integer&gt;</li>
-                <li>search=[tag, tag2]</li>
-                <li>format=(json, xml)</li>
-            </ul>
-        </td>
-        <td class="explanation">Collection of all the reaction faces on the service. Default number of fetched records (limit) is 20 except with 'random' order which has the default limit of 2. Maximum limit is 100.<br> You can also use search to search for specified tags. Tags need to be given as a json array as in examples. Search results may differ from APIv1 search results. 1 charecter tags will be ignored. <br> Format is optional if you supply accept http header specifying what you want.</td>
-        <td>
-            <ul>
-                <li><a rel="nofollow" href="/api/v2/face/?order_by=-id&limit=10&offset=200&format=json">/api/v2/face/?order_by=-id&amp;limit=50&amp;offset=200&amp;format=json</a></li>
-                <li><a rel="nofollow" href="/api/v2/face/?format=xml">/api/v2/face/?format=xml</a></li>
-                <li><a rel="nofollow" href='/api/v2/face/?search=["twilight sparkle", "no"]&format=json'>/api/v2/face/?search=["twilight sparkle", "no"]&format=json</a></li>
-                <li><a rel="nofollow" href='/api/v2/face/?search=["no"]&order_by=random&format=json'>/api/v2/face/?search=["no"]&order_by=random&format=json</a></li> 
-            </ul>
-        </td>
-    </tr>
-    <tr>
-        <td>/api/v2/face/&lt;id&gt;/</td>
-        <td>
-            <ul>
-                <li>format=(json, xml)</li>
-            </ul>
-        </td>
-        <td class="explanation">Fetch the reaction face with specified id.</td>
-        <td><ul><li><a rel="nofollow" href="/api/v2/face/34/?format=json">/api/v2/face/34/?format=json</a></li></ul></td>
-    </tr>
-    <tr>
-        <td>/api/v2/tag/</td>
-        <td><ul>
-                <li>name__startswith=&lt;string&gt;</li>
-                <li>name__contains=&lt;string&gt;</li>
-                <li>limit=&lt;integer&gt;</li>
-                <li>offset=&lt;integer&gt;</li>
-                <li>format=(json, xml)</li>
-        </ul></td>
-        <td class="explanation">Fetch all tags known by the service or return tags that start with string or contain some string.</td>
-        <td>
-            <ul>
-                <li><a rel="nofollow" href="/api/v2/tag/?format=xml">/api/v2/tag/?format=xml</a></li>
-                <li><a rel="nofollow" href="/api/v2/tag/?name__startswith=pinkie&format=json">/api/v2/tag/?name__startswith=pinkie&format=json</a></li>
-                <li><a rel="nofollow" href="/api/v2/tag/?name__contains=pinkie&format=json>">/api/v2/tag/?name__contains=pinkie&format=json</a>
-            </ul>
-        </td>
-    </tr>
+  <tr>
+    <th>Resource</th>
+    <th>GET arguments</th>
+    <th>Explanation</th>
+    <th>Example</th>
+  </tr>
+  <tr>
+    <td>/api/v2/face/</td>
+    <td>
+      <ul>
+        <li>limit=&lt;integer&gt;</li>
+        <li>order=(-id, id, random)</li>
+        <li>offset=&lt;integer&gt;</li>
+        <li>search=[tag, tag2]</li>
+        <li>format=(json, xml)</li>
+      </ul>
+    </td>
+    <td class="explanation">Collection of all the reaction faces on the service. Default number of fetched records (limit) is 20 except with 'random' order which has the default limit of 2. Maximum limit is 100.<br> You can also use search to search for specified tags. Tags need to be given as a json array as in examples. Search results may differ from APIv1 search results. 1 charecter tags will be ignored. <br> Format is optional if you supply accept http header specifying what you want.</td>
+    <td>
+      <ul>
+        <li><a rel="nofollow" href="/api/v2/face/?order_by=-id&limit=10&offset=200&format=json">/api/v2/face/?order_by=-id&amp;limit=50&amp;offset=200&amp;format=json</a></li>
+        <li><a rel="nofollow" href="/api/v2/face/?format=xml">/api/v2/face/?format=xml</a></li>
+        <li><a rel="nofollow" href='/api/v2/face/?search=["twilight sparkle", "no"]&format=json'>/api/v2/face/?search=["twilight sparkle", "no"]&format=json</a></li>
+        <li><a rel="nofollow" href='/api/v2/face/?search=["no"]&order_by=random&format=json'>/api/v2/face/?search=["no"]&order_by=random&format=json</a></li> 
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>/api/v2/face/&lt;id&gt;/</td>
+    <td>
+      <ul>
+        <li>format=(json, xml)</li>
+      </ul>
+    </td>
+    <td class="explanation">Fetch the reaction face with specified id.</td>
+    <td><ul><li><a rel="nofollow" href="/api/v2/face/34/?format=json">/api/v2/face/34/?format=json</a></li></ul></td>
+  </tr>
+  <tr>
+    <td>/api/v2/tag/</td>
+    <td><ul>
+        <li>name__startswith=&lt;string&gt;</li>
+        <li>name__contains=&lt;string&gt;</li>
+        <li>limit=&lt;integer&gt;</li>
+        <li>offset=&lt;integer&gt;</li>
+        <li>format=(json, xml)</li>
+    </ul></td>
+    <td class="explanation">Fetch all tags known by the service or return tags that start with string or contain some string.</td>
+    <td>
+      <ul>
+        <li><a rel="nofollow" href="/api/v2/tag/?format=xml">/api/v2/tag/?format=xml</a></li>
+        <li><a rel="nofollow" href="/api/v2/tag/?name__startswith=pinkie&format=json">/api/v2/tag/?name__startswith=pinkie&format=json</a></li>
+        <li><a rel="nofollow" href="/api/v2/tag/?name__contains=pinkie&format=json>">/api/v2/tag/?name__contains=pinkie&format=json</a>
+      </ul>
+    </td>
+  </tr>
 </table>
 
 

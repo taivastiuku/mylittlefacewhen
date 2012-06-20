@@ -1,69 +1,69 @@
 {{^ face.accepted }}
-    <div class="text-center">This post is waiting for approval.</div>
+  <div class="text-center">This post is waiting for approval.</div>
 {{/ face.accepted }}
 <div class="shrinkwrap-out text-center">
-    <div class="shrinkwrap-in">
-        <div id="singlewrap">
-            <a id="single" href="/random/"><img class="single" src="{{ image_service }}{{ image }}" alt="" /></a>
-            <br />
-            <div id="controls">
-                <div tabindex=0 class="faded" id="flag" title="Report duplicate or other problem"></div>
-            </div>
-            <div id="shortlink"><a class="text-center small text-top" href="http://mlfw.info/f/{{ face.id }}/">http://mlfw.info/f/{{ face.id }}/</a></div>
-        </div>
+  <div class="shrinkwrap-in">
+    <div id="singlewrap">
+      <a id="single" href="/random/"><img class="single" src="{{ image_service }}{{ image }}" alt="" /></a>
+      <br />
+      <div id="controls">
+        <div tabindex=0 class="faded" id="flag" title="Report duplicate or other problem"></div>
+      </div>
+      <div id="shortlink"><a class="text-center small text-top" href="http://mlfw.info/f/{{ face.id }}/">http://mlfw.info/f/{{ face.id }}/</a></div>
     </div>
+  </div>
 </div>
 
 <div id="imageinfo" class="text-center">
-    <div class="editable" id="info-show">
-        <b>Tags: </b><br>
-        <span id="tags">
-        {{# face.tags }}<a class="tag" href="/search/?tag={{ name }}">{{ name }}</a>{{/ face.tags}}
-        </span><br>
-        <b>Source: </b><br>
-        <span id="source">{{# face.source }}<a href="{{ source }}">{{ source }}</a>{{/ face.source }}{{^ face.source }}<span>unknown</span>{{/ face.source }}</span><br>
-        <div id="button"><button id="editbutton">Edit</button></div>
-    </div>
-    <div class="editable" id="info-edit">
-        <form action="/f/<%= face.id %>/" method="post">
-            <b>Tags: </b><em class="small">Separated by comma, space allowed.</em>
-            <br>
-            <textarea name="tags" cols="32" rows="3">{{# face.tags }}{{ name }}, {{/ face.tags }}</textarea>
-            <hr>
-            <b>Source: </b><em class="small">URL or other reference</em>
-            <br>
-            <input name="source" value="{{# face.source }}{{ source }}{{/ face.source }}" size="30" />
-            <br>
-            <input type="submit" value="Submit" />
-        </form>
-    </div>
-    <div id="loader"><img src="{{ static_prefix }}dash.gif" alt="loading" /></div>
+  <div class="editable" id="info-show">
+    <b>Tags: </b><br>
+    <span id="tags">
+    {{# face.tags }}<a class="tag" href="/search/?tag={{ name }}">{{ name }}</a>{{/ face.tags}}
+    </span><br>
+    <b>Source: </b><br>
+    <span id="source">{{# face.source }}<a href="{{ source }}">{{ source }}</a>{{/ face.source }}{{^ face.source }}<span>unknown</span>{{/ face.source }}</span><br>
+    <div id="button"><button id="editbutton">Edit</button></div>
+  </div>
+  <div class="editable" id="info-edit">
+    <form action="/f/<%= face.id %>/" method="post">
+      <b>Tags: </b><em class="small">Separated by comma, space allowed.</em>
+      <br>
+      <textarea name="tags" cols="32" rows="3">{{# face.tags }}{{ name }}, {{/ face.tags }}</textarea>
+      <hr>
+      <b>Source: </b><em class="small">URL or other reference</em>
+      <br>
+      <input name="source" value="{{# face.source }}{{ source }}{{/ face.source }}" size="30" />
+      <br>
+      <input type="submit" value="Submit" />
+    </form>
+  </div>
+  <div id="loader"><img src="{{ static_prefix }}dash.gif" alt="loading" /></div>
 </div>
 <hr />
 <div class="text-center sizes">
-    <span class="b">Sizes:</span><br />
-    <a class="tag" href="{{ image_service }}{{ face.image }}">original</a>
-    {{# face.resizes }}<a class="tag" href="{{ image_service }}{{ image }}">{{ size }}</a> 
-    {{/ face.resizes }}
-    <a class="tag" href="{{ image_service }}{{ thumb }}">thumb</a>
+  <span class="b">Sizes:</span><br />
+  <a class="tag" href="{{ image_service }}{{ face.image }}">original</a>
+  {{# face.resizes }}<a class="tag" href="{{ image_service }}{{ image }}">{{ size }}</a> 
+  {{/ face.resizes }}
+  <a class="tag" href="{{ image_service }}{{ thumb }}">thumb</a>
 </div>
 <div id="boxes">
-    <div id="dialog" class="window">
-        <b>Report this image</b><br>
-        <span>You should report image if:</span>
-        <ul>
-            <li>Image is duplicate (of?)</li>
-            <li>Image is broken (how?)</li>
-            <li>Image is inappropriate (why?)</li>
-            <li>Image is poor (how?)</li>
-        </ul>
-        
-        <label for="report">Reasons:</label><br />
-        <textarea id="report" name="report"></textarea><br />
-        <div id="report_options">
-            <div class="text_left"><a href="#" class="close">Cancel</a></div>
-            <div class="text_right"><a href="#" class="report">Report</a></div>
-        </div>
+  <div id="dialog" class="window">
+    <b>Report this image</b><br>
+    <span>You should report image if:</span>
+    <ul>
+      <li>Image is duplicate (of?)</li>
+      <li>Image is broken (how?)</li>
+      <li>Image is inappropriate (why?)</li>
+      <li>Image is poor (how?)</li>
+    </ul>
+    
+    <label for="report">Reasons:</label><br />
+    <textarea id="report" name="report"></textarea><br />
+    <div id="report_options">
+      <div class="text_left"><a href="#" class="close">Cancel</a></div>
+      <div class="text_right"><a href="#" class="report">Report</a></div>
     </div>
-    <div id="mask"></div>
+  </div>
+  <div id="mask"></div>
 </div>

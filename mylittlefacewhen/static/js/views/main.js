@@ -116,7 +116,7 @@ window.MainView = Backbone.View.extend({
 });
 
 window.UnreviewedView = Backbone.View.extend({
-  el: $("#content"),
+  el: "#content",
   initialize: function() {
     return this.template = tpl.get('main');
   },

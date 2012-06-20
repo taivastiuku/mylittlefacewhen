@@ -1,13 +1,13 @@
 <h1>mylittlefacewhen.com <a class="navigate" href="/changelog/">v2.2.1</a></h1>
 You can contact the dev team with <a href="mailto:taivastiuku@mylittlefacewhen.com">mail</a>, <a href="http://twitter.com/mlfw">Twitter</a> or <a class="navigate" href="/feedback">the feedback form</a>.<br />
 <a href="http://twitter.com/mlfw">Twitter</a> updates consist mostly of information about updates and site development.
+
+<p>
+  <a id="mlfw" href="/face/">mlfw I get mail from you</a><br/>
 </p>
 <p>
-<a id="mlfw" href="/face/">mlfw I get mail from you</a><br/>
-</p>
-<p>
-<h3>List of features</h3>
-<ul>
+  <h3>List of features</h3>
+  <ul>
     <li>Free Software! <a href="https://github.com/inopia/mylittlefacewhen">Get the source from github.</a>
     <li>backbone.js UI
     <li>There is an API. See the <a class="navigate" href="/develop/api/">documentation</a>.
@@ -17,97 +17,98 @@ You can contact the dev team with <a href="mailto:taivastiuku@mylittlefacewhen.c
     <li>Multifile uploader with drag&amp;drop and autofill for tags
     <li><a href="http://MyLittleFaceWhen.com/feed/">RSS-feed</a> of new images.
     <li>minified CSS and JS, optimized images
-</ul>
+  </ul>
+</p>
 
 <p>
 <h3>Some lessons learned:</h3>
 <ul>
-    <li>Caching is a serious challenge for web applications and has many pitfalls
-    <ul>
-        <li>manifest.appcache caches all sites that declare manifest in addition to files listed in the manifest itself
-        <li>serving content with invalid mime may cause an appcache that gets loaded but never updates!
-        <li>nginx with "expires max" may not be a good idea for content that changes from time to time (css, js)
-        <li>Firefox displays suspicious warning for appcache
-        <li>IE may cache api calls unless instructed otherwise
-    </ul>
-    <li>Any site with lots of client side scripting should use some client side framework
-    <ul>
-        <li>Organic development leads torwards blobs of js with content, app logic and event handlers mixed togeter
-        <li>This is an old problem in software engineering and can be solved using a fitting design pattern
-        <li>MVC design pattern has been implemented by various tools like backbone.js
-    </ul>
-    <li>3rd party developers are precious. 
-    <ul>
-        <li>It is important to provide up-to-date documentation
-        <li>Don't break the api
-        <li>Eat your own dogfood
-    </ul>
-    <li>CDN provides reliability but will cost a magnitude more than few VPS instances
-    <li>it is not wise to run heavy, long-running scripts on OpenVZ based VPS'es
-    <li>Google referrals affect all other referrals
-    <li>Google will fuck you up if the site
-    <ul>
-        <li>is offline for some preiod of time
-        <li>serves content with wrong mime-type
-        <li>&lt;title&gt; is not good enough
-        <li>&lt;meta&gt; description is not good enough
-        <li>has JavaScript generated content with no html fallback
-    </ul>
-    <li>You cannot abandon server-side templates, use templating that is supported both on client and server
-    <li>Reddit causes short and heavy traffic spikes
-    <li>Facebook wants OpenGraph or img_src meta tag for thumbnails
-    <li>use viewport meta tag for mobile support
+  <li>Caching is a serious challenge for web applications and has many pitfalls
+  <ul>
+    <li>manifest.appcache caches all sites that declare manifest in addition to files listed in the manifest itself
+    <li>serving content with invalid mime may cause an appcache that gets loaded but never updates!
+    <li>nginx with "expires max" may not be a good idea for content that changes from time to time (css, js)
+    <li>Firefox displays suspicious warning for appcache
+    <li>IE may cache api calls unless instructed otherwise
+  </ul>
+  <li>Any site with lots of client side scripting should use some client side framework
+  <ul>
+    <li>Organic development leads torwards blobs of js with content, app logic and event handlers mixed togeter
+    <li>This is an old problem in software engineering and can be solved using a fitting design pattern
+    <li>MVC design pattern has been implemented by various tools like backbone.js
+  </ul>
+  <li>3rd party developers are precious. 
+  <ul>
+    <li>It is important to provide up-to-date documentation
+    <li>Don't break the api
+    <li>Eat your own dogfood
+  </ul>
+  <li>CDN provides reliability but will cost a magnitude more than few VPS instances
+  <li>it is not wise to run heavy, long-running scripts on OpenVZ based VPS'es
+  <li>Google referrals affect all other referrals
+  <li>Google will fuck you up if the site
+  <ul>
+    <li>is offline for some preiod of time
+    <li>serves content with wrong mime-type
+    <li>&lt;title&gt; is not good enough
+    <li>&lt;meta&gt; description is not good enough
+    <li>has JavaScript generated content with no html fallback
+  </ul>
+  <li>You cannot abandon server-side templates, use templating that is supported both on client and server
+  <li>Reddit causes short and heavy traffic spikes
+  <li>Facebook wants OpenGraph or img_src meta tag for thumbnails
+  <li>use viewport meta tag for mobile support
 </ul>
 </p> 
 
 <p>
 <h3>Current setup:</h3>
 <ul>
-    <li>Web server:
-    <ul>
-        <li>nginx with wsgi, set up by Webfaction
-        <li>2 VPS:s for static content at /media/, runs nginx
-    </ul>
-    <li>Framework: Django
-    <ul>
-        <li>django-tagging
-        <li>django-tastypie
-        <li>django-piston *deprecated
-        <li>south
-        <li>pystache
-    </ul>
-    <li>JavaScript libraries:
-    <ul>
-        <li>backbone.js
-        <li>underscore.js
-        <li>mustache.js
-        <li>JQuery
-        <li>JQuery.UI
-        <li>JQuery.LazyLoad
-    </ul>
-    <li>Image processing:
-    <ul>
-        <li>PIL compiled with libwebp
-        <li>imagemagick for animated gif thumbnails
-        <li>Cairo for texts on non-animated gif thumbnails
-        <li>pngnq for optimizing RGBA thumbnails
-        <li>pngout for optimizing all pngs
-        <li>pngcrush for optimizing pngs that pngout cannot handle
-        <li>jpegoptim for optimizing jpegs
-    </ul>
-    <li>Dev environment:
-    <ul>
-        <li>Virtualbox
-        <li>Ubuntu server 10.04
-        <li>vim +Project
-        <li>CoffeeScript for making JavaScript sane
-        <li>.sass as .css dev fromat
-        <li>Opera Mobile emulator for mobile testing
-    </ul>
-    <li>DB: mysql
-    <li>Deployment: fabric
-    <li>VCS: GIT
-    <li>Traffic analysis: Google Analytics and web server logs
+  <li>Web server:
+  <ul>
+    <li>nginx with wsgi, set up by Webfaction
+    <li>2 VPS:s for static content at /media/, runs nginx
+  </ul>
+  <li>Framework: Django
+  <ul>
+    <li>django-tagging
+    <li>django-tastypie
+    <li>django-piston *deprecated
+    <li>south
+    <li>pystache
+  </ul>
+  <li>JavaScript libraries:
+  <ul>
+    <li>backbone.js
+    <li>underscore.js
+    <li>mustache.js
+    <li>JQuery
+    <li>JQuery.UI
+    <li>JQuery.LazyLoad
+  </ul>
+  <li>Image processing:
+  <ul>
+    <li>PIL compiled with libwebp
+    <li>imagemagick for animated gif thumbnails
+    <li>Cairo for texts on non-animated gif thumbnails
+    <li>pngnq for optimizing RGBA thumbnails
+    <li>pngout for optimizing all pngs
+    <li>pngcrush for optimizing pngs that pngout cannot handle
+    <li>jpegoptim for optimizing jpegs
+  </ul>
+  <li>Dev environment:
+  <ul>
+    <li>Virtualbox
+    <li>Ubuntu server 10.04
+    <li>vim +Project
+    <li>CoffeeScript for making JavaScript sane
+    <li>.sass as .css dev fromat
+    <li>Opera Mobile emulator for mobile testing
+  </ul>
+  <li>DB: mysql
+  <li>Deployment: fabric
+  <li>VCS: GIT
+  <li>Traffic analysis: Google Analytics and web server logs
 </ul>
 </p>
 </div>

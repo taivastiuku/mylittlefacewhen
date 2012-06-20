@@ -1,19 +1,19 @@
 <div id="dialog">
-    <h2>{{# message }}{{ message }}{{/message}}{{^message}}Submit feedback:{{/message}}</h2>
+  <h2>{{# message }}{{ message }}{{/message}}{{^message}}Submit feedback:{{/message}}</h2>
   <form method="post" action="/feedback/" enctype="multipart/form-data">
   <table>
-      <tr>
-          <td><b><label for="id_contact">Contact</label></b><br><input id="id_contact" name="contact" maxlength=256 type="text"></td>
-      </tr>
-      <tr>
-          <td>
-              <b><label for="id_feedback">Feedback*</label></b><br>
-              <textarea id="id_feedback" name="feedback" required="required" rows="10" cols="40"></textarea>
-          </td>
-      </tr>
-      <tr>
-          <td><input id="feedbackSubmit" type="submit" value="Submit"></td>
-      </tr>
+    <tr>
+      <td><b><label for="id_contact">Contact</label></b><br><input id="id_contact" name="contact" maxlength=256 type="text"></td>
+    </tr>
+    <tr>
+      <td>
+        <b><label for="id_feedback">Feedback*</label></b><br>
+        <textarea id="id_feedback" name="feedback" required="required" rows="10" cols="40"></textarea>
+      </td>
+    </tr>
+    <tr>
+      <td><input id="feedbackSubmit" type="submit" value="Submit"></td>
+    </tr>
   </table>
   </form>
   <p class="center">You can also send <a href="mailto:taivastiuku@mylittlefacewhen.com">mail</a>.</p>
