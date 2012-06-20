@@ -29,6 +29,7 @@ urlpatterns = patterns('',
     #PAGE
     (r'^$', "viewer.views.main"),
     (r'^search/$', "viewer.views.search"),
+    (r'^s/$', "viewer.views.search"),
 #    (r'^(f|face)/(?P<face_id>\d+)/qr/$', "viewer.views.qr"),
     (r'^f/(?P<face_id>\d+)/?', "viewer.views.single"),
     (r'^face/(?P<face_id>\d+)/?', "viewer.views.single"),
