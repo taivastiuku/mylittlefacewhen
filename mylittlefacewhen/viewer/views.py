@@ -69,12 +69,17 @@ def search(request):
     """
     List of all the reactions with given tag.
     """
-    query = request.GET.get("tag", request.GET.get("tags")).strip(",")
+    query = request.GET.get("tag", request.GET.get("tags", "")).strip(",")
     tags = [tag.strip() for tag in query.split(",")]
     faces = Face.search(tags)
 
     if len(faces) == 1:
 	return redirect("/f/%d" % faces[0].id)
+    elif len(faces) == 0:
+        query = "Search by typing some tags into the searchbox __^"
+    else:
+        query = query + ", "
+        
    
 
     meta = DEFAULT_META.copy()
@@ -85,7 +90,7 @@ def search(request):
             "content": "search.mustache",
             "content_data": {
                 "static_prefix":STATIC_PREFIX,
-                "query" : query + ", ",
+                "query" : query
                 },
             "metadata": meta,
             }
