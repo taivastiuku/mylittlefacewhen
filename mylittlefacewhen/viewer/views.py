@@ -113,7 +113,7 @@ def single(request, face_id):
     f["resizes"] = []
     for itm in ("huge","large","medium","small"):
         if getattr(face, itm):
-            f["resizes"].append({"resize":getattr(face, itm).url, "size": itm})
+            f["resizes"].append({"image":getattr(face, itm).url, "size": itm})
     
     to_content = {
             "face": f,
