@@ -438,10 +438,10 @@ class Flag(models.Model):
     user_agent = models.CharField(max_length=512, null=True)
     reason = models.TextField()
 
-    def save(self, *args, **kvargs):
-        super(Flag, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
         s = "Face:\thttp://mlfw.info/f/%s/\nReason:\t%s\nUseragent:\t%s\n" % (str(self.face.id), self.reason, self.user_agent)
         send_mail("reported! mlfw " + str(self.face.id), s, "server@mylittlefacewhen.com", ["taivastiuku@mylittlefacewhen.com"])
+        return super(Flag, self).save(*args, **kwargs)
 
 
     def __str__(self):
@@ -670,10 +670,11 @@ class Feedback(models.Model):
     useragent = models.CharField(max_length=512, default="")
     processed = models.BooleanField(default=False)
 
-    def save(self, *args, **kvargs):
-        super(Feedback, self).save(*args, **kwargs)
+    def save(self, *args, **kwargs):
         s = "Contact:\t%s\nFeedback:\t%s\nTime:\t%s\nUseragent:\t%s\n" % (self.contact, self.text, str(self.datetime), self.useragent)
         send_mail("mlfw feedback: " + self.contact, s, "server@mylittlefacewhen.com", ["taivastiuku@mylittlefacewhen.com"])
+        return super(Feedback, self).save(*args, **kwargs)
+
 
     def __str__(self):
         return self.contact + " - " + self.text
