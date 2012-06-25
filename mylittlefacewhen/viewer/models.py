@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.mail import send_mail
 import tagging
 
 from resizor.restful import process_image as resizor
@@ -647,6 +648,11 @@ class Feedback(models.Model):
     datetime = models.DateTimeField("datetime when added", auto_now_add=True)
     useragent = models.CharField(max_length=512, default="")
     processed = models.BooleanField(default=False)
+
+    def save(self, *args, **kvargs):
+        super(Feedback, self).save(*args, **kwargs)
+        s = "Contact:\t%s\nFeedback:\t%s\nTime:\t%s\nUseragent:\t%s\n" % (self.contact, self.text, str(self.datetime), self.useragent)
+        send_mail("mlfw feedback: " + self.contact, s, "server@mylittlefacewhen.com", ["taivastiuku@mylittlefacewhen.com"])
 
 class AccessLog(models.Model):
     """
