@@ -25,4 +25,3 @@ class Feedback(admin.ModelAdmin):
     pass
 
 admin.site.register(models.Feedback, Feedback)
-

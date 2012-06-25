@@ -395,15 +395,6 @@ class Face(models.Model):
             return True
         return False
 
-    def flag(self, reason):
-        
-        if not Flag.objects.filter(face=self):
-            Flag(face = self, reason = reason).save()
-            return "Item was flagged"
-        else:
-
-            return "Item was already flagged"
-
     def remove(self, reason):
         if reason == "":
             reason = "No reason for removal was given."
@@ -446,6 +437,12 @@ class Flag(models.Model):
     face = models.ForeignKey(Face)
     user_agent = models.CharField(max_length=512, null=True)
     reason = models.TextField()
+
+    def save(self, *args, **kvargs):
+        super(Flag, self).save(*args, **kwargs)
+        s = "Face:\thttp://mlfw.info/f/%s/\nReason:\t%s\nUseragent:\t%s\n" % (str(self.face.id), self.reason, self.user_agent)
+        send_mail("reported! mlfw " + str(self.face.id), s, "server@mylittlefacewhen.com", ["taivastiuku@mylittlefacewhen.com"])
+
 
     def __str__(self):
         return str(self.face.id) + " - " + self.reason
