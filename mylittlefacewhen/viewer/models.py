@@ -431,7 +431,12 @@ class Face(models.Model):
             self.save()
 
 
-            
+    def __str__(self):
+        s = str(self.id) + " - "
+        for tag in self.tags:
+            s += str(tag) + ", "
+        return s[:-2]
+
 tagging.register(Face)
 
 class Flag(models.Model):
@@ -441,6 +446,9 @@ class Flag(models.Model):
     face = models.ForeignKey(Face)
     user_agent = models.CharField(max_length=512, null=True)
     reason = models.TextField()
+
+    def __str__(self):
+        return str(self.face.id) + " - " + self.reason
 
 #
 #class Advert(models.Model):
@@ -529,6 +537,12 @@ class SourceLog(models.Model):
             self.face.source = ""
 	self.delete()
 	return True
+
+    def __str__(self):
+        if self.prev:
+            return str(self.prev.source) + " -> " + str(self.source)
+        else:
+            return "None -> " + str(self.source)
 
 class TagLog(models.Model):
     """
@@ -637,6 +651,16 @@ class TagLog(models.Model):
 		    out.append(tag)
 	return out
 
+    def __str__(self):
+        s = ""
+        for tag in self.added():
+            s += "+%s, " % str(tag)
+        for tag in self.removed():
+            s += "-%s, " % str(tag)
+        return s[:-2]
+
+
+
 tagging.register(TagLog)
 
 
@@ -653,6 +677,9 @@ class Feedback(models.Model):
         super(Feedback, self).save(*args, **kwargs)
         s = "Contact:\t%s\nFeedback:\t%s\nTime:\t%s\nUseragent:\t%s\n" % (self.contact, self.text, str(self.datetime), self.useragent)
         send_mail("mlfw feedback: " + self.contact, s, "server@mylittlefacewhen.com", ["taivastiuku@mylittlefacewhen.com"])
+
+    def __str__(self):
+        return self.contact + " - " + self.text
 
 class AccessLog(models.Model):
     """

@@ -12,8 +12,8 @@ from viewer import feeds
 from viewer.api import v2
 
 # Uncomment the next two lines to enable the admin:
-#from django.contrib import admin
-#admin.autodiscover()
+from django.contrib import admin
+admin.autodiscover()
 
 #these are for api mapping and api access control for the old piston-api (v1)
 faces_handler = Resource(FacesHandler, authentication = authentication.AnonMethodAllowed().set_allowed(["GET", "POST", "PUT"]))
@@ -84,7 +84,7 @@ urlpatterns = patterns('',
 #    url(r'^api/resizor/$', resizor),
 
     # Uncomment the next line to enable the admin:
-#    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', include(admin.site.urls)),
 )
 if settings.DEBUG:
     urlpatterns += patterns('',
