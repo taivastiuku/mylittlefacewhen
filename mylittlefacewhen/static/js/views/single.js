@@ -18,18 +18,21 @@ window.SingleView = Backbone.View.extend({
     "click #flag": "showWindow"
   },
   render: function() {
+    this.fetcher(this.renderIt());
+    return this;
+  },
+  fetcher: function(callback) {
     var _this = this;
     if (this.model.get("not_fetched")) {
       this.model.fetch({
         success: function() {
           _this.model.set("not_fetched", false);
-          return _this.renderIt();
+          return callback();
         }
       });
     } else {
-      this.renderIt();
+      callback();
     }
-    return this;
   },
   renderIt: function() {
     var face, image, resizes, tag, tags, thumb, to_template, _i, _len, _ref;
@@ -180,21 +183,25 @@ window.SingleView = Backbone.View.extend({
         "name": tag
       });
     });
-    return this.model.save({
-      tags: submit_tags,
-      source: event.currentTarget[1].value
-    }, {
-      success: function() {
-        var show;
-        _this.updateTags(submit_tags);
-        $("#source").html(event.currentTarget[1].value);
-        show = function() {
-          $("#loader").hide();
-          return $("#info-show").show();
-        };
-        return window.setTimeout(show, 1000);
-      }
-    });
+    if (this.model.isNew()) {
+      return this.fetcher(function() {
+        return _this.model.save({
+          tags: submit_tags,
+          source: event.currentTarget[1].value
+        }, {
+          success: function() {
+            var show;
+            _this.updateTags(submit_tags);
+            $("#source").html(event.currentTarget[1].value);
+            show = function() {
+              $("#loader").hide();
+              return $("#info-show").show();
+            };
+            return window.setTimeout(show, 1000);
+          }
+        });
+      });
+    }
   },
   showWindow: function(event) {
     var id, winH, winW;

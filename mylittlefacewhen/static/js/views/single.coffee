@@ -16,15 +16,19 @@ window.SingleView = Backbone.View.extend
     "click #flag": "showWindow"
 
   render: ->
+    @fetcher @renderIt()
+    return @
+
+  fetcher: (callback) ->
     if @model.get("not_fetched")
       @model.fetch
         success: =>
           @model.set("not_fetched", false)
-          @renderIt()
+          callback()
     else
-      @renderIt()
+      callback()
 
-    return @
+    return undefined
 
   renderIt: ->
     face = @model.toJSON()
@@ -135,17 +139,18 @@ window.SingleView = Backbone.View.extend
     _.each tags, (tag) ->
       submit_tags.push {"name": tag}
 
-    @model.save({tags: submit_tags,source: event.currentTarget[1].value},
-      success: =>
-        @updateTags submit_tags
-        $("#source").html(event.currentTarget[1].value)
+    if @model.isNew()
+      @fetcher =>
+        @model.save {tags: submit_tags,source: event.currentTarget[1].value},
+          success: =>
+            @updateTags submit_tags
+            $("#source").html(event.currentTarget[1].value)
 
-        show = ->
-          $("#loader").hide()
-          $("#info-show").show()
+            show = ->
+              $("#loader").hide()
+              $("#info-show").show()
 
-        window.setTimeout show, 1000
-    )
+            window.setTimeout show, 1000
 
   showWindow: (event) ->
     id = "#dialog"
