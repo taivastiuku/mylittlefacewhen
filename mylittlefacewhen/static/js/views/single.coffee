@@ -15,9 +15,6 @@ window.SingleView = Backbone.View.extend
     "submit form": "saveInfo"
     "click #flag": "showWindow"
 
-  render: ->
-    @fetcher @renderIt()
-    return @
 
   fetcher: (callback) ->
     if @model.get("not_fetched")
@@ -30,41 +27,41 @@ window.SingleView = Backbone.View.extend
 
     return undefined
 
-  renderIt: ->
-    face = @model.toJSON()
-    image = @model.getImage()
-    thumb = @model.getThumb()
+  render: ->
+    @fetcher =>
+      face = @model.toJSON()
+      image = @model.getImage()
+      thumb = @model.getThumb()
 
-    if face.source
-      face.source = [{source:face.source}]
-    else
-      face.source = []
-    resizes = []
+      if face.source
+        face.source = [{source:face.source}]
+      else
+        face.source = []
+      resizes = []
 
-    resizes.push({size:"huge", image:face.resizes.huge}) if face.resizes.huge
-    resizes.push({size:"large", image:face.resizes.large}) if face.resizes.large
-    resizes.push({size:"medium", image:face.resizes.medium}) if face.resizes.medium
-    resizes.push({size:"small", image:face.resizes.small}) if face.resizes.small
+      resizes.push({size:"huge", image:face.resizes.huge}) if face.resizes.huge
+      resizes.push({size:"large", image:face.resizes.large}) if face.resizes.large
+      resizes.push({size:"medium", image:face.resizes.medium}) if face.resizes.medium
+      resizes.push({size:"small", image:face.resizes.small}) if face.resizes.small
 
-    face.resizes = resizes
+      face.resizes = resizes
 
-    to_template =
-      face: face
-      image: image
-      static_prefix: static_prefix
-      thumb: thumb
-      image_service: app.getImageService()
-    
-    @$el.html Mustache.render(@template, to_template)
-    $(".single").css "max-height", screen.height
+      to_template =
+        face: face
+        image: image
+        static_prefix: static_prefix
+        thumb: thumb
+        image_service: app.getImageService()
+      
+      @$el.html Mustache.render(@template, to_template)
+      $(".single").css "max-height", screen.height
 
-    $(window).scrollTop(0)
+      $(window).scrollTop(0)
 
-    tags = ""
-    for tag in face.tags
-      tags += tag.name + ", "
-    @updateMeta(face, tags)
-
+      tags = ""
+      for tag in face.tags
+        tags += tag.name + ", "
+      @updateMeta(face, tags)
 
     return @
 
