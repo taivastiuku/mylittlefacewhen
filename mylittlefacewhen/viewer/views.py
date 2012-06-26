@@ -23,6 +23,8 @@ DEFAULT_META = {
         "default_image": STATIC_PREFIX + "cheerilee-square-300.png",
     }
         
+PONIES = ("celestia", "molestia", "luna", "pinkie pie", "twilight sparkle", "applejack", "rarity", "fluttershy", "rainbow dash", "lyra", "bon bon", "bon bon", "rose", "sweetie belle", "spike", "scootaloo", "applebloom", "cheerilee", "big macintosh", "berry punch")
+
 
 def main(request, listing="normal"):
     """
@@ -130,13 +132,33 @@ def single(request, face_id):
             "image_service": imageurl,
             }
 
+    tags = ""
+    ponies = ""
+    longest = ""
+    for tag in f["tags"]:
+        if tag["name"] in PONIES:
+            ponies += tag["name"] + ", "
+        elif len(tag["name"]) > len(longest):
+            tags += longest + ", "
+            longest = tag["name"]
+        else:
+            tags += tag["name"] + ", "
+
+    ponies = ponies[:-2].title()
+    
+    if ponies and longest:
+        title = ponies + ": " + longest
+        description = ponies + " reacting with '" + longest + "' and " + tags
+    else:
+        title = "Pony Reaction Image " + str(face.id)
+        description = "Poorly tagged image"
 
     to_template = {
             "content": "single.mustache",
             "content_data": to_content,
             "metadata": {
-                "title": "Pony reaction %d" % f["id"],
-                "description": "Pony reacting with tags: " + str(f["tags"]),
+                "title": title,
+                "description": description,
                 "static_prefix": STATIC_PREFIX,
                 "default_image": imageurl + f["image"],
                 },
