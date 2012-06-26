@@ -23,7 +23,7 @@ DEFAULT_META = {
         "default_image": STATIC_PREFIX + "cheerilee-square-300.png",
     }
         
-PONIES = ("celestia", "molestia", "luna", "pinkie pie", "twilight sparkle", "applejack", "rarity", "fluttershy", "rainbow dash", "lyra", "bon bon", "bon bon", "rose", "sweetie belle", "spike", "scootaloo", "applebloom", "cheerilee", "big macintosh", "berry punch")
+PONIES = ("celestia", "molestia", "luna", "pinkie pie", "twilight sparkle", "applejack", "rarity", "fluttershy", "rainbow dash", "lyra", "bon bon", "bon bon", "rose", "sweetie belle", "spike", "scootaloo", "applebloom", "cheerilee", "big macintosh", "berry punch", "discord", "nightmare moon", "chrysalis", "cadance", "shining armor")
 
 
 def main(request, listing="normal"):
@@ -113,7 +113,7 @@ def single(request, face_id):
     else:
         imageurl = "http://" + request.get_host()
 
-    f = model_to_dict(face, fields=["source","accepted","id"])
+    f = model_to_dict(face, fields=["source","accepted","id", "width", "height"])
     if f.get("source"):
         f["source"] = [f["source"]]
     f["tags"] = [{"name": tag.name} for tag in face.tags]
@@ -148,7 +148,8 @@ def single(request, face_id):
     
     if ponies and longest:
         title = ponies + ": " + longest
-        description = ponies + " reacting with '" + longest + "' and " + tags
+        description = ponies + " reacting with '" + longest + "' and " + tags[:-2]
+        to_content["alt"] = description
     else:
         title = "Pony Reaction Image " + str(face.id)
         description = "Poorly tagged image"
