@@ -86,8 +86,9 @@ window.TagView = Backbone.View.extend({
     return this.template = tpl.get("tag");
   },
   render: function() {
+    console.log(this.model);
     $(this.el).html(Mustache.render(this.template, {
-      model: this.model.toJSON()
+      name: this.model.get("name")
     }));
     return this;
   }

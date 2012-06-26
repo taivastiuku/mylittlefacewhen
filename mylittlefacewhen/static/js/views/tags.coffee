@@ -100,5 +100,6 @@ window.TagView = Backbone.View.extend
     @template = tpl.get("tag")
 
   render: ->
-    $(@el).html Mustache.render(@template,model: @model.toJSON())
+    console.log @model
+    $(@el).html Mustache.render(@template, name: @model.get("name"))
     return @
