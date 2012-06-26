@@ -49,7 +49,7 @@ AppRouter = Backbone.Router.extend({
         }
       });
     });
-    return new TopView().render();
+    return this.topView = new TopView().render();
   },
   _trackPageview: function() {
     var url;
@@ -224,8 +224,9 @@ AppRouter = Backbone.Router.extend({
     }
     this.currentPage = callback();
     if (this.firstLoad) {
-      return this.firstLoad = false;
+      this.firstLoad = false;
     }
+    return this.topView.updateAd();
   }
 });
 

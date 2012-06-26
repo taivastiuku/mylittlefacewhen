@@ -447,6 +447,18 @@ class Flag(models.Model):
     def __str__(self):
         return str(self.face.id) + " - " + self.reason
 
+
+class Advert(models.Model):
+    htmlad = models.CharField(max_length=1024)
+
+    @staticmethod
+    def random():
+        objs = Advert.objects.all()
+        count = objs.count()
+        return objs[ random.randint(0, count-1) ]
+      
+    
+
 #
 #class Advert(models.Model):
 #    STATUSES = (

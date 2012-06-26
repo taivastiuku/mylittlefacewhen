@@ -51,3 +51,12 @@ window.TagCollection = Backbone.Collection.extend({
   model: Tag,
   url: "/api/v2/tag/"
 });
+
+window.Advert = Backbone.Model.extend({
+  urlRoot: "/api/v2/ad/"
+});
+
+window.AdvertCollection = Backbone.Collection.extend({
+  model: Tag,
+  url: "/api/v2/ad/"
+});

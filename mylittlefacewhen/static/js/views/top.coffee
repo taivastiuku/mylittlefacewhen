@@ -2,6 +2,7 @@ window.TopView = Backbone.View.extend
   el: $("#top")
   initialize: ->
     @template = tpl.get("top")
+    @collection = new AdvertCollection()
 
   events:
     "focus #topmenu a":"focused"
@@ -9,11 +10,31 @@ window.TopView = Backbone.View.extend
     "submit #search form": "search"
     "click #topmenu a": "navigateAnchor"
     "click #logo a": "navigateAnchor"
+    "click #close-ad": "closeAd"
 
   render: ->
     $(@el).html @template #Mustache.render(@template, {})
     @autocomplete $("#searchbar")
+    @updateAd()
     return @
+
+  closeAd: (event) ->
+    event.preventDefault()
+    $("#mainos").remove()
+    $.cookie('noads', true, {expires: 8, path: '/'})
+    return undefined
+
+  updateAd: ->
+    unless $.cookie('noads') or $(window).width() < 700
+      @collection.fetch
+        success: =>
+          $ad = $("#mainos")
+          $ad.find("span").html @collection.models[0].get("htmlad")
+          $ad.show()
+
+    return undefined
+      
+    
 
   search: (event) ->
     event.preventDefault()

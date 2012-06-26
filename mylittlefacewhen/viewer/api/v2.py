@@ -204,3 +204,15 @@ class FlagResource(ModelResource):
         return flag
 
 API.register(FlagResource())
+
+class AdResource(ModelResource):
+    class Meta:
+        queryset = models.Advert.objects.all()
+        allowed_mathods = ('get',)
+        include_resource_uri = False
+
+    def apply_sorting(self, obj_list, options=None):
+        i = random.randint(0, len(obj_list) - 1)
+        return obj_list[i:i+1]
+
+API.register(AdResource())

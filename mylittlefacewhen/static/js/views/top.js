@@ -4,19 +4,43 @@ var ac_extractLast, ac_split;
 window.TopView = Backbone.View.extend({
   el: $("#top"),
   initialize: function() {
-    return this.template = tpl.get("top");
+    this.template = tpl.get("top");
+    return this.collection = new AdvertCollection();
   },
   events: {
     "focus #topmenu a": "focused",
     "blur #topmenu a": "unfocused",
     "submit #search form": "search",
     "click #topmenu a": "navigateAnchor",
-    "click #logo a": "navigateAnchor"
+    "click #logo a": "navigateAnchor",
+    "click #close-ad": "closeAd"
   },
   render: function() {
     $(this.el).html(this.template);
     this.autocomplete($("#searchbar"));
+    this.updateAd();
     return this;
+  },
+  closeAd: function(event) {
+    event.preventDefault();
+    $("#mainos").remove();
+    $.cookie('noads', true, {
+      expires: 8,
+      path: '/'
+    });
+  },
+  updateAd: function() {
+    var _this = this;
+    if (!($.cookie('noads') || $(window).width() < 700)) {
+      this.collection.fetch({
+        success: function() {
+          var $ad;
+          $ad = $("#mainos");
+          $ad.find("span").html(_this.collection.models[0].get("htmlad"));
+          return $ad.show();
+        }
+      });
+    }
   },
   search: function(event) {
     var tags;

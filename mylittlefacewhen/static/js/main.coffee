@@ -54,7 +54,7 @@ AppRouter = Backbone.Router.extend
   
    
     # Top bar
-    new TopView().render()
+    @topView = new TopView().render()
 
   _trackPageview: ->
     # GoogleAnalytics
@@ -178,6 +178,7 @@ AppRouter = Backbone.Router.extend
     @currentPage = callback()
     # First load is handeled differently due to server generated template
     @firstLoad = false if @firstLoad
+    @topView.updateAd()
 
 # Templates that are loaded during development mode.
 # Release version has all of these already loaded in app.js
