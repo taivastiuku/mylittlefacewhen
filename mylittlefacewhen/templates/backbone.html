@@ -1,8 +1,6 @@
 {% load static %}{% load mustache %}<!DOCTYPE html>
 <html lang="en" {% if not_firefox and not debug %}manifest="{% get_static_prefix %}dictionary.appcache"{% endif %}>
-    <head>{% mustache "meta.mustache" metadata %}</head>
-    <body id="body">
-<!-- Google analytics -->
+  <head>{% mustache "meta.mustache" metadata %}
 <!--remove	
 <script type="text/javascript">
   var _gaq = _gaq || [];
@@ -15,7 +13,10 @@
   })();
 
 </script>
-remove-->
+remove-->  
+  </head>
+    <body id="body">
+<!-- Google analytics -->
 <!--[if lte IE 8]><center>Old Internet Explorers may work pretty badly with this site</center><![endif]--> 
 <div id="top">{% mustache "top.mustache" %}</div>
 <div id="content">{% mustache content content_data %}</div>

@@ -2,7 +2,7 @@ app = undefined
 
 # Some views need to clean up before close.
 Backbone.View::close = ->
-  console.log "Closing view " + this
+  #console.log "Closing view " + this
   @beforeClose() if @beforeClose
 #  @remove()
   @undelegateEvents()

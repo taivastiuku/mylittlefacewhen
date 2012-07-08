@@ -32,7 +32,6 @@ window.TagsView = Backbone.View.extend({
     var $tags, data,
       _this = this;
     data = this.model.toJSON();
-    console.log(data);
     $(this.el).html(Mustache.render(this.template, {
       models: data
     }));
@@ -86,7 +85,6 @@ window.TagView = Backbone.View.extend({
     return this.template = tpl.get("tag");
   },
   render: function() {
-    console.log(this.model);
     $(this.el).html(Mustache.render(this.template, {
       name: this.model.get("name")
     }));

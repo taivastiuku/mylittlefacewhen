@@ -4,7 +4,6 @@ var AppRouter, app;
 app = void 0;
 
 Backbone.View.prototype.close = function() {
-  console.log("Closing view " + this);
   if (this.beforeClose) {
     this.beforeClose();
   }
