@@ -1,0 +1,65 @@
+[
+  {
+    "pk": 1,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/offer-listing/B0043WAPJM/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=am2&camp=1789&creative=9325&creativeASIN=B0043WAPJM\">Celestia toy? Why not Pinklestia?</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=am2&o=1&a=B0043WAPJM\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 2,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B0063FGF14/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B0063FGF14\">Get ponies on DVD!</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B0063FGF14\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 3,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B006CD0F68/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B006CD0F68\">Cutie Mark Crusaders and Cheerilee figure set!</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B006CD0F68\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 4,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B00636H2BU/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B00636H2BU\">Rainbow Dash always dresses in style!</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B00636H2BU\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 5,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B0043WDZ0S/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B0043WDZ0S\">Get the only REAL fashion pony, Rarity.</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B0043WDZ0S\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 6,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B00859GJZS/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B00859GJZS\">Princess Cadance Figure, not Chrysalis I promise</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B00859GJZS\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 7,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B004P958EA/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B004P958EA\">Celestia & Luna - Super saver shipping!</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B004P958EA\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 8,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B006ZB1W3M/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B006ZB1W3M\">Blind Bag ponies, gotta catch 'em all!</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B006ZB1W3M\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 9,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B0089QJ954/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B0089QJ954\">Silly Lyra, you're not Hearsing... or human</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B0089QJ954\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  }
+]
