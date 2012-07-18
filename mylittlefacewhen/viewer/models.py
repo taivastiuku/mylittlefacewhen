@@ -683,9 +683,10 @@ class Feedback(models.Model):
     processed = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
-        s = "Contact:\t%s\nFeedback:\t%s\nTime:\t%s\nUseragent:\t%s\n" % (self.contact, self.text, str(self.datetime), self.useragent)
-        send_mail("mlfw feedback: " + self.contact, s, "server@mylittlefacewhen.com", ["taivastiuku@mylittlefacewhen.com"])
-        return super(Feedback, self).save(*args, **kwargs)
+        if (self.text):
+            s = "Contact:\t%s\nFeedback:\t%s\nTime:\t%s\nUseragent:\t%s\n" % (self.contact, self.text, str(self.datetime), self.useragent)
+            send_mail("mlfw feedback: " + self.contact, s, "server@mylittlefacewhen.com", ["taivastiuku@mylittlefacewhen.com"])
+            return super(Feedback, self).save(*args, **kwargs)
 
 
     def __str__(self):
