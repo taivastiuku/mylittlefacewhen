@@ -165,7 +165,7 @@ window.SingleView = Backbone.View.extend({
     });
   },
   saveInfo: function(event) {
-    var i, submit_tags, tags,
+    var i, saver, submit_tags, tags,
       _this = this;
     event.preventDefault();
     tags = event.currentTarget[0].value.split(",");
@@ -182,24 +182,29 @@ window.SingleView = Backbone.View.extend({
         "name": tag
       });
     });
+    saver = function() {
+      return _this.model.save({
+        tags: submit_tags,
+        source: event.currentTarget[1].value
+      }, {
+        success: function() {
+          var show;
+          _this.updateTags(submit_tags);
+          $("#source").html(event.currentTarget[1].value);
+          show = function() {
+            $("#loader").hide();
+            return $("#info-show").show();
+          };
+          return window.setTimeout(show, 1000);
+        }
+      });
+    };
     if (this.model.isNew()) {
       return this.fetcher(function() {
-        return _this.model.save({
-          tags: submit_tags,
-          source: event.currentTarget[1].value
-        }, {
-          success: function() {
-            var show;
-            _this.updateTags(submit_tags);
-            $("#source").html(event.currentTarget[1].value);
-            show = function() {
-              $("#loader").hide();
-              return $("#info-show").show();
-            };
-            return window.setTimeout(show, 1000);
-          }
-        });
+        return saver();
       });
+    } else {
+      return saver();
     }
   },
   showWindow: function(event) {

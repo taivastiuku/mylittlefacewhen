@@ -136,18 +136,23 @@ window.SingleView = Backbone.View.extend
     _.each tags, (tag) ->
       submit_tags.push {"name": tag}
 
+    saver = =>
+      @model.save {tags: submit_tags,source: event.currentTarget[1].value},
+        success: =>
+          @updateTags submit_tags
+          $("#source").html(event.currentTarget[1].value)
+
+          show = ->
+            $("#loader").hide()
+            $("#info-show").show()
+
+          window.setTimeout show, 1000
+
     if @model.isNew()
       @fetcher =>
-        @model.save {tags: submit_tags,source: event.currentTarget[1].value},
-          success: =>
-            @updateTags submit_tags
-            $("#source").html(event.currentTarget[1].value)
-
-            show = ->
-              $("#loader").hide()
-              $("#info-show").show()
-
-            window.setTimeout show, 1000
+        saver()
+    else
+      saver()
 
   showWindow: (event) ->
     id = "#dialog"
