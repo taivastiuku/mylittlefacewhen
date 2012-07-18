@@ -38,6 +38,8 @@ def main(request, listing="normal"):
     else:
         path = "/" + listing + "/"
 
+    meta = DEFAULT_META.copy()
+    meta["path"] = request.path
 
     to_template = {
             "listing" : listing,
@@ -59,6 +61,7 @@ def randoms(request):
     meta = DEFAULT_META.copy()
     meta["title"] = "Random ponies!"
     meta["description"] = "Endless list of reacting ponies that just goes on and on and on... "
+    meta["path"] = request.path
 
     to_template = {
             "content": "randoms.mustache",
@@ -85,6 +88,7 @@ def search(request):
    
 
     meta = DEFAULT_META.copy()
+    meta["path"] = request.path
     meta["title"] = "Search for "
     for tag in tags:
         meta["title"] += tag + ", "
@@ -162,6 +166,7 @@ def single(request, face_id):
                 "description": description,
                 "static_prefix": STATIC_PREFIX,
                 "default_image": imageurl + f["image"],
+                "path": request.path,
                 },
             }
 
@@ -173,6 +178,7 @@ def develop(request):
     """
     
     meta = DEFAULT_META.copy()
+    meta["path"] = request.path
     meta["title"] = "Information"
     meta["description"] = "Details about mylittlefacewhen.com development and future"
     
@@ -189,6 +195,7 @@ def api(request):
     API documentation
     """
     meta = DEFAULT_META.copy()
+    meta["path"] = request.path
     meta["title"] = "API documentation"
     meta["description"] = "Most of the site can be created using only this API"
     to_template = {
@@ -288,6 +295,7 @@ def feedback(request):
 	form = forms.FeedbackForm()
 
     meta = DEFAULT_META.copy()
+    meta["path"] = request.path
     meta["title"] = "Feedback"
     meta["description"] = "Any feedback is welcome, bug reports are highly appreciated"
     to_template = {
@@ -301,6 +309,7 @@ def feedback(request):
 def submit(request):
 
     meta = DEFAULT_META.copy()
+    meta["path"] = request.path
     meta["title"] = "Upload ponies!"
     meta["description"] = "Sharing is caring!"
     to_template = {
@@ -315,6 +324,7 @@ def tags(request):
     View all tags
     """
     meta = DEFAULT_META.copy()
+    meta["path"] = request.path
     meta["title"] = "Tags"
     meta["description"] = "Some popular tags with random images and all the tags as links"
     to_template = {
@@ -327,6 +337,7 @@ def tags(request):
 
 def changelog(request):
     meta = DEFAULT_META.copy()
+    meta["path"] = request.path
     meta["title"] = "Changelog"
     meta["description"] = "We've come a long way. Another day another release."
     to_template = {
