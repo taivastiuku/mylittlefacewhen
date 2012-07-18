@@ -23,7 +23,7 @@ window.TopView = Backbone.View.extend({
   },
   closeAd: function(event) {
     event.preventDefault();
-    $("#mainos").remove();
+    $("#mainos").hide("fast");
     $.cookie('noads', true, {
       expires: 8,
       path: '/'
@@ -37,7 +37,7 @@ window.TopView = Backbone.View.extend({
           var $ad;
           $ad = $("#mainos");
           $ad.find("span").html(_this.collection.models[0].get("htmlad"));
-          return $ad.show();
+          return $ad.show("fast");
         }
       });
     }

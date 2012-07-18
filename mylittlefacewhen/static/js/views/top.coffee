@@ -20,7 +20,7 @@ window.TopView = Backbone.View.extend
 
   closeAd: (event) ->
     event.preventDefault()
-    $("#mainos").remove()
+    $("#mainos").hide("fast")
     $.cookie('noads', true, {expires: 8, path: '/'})
     return undefined
 
@@ -30,7 +30,7 @@ window.TopView = Backbone.View.extend
         success: =>
           $ad = $("#mainos")
           $ad.find("span").html @collection.models[0].get("htmlad")
-          $ad.show()
+          $ad.show("fast")
 
     return undefined
       
