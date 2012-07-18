@@ -28,7 +28,7 @@ window.FeedbackView = Backbone.View.extend({
     $(event.currentTarget).attr("disabled", "true");
     fb = new Feedback({
       contact: $("#id_contact").val(),
-      feedback: $("#id_feedback").val()
+      feedback: $("#id_feedback").val().replace("\n", "\\n")
     });
     response = function(model, response) {
       $(event.currentTarget).removeAttr("disabled");
