@@ -19,5 +19,26 @@
     "fields": {
       "htmlad": "<a href=\"http://poniponi.com/\">Poniponi comic reader, continue from last comic you read!</a>"
     }
+  },
+  {
+    "pk": 4,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/0452289963/ref=as_li_qf_sp_asin_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=0452289963\">Your thoughts are not you</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=0452289963\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 5,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/0452289963/ref=as_li_qf_sp_asin_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=0452289963\">There's no time like now</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=0452289963\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 6,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.codecademy.com/\">Do yourself a favor and learn some basic programming. It's free!</a>"
+    }
   }
 ]
