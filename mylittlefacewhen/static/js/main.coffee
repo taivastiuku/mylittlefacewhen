@@ -19,7 +19,10 @@ AppRouter = Backbone.Router.extend
     @faceList = new FaceCollection() #loaded from main view
     @randFaceList = new FaceCollection() #loaded from randoms
     @tagList = new TagCollection()
-    @firstLoad = true
+    if window.location.hash
+      @firstLoad = false
+    else
+      @firstLoad = true
 
     # Client-side load balancing, list services and pick the fastest one.
     # All image services have 2kB file for speed testing and allow main site
