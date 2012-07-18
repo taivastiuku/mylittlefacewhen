@@ -23,8 +23,13 @@ AppRouter = Backbone.Router.extend({
     this.bind('all', this._trackPageview);
     this.faceList = new FaceCollection();
     this.randFaceList = new FaceCollection();
+    this.randomQueue = new FaceCollection();
     this.tagList = new TagCollection();
-    this.firstLoad = true;
+    if (window.location.hash) {
+      this.firstLoad = false;
+    } else {
+      this.firstLoad = true;
+    }
     this.imageServices = ["http://denver.mylittlefacewhen.com", "http://scranton.mylittlefacewhen.com"];
     this.fastest = {
       service: void 0,
@@ -146,25 +151,28 @@ AppRouter = Backbone.Router.extend({
     });
   },
   random: function() {
-    var faces;
-    faces = new FaceCollection();
-    faces.fetch({
-      data: {
-        order_by: "random",
-        limit: 1
-      },
-      success: function(data) {
-        var face;
-        face = faces.models[0];
-        if (!app.faceList.get(face.id)) {
-          app.faceList.add(face);
+    var face,
+      _this = this;
+    if (this.randomQueue.length < 1) {
+      return this.randomQueue.fetch({
+        data: {
+          order_by: "random",
+          limit: 3
+        },
+        success: function(data) {
+          return _this.random();
         }
-        return app.navigate("f/" + face.get("id") + "/", {
-          trigger: true
-        });
+      });
+    } else {
+      this.select("none");
+      face = this.randomQueue.pop();
+      if (!this.randFaceList.get(face.id)) {
+        this.randFaceList.add(face);
       }
-    });
-    return this.select("none");
+      return app.navigate("f/" + (face.get("id")) + "/", {
+        trigger: true
+      });
+    }
   },
   randoms: function() {
     var _this = this;

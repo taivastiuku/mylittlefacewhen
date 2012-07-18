@@ -16,8 +16,12 @@ Backbone.View::navigateAnchor = (event) ->
 AppRouter = Backbone.Router.extend
   initialize: ->
     @bind 'all', @_trackPageview
+    
+    #TODO Could these infused as one?
     @faceList = new FaceCollection() #loaded from main view
     @randFaceList = new FaceCollection() #loaded from randoms
+    @randomQueue = new FaceCollection() #cache for randomly loaded images
+
     @tagList = new TagCollection()
     if window.location.hash
       @firstLoad = false
@@ -126,15 +130,17 @@ AppRouter = Backbone.Router.extend
       return @pageload new FeedbackView()
 
   random: ->
-    faces = new FaceCollection()
-    faces.fetch
-      data:{order_by: "random", limit: 1}
-      success: (data) ->
-        face = faces.models[0]
-        app.faceList.add face unless app.faceList.get(face.id)
-        app.navigate("f/" + face.get("id") + "/", {trigger:true})
+    if @randomQueue.length < 1
+      @randomQueue.fetch
+        data:{order_by: "random", limit: 3}
+        success: (data) =>
+          @random()
+    else
+      @select("none")
+      face = @randomQueue.pop()
+      @randFaceList.add face unless @randFaceList.get(face.id)
+      app.navigate "f/#{face.get("id")}/", trigger:true
 
-    @select("none")
 
   randoms: ->
     @before =>
