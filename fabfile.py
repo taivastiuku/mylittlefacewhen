@@ -139,7 +139,7 @@ def _prepare_deploy():
 
         lib = ""
         libdir = env.staticdir + "lib/"
-        for filu in ("jquery-1.7.2.min.js", "underscore-min.js", "backbone-min.js", "backbone-tastypie.js","jquery.lazyload.min.js", "jquery.cookie.min.js", "jquery-ui-1.8.18.custom.min.js", "mustache.min.js"):
+        for filu in ("jquery-1.8.0.min.js", "underscore-min.js", "backbone-min.js", "backbone-tastypie.js","jquery.lazyload.min.js", "jquery.cookie.min.js", "jquery-ui-1.8.18.custom.min.js", "mustache.min.js"):
             with open(libdir + filu) as libfile:
                 lib += libfile.read()
 
