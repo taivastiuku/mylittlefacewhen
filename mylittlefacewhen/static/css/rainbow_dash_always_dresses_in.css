@@ -316,7 +316,7 @@ span.thumb img:hover, div.thumb:hover {
 /* end single */
 /* tags */
 /* .tag also used in single */
-a.tag {
+a.tag, a.resize {
   text-decoration: none;
   padding: 0 0.2em;
   margin: 0 0.1em;
