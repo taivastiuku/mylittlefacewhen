@@ -15,7 +15,8 @@ from viewer.api import auths
 from viewer import forms
 
 import datetime
-import json
+try:    import simplejson as json
+except: import json
 import random
 
 API = Api(api_name="v2")

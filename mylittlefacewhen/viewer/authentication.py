@@ -1,6 +1,7 @@
 from django.core.serializers.json import DateTimeAwareJSONEncoder
 from django.http import HttpResponse
-from django.utils import simplejson as json
+try:    import simplejson as json
+except: import json
 
 class Required(object):
     """

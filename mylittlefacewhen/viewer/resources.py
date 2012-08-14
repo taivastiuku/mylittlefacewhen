@@ -12,7 +12,8 @@ import base64
 import random
 import re
 
-import json
+try:    import simplejson as json
+except: import json
 from datetime import datetime
 
 #IMAGEURL = "http://images.mlfw.info"

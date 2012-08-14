@@ -10,3 +10,4 @@ django-tastypie==0.9.11
 requests==0.11.2
 lxml==2.3.4
 pystache==0.5.2
+simplejson>=2.0.9

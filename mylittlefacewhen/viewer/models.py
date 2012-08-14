@@ -12,7 +12,8 @@ from cStringIO import StringIO
 from datetime import datetime, timedelta
 import requests
 #import base64
-import json
+try:    import simplejson as json
+except: import json
 
 from viewer import forms
 
