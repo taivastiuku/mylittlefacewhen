@@ -157,7 +157,8 @@ AppRouter = Backbone.Router.extend({
       return this.randomQueue.fetch({
         data: {
           order_by: "random",
-          limit: 3
+          limit: 3,
+          accepted: true
         },
         success: function(data) {
           return _this.random();

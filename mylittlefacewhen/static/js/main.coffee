@@ -132,7 +132,10 @@ AppRouter = Backbone.Router.extend
   random: ->
     if @randomQueue.length < 1
       @randomQueue.fetch
-        data:{order_by: "random", limit: 3}
+        data:
+          order_by: "random"
+          limit: 3
+          accepted: true
         success: (data) =>
           @random()
     else

@@ -45,7 +45,8 @@ window.RandomsView = Backbone.View.extend({
       return collection.fetch({
         data: $.param({
           order_by: "random",
-          limit: 3
+          limit: 3,
+          accepted: true
         }),
         success: function(data) {
           _.each(collection.models, function(model) {
