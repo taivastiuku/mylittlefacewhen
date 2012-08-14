@@ -60,7 +60,7 @@ class FaceResource(ModelResource):
             if limit > 5:
                 raise BadRequest("at most 5 randoms at a time")
 
-            obj_list = obj_list.filter(accepted=True)
+            obj_list = obj_list.all()
             if options.get("search"):
                 faces_len = len(obj_list)
             else:
