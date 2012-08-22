@@ -1,23 +1,19 @@
-#from django.core.paginator import Paginator, InvalidPage
-#from django.conf.urls.defaults import url
-#from django.http import Http404
+import random
+import datetime
+try:    import simplejson as json
+except: import json
+
+from viewer import models
+from viewer import forms
+from viewer.api import auths
+from tagging.models import Tag
+
 from tastypie.resources import ModelResource, Resource
 from tastypie.api import Api
 from tastypie.utils import trailing_slash
 from tastypie import fields
-from tagging.models import Tag
-from viewer import models
 from tastypie.constants import ALL
 from tastypie.exceptions import BadRequest
-
-from viewer.api import auths
-
-from viewer import forms
-
-import datetime
-try:    import simplejson as json
-except: import json
-import random
 
 API = Api(api_name="v2")
 
