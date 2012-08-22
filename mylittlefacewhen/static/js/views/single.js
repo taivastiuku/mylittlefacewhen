@@ -33,7 +33,7 @@ window.SingleView = Backbone.View.extend({
   render: function() {
     var _this = this;
     this.fetcher(function() {
-      var face, image, resizes, tag, tags, thumb, to_template, _i, _len, _ref;
+      var artist, face, image, resizes, tag, tags, thumb, to_template, _i, _len, _ref;
       face = _this.model.toJSON();
       image = _this.model.getImage();
       thumb = _this.model.getThumb();
@@ -72,7 +72,21 @@ window.SingleView = Backbone.View.extend({
         });
       }
       face.resizes = resizes;
+      tags = "";
+      artist = false;
+      _ref = face.tags;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        tag = _ref[_i];
+        if (tag.name.indexOf("artist:") === 0) {
+          console.log(tag.name);
+          artist = $.trim(tag.name.split(":", 2)[1]);
+          console.log(artist);
+        }
+        tags += tag.name + ", ";
+      }
+      _this.updateMeta(face, tags);
       to_template = {
+        artist: artist,
         face: face,
         image: image,
         static_prefix: static_prefix,
@@ -81,14 +95,7 @@ window.SingleView = Backbone.View.extend({
       };
       _this.$el.html(Mustache.render(_this.template, to_template));
       $(".single").css("max-height", screen.height);
-      $(window).scrollTop(0);
-      tags = "";
-      _ref = face.tags;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        tag = _ref[_i];
-        tags += tag.name + ", ";
-      }
-      return _this.updateMeta(face, tags);
+      return $(window).scrollTop(0);
     });
     return this;
   },

@@ -45,8 +45,19 @@ window.SingleView = Backbone.View.extend
       resizes.push({size:"small", image:face.resizes.small}) if face.resizes.small
 
       face.resizes = resizes
+      
+      tags = ""
+      artist = false
+      for tag in face.tags
+        if tag.name.indexOf("artist:") == 0
+          console.log tag.name
+          artist = $.trim tag.name.split(":",2)[1]
+          console.log artist
+        tags += tag.name + ", "
+      @updateMeta(face, tags)
 
       to_template =
+        artist: artist
         face: face
         image: image
         static_prefix: static_prefix
@@ -58,10 +69,6 @@ window.SingleView = Backbone.View.extend
 
       $(window).scrollTop(0)
 
-      tags = ""
-      for tag in face.tags
-        tags += tag.name + ", "
-      @updateMeta(face, tags)
 
     return @
 
