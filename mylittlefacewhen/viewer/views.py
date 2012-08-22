@@ -120,7 +120,16 @@ def single(request, face_id):
     f = model_to_dict(face, fields=["source","accepted","id", "width", "height"])
     if f.get("source"):
         f["source"] = [f["source"]]
-    f["tags"] = [{"name": tag.name} for tag in face.tags]
+
+    f["tags"] = []
+    artist = False
+    for tag in face.tags:
+        f["tags"].append({"name":tag.name})
+        if tag.name.startswith("artist:"):
+            artist = tag.name.partition(":")[2].strip()
+
+
+
     f["image"] = face.image.url
 
     f["resizes"] = []
@@ -129,6 +138,7 @@ def single(request, face_id):
             f["resizes"].append({"image":getattr(face, itm).url, "size": itm})
     
     to_content = {
+            "artist": artist,
             "face": f,
             "thumb":face.thumb.url,
             "image":image,
@@ -228,43 +238,20 @@ def rand(request):
 #
 #    return render_to_response("viewer/salute.html", to_template, context_instance = RequestContext(request))
 
-@login_required
-def sourcelog(request, page=1):
-    """
-    View form managing tag edits.
-    """
-    page = int(page)
-    start = 50*(page-1)
-    end = 50*page
-    sourcelog_id = request.POST.get("id")
-    undo = None
-    if sourcelog_id:
-	ret = SourceLog.objects.filter(id=sourcelog_id)
-	if ret:
-	    undo = ret[0].public_undo()
-    
-    to_template = {
-            "sourcelog" : SourceLog.objects.order_by("-datetime")[start:end],
-            "undo" : undo,
-        }
-    return render_to_response("sourcelog.html", to_template, context_instance=RequestContext(request))
 
 @login_required
-def taglog(request, page=1):
-    """
-    View form managing tag edits.
-    """
+def changes(request, page=1):
     page = int(page)
-    start = 50*(page-1)
-    end = 50*page
-    taglog_id = request.POST.get("id")
+    start = 30*(page-1)
+    end = 30*+page
+    changelog_id = request.POST.get("id")
     undo = None
-    if taglog_id:
-	ret = TagLog.objects.filter(id=taglog_id)
-	if ret:
-	    undo = ret[0].public_undo()
+    if changelog_id:
+        ret = ChangeLog.objects.filter(id=changelog_id)
+        if ret:
+            undo = ret[0].undo()
     faces = []
-    logs = TagLog.objects.all().order_by("-datetime")[start:end]
+    logs = ChangeLog.objects.all().order_by("-datetime")[start:end]
     for log in logs:
         face = log.face
         face.setThumbWithRequest(request)
@@ -276,7 +263,9 @@ def taglog(request, page=1):
             "zip" : z,
             "undo" : undo,
         }
-    return render_to_response("taglog.html", to_template, context_instance=RequestContext(request))
+
+    return render_to_response("changes.html", to_template, context_instance=RequestContext(request))
+
 
 @csrf_exempt
 def feedback(request):

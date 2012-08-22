@@ -100,7 +100,7 @@ class FaceResource(ModelResource):
 
         face = models.Face.objects.get(pk=bundle.data["id"])
         
-        return face.public_update({"tags":tags, "source":bundle.data.get("source", "")})
+        return face.public_update({"tags":tags[:-2], "source":bundle.data.get("source", "")})
 
     def obj_create(self, bundle, request=None, **kwargs):
         form = forms.CreateFace(bundle.data)

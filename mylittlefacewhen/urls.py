@@ -54,10 +54,8 @@ urlpatterns = patterns('',
 #    (r'^errors/404/$', "viewer.views.notfound"),
     
     #admin
-    (r'^taglog/$', "viewer.views.taglog"),
-    (r'^taglog/(?P<page>\d+)/$', "viewer.views.taglog"),
-    (r'^sourcelog/$', "viewer.views.sourcelog"),
-    (r'^sourcelog/(?P<page>\d+)/$', "viewer.views.sourcelog"),
+    (r'^changes/$', "viewer.views.changes"),
+    (r'^changes/(?P<page>\d+)/$', "viewer.views.changes"),
     (r'^acceptimages/$', "viewer.views.acceptImages"),
 
     #RSS

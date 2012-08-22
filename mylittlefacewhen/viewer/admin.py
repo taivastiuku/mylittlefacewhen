@@ -11,15 +11,10 @@ class Flag(admin.ModelAdmin):
 
 admin.site.register(models.Flag, Flag)
 
-class SourceLog(admin.ModelAdmin):
+class ChangeLog(admin.ModelAdmin):
     pass
 
-admin.site.register(models.SourceLog, SourceLog)
-
-class TagLog(admin.ModelAdmin):
-    pass
-
-admin.site.register(models.TagLog, TagLog)
+admin.site.register(models.ChangeLog, ChangeLog)
 
 class Feedback(admin.ModelAdmin):
     pass

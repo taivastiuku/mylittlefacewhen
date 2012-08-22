@@ -166,8 +166,7 @@ class Face(models.Model):
         face.tags = tags
 
         if face.generateImages():
-            SourceLog.new(face)
-            TagLog.new(face)
+            ChangeLog.new_edit(face)
             return face
 
 
@@ -358,16 +357,13 @@ class Face(models.Model):
     def public_update(self, data):
         form = forms.PublicUpdateFace(data)
         if form.is_valid():
-            for item, value in form.cleaned_data.items():
-                if value == "":
-                    continue
-                if item == "tags":
-                    self.tags = value
-                    TagLog.new(self)
-                elif item == "source":
-                    self.source = value
-                    SourceLog.new(self)
+            tags =  form.cleaned_data.get("tags")
+            if tags:
+                self.tags = tags
+            ChangeLog.new_edit(self)
             self.save()
+        else:
+            print "not valid"
         return self
 
     def update(self, data):
@@ -387,11 +383,10 @@ class Face(models.Model):
             for item in ["tags", "source", "processed"]:
                 if cleaned_data.get(item):
                     setattr(self, item, cleaned_data[item])
-                    if item == "tags":
-                        TagLog.new(self)
-                    elif item == "source":
-                        SourceLog.new(self)
 
+            if cleaned_data.get("source") or cleaned_data.get("tags"):
+                ChangeLog.new_edit(self)
+            
             self.save()
             return True
         return False
@@ -442,7 +437,10 @@ class Flag(models.Model):
     def save(self, *args, **kwargs):
         s = "Face:\thttp://mlfw.info/f/%s/\nReason:\t%s\nUseragent:\t%s\n" % (str(self.face.id), self.reason, self.user_agent)
         send_mail("reported! mlfw " + str(self.face.id), s, "server@mylittlefacewhen.com", ["taivastiuku@mylittlefacewhen.com"])
-        return super(Flag, self).save(*args, **kwargs)
+        
+        ret = super(Flag, self).save(*args, **kwargs)
+        ChangeLog(face=self.face, flag=self).save()
+        return ret
 
 
     def __str__(self):
@@ -458,43 +456,6 @@ class Advert(models.Model):
         count = objs.count()
         return objs[ random.randint(0, count-1) ]
       
-    
-
-#
-#class Advert(models.Model):
-#    STATUSES = (
-#            ("a", "active"),
-#            ("s", "suspended"),
-#            ("u", "unreviewed"),
-#            )
-#
-#    urlpath = models.URLField(verify_exists=False, blank=False)
-#    urlname = models.CharField(max_length=100)
-#    line1 = models.CharField(max_length=100)
-#    line2 = models.CharField(max_length=100)
-#    views = models.IntegerField(default=0)
-#    clicks = models.IntegerField(default=0)
-#    closes = models.IntegerField(default=0)
-#    status = models.CharField(max_length=1, default="a", choises=Advert.STATUSES) 
-#
-#    @staticmethod
-#    def random():
-#        objs = Advert.objects.all()
-#        count = objs.count()
-#        random_index = random.randint(0, count-1)
-#        random_object =  objs[random_index]
-#        random_object.view()
-#
-#
-#    def view():
-#        self.views = modles.F('views') + 1
-#
-#    def click():
-#        self.clicks = models.F('clicks') + 1
-#
-#    def close():
-#        self.closes = models.F('closes') + 1
-
 class Salute(models.Model):
     """
     Rainbow Salute images
@@ -504,75 +465,23 @@ class Salute(models.Model):
     country = models.CharField(max_length=32)
     language_code = models.CharField(max_length=8)
 
-class SourceLog(models.Model):
-    """
-    Keep track of Face source changes.
-    """
-    datetime = models.DateTimeField("datetime when added")
+class ChangeLog(models.Model):
+    datetime = models.DateTimeField("datetime when added", auto_now=True)
     face = models.ForeignKey(Face)
     prev = models.OneToOneField("self", null=True, related_name="next")
     source = models.URLField(verify_exists=False, blank=True, default="")
+    flag = models.ForeignKey(Flag, null=True)
+
     @staticmethod
-    def new(face):
-        if not face.source:
+    def new_edit(face):
+        if not face.tags and not face.source:
             return
-        prev = face.sourcelog_set.order_by("-datetime")
+
+        prev = face.changelog_set.all().order_by("-datetime")
         if not prev:
             prev = None
         else:
             prev = prev[0]
-            if face.source == prev.source:
-                return
-
-        sourcelog = SourceLog(datetime=datetime.utcnow(), face=face, prev=prev, source = face.source)
-        sourcelog.save()
-
-    def age(self):
-        return str(datetime.utcnow() - self.datetime).rpartition(":")[0]
-
-    def public_undo(self):
-	# Public can edit only records that are at most day old
-	if self.datetime + timedelta(days=7) < datetime.utcnow():
-	    return False
-	
-	#Destroy all newer taglogs
-	try:
-	    self.next.public_undo()
-	except:
-	    pass
-	
-        if self.prev:
-            self.face.source = self.prev.source
-        else:
-            self.face.source = ""
-	self.delete()
-	return True
-
-    def __str__(self):
-        if self.prev:
-            return str(self.prev.source) + " -> " + str(self.source)
-        else:
-            return "None -> " + str(self.source)
-
-class TagLog(models.Model):
-    """
-    This should propable be part of django-tagging created in a generic way.
-    Anyway, this is for keeping a track of tag changes to Faces. Useful as 
-    there is always some tag vandalism if anyone can edit them.
-    """
-    datetime = models.DateTimeField("datetime when added")
-    face = models.ForeignKey(Face)
-    prev = models.OneToOneField("self", null=True, related_name="next")
-
-    @staticmethod
-    def new(face):
-        if not face.tags:
-            return
-	prev = face.taglog_set.all().order_by("-datetime")
-	if not prev:
-	    prev = None
-	else:
-	    prev = prev[0]
             
             if len(prev.tags) == len(face.tags):
                 same_tags = []
@@ -581,88 +490,92 @@ class TagLog(models.Model):
                         same_tags.append(True)
                     else:
                         same_tags.append(False)
-                if all(same_tags):
+                if all(same_tags) and prev.source == face.source:
                     #print "return"
                     return
 
-	taglog = TagLog(datetime=datetime.utcnow(), face = face, prev=prev)
-	taglog.save()
-	tags = ""
-	for tag in face.tags:
-	    tags += str(tag) + ","
-	taglog.tags = tags
-	return taglog
+        changelog = ChangeLog(face = face, prev=prev, source=face.source)
+        changelog.save()
+        tags = ""
+        for tag in face.tags:
+            tags += str(tag) + ","
+        changelog.tags = tags
+        return changelog
 
     def age(self):
-	return str(datetime.utcnow() - self.datetime).rpartition(":")[0]
-
-    def public_undo(self):
-        """
-        Only new edits can be reverted. I thought of letting anyone revert tag
-        edits but currently revertpage is hidden.
-        """
-	# Do nothing if this is the oldest taglog
-	if not self.prev:
-	    return False
-	
-	# Public can edit only records that are at most day old
-	if self.datetime + timedelta(days=7) < datetime.utcnow():
-	    return False
-	
-	#Destroy all newer taglogs
-	try:
-	    self.next.public_undo()
-	except:
-	    pass
-	
-	tags = ""
-	for tag in self.prev.tags:
-	    tags += tag.name + ","
-	self.face.tags = tags
-	self.delete()
-	return True
-
+        return str(datetime.utcnow() - self.datetime).rpartition(":")[0]
 
     def same(self):
         """
         What tags are shared with the previous taglog?
         """
-	out = []
+        out = []
 
-	if self.prev:
-	    for tag in self.tags:
-		if tag in self.prev.tags:
-		    out.append(tag)
-	return out
+        if self.prev:
+            for tag in self.tags:
+                if tag in self.prev.tags:
+                    out.append(tag)
+        return out
 
     def removed(self):
         """
         What tags were removed from previous taglog?
         """
-	out = []
+        out = []
 
-	if self.prev:
-	    for tag in self.prev.tags:
-		if tag not in self.tags:
-		    out.append(tag)
-	return out
+        if self.prev:
+            for tag in self.prev.tags:
+                if tag not in self.tags:
+                    out.append(tag)
+        return out
     
     def added(self):
         """
         What tags were added from previous taglog?
         """
-	out = []
+        out = []
 
-	if not self.prev:
-	    out.extend(self.tags)
-	else:
-	    for tag in self.tags:
-		if tag not in self.prev.tags:
-		    out.append(tag)
-	return out
+        if not self.prev:
+            out.extend(self.tags)
+        else:
+            for tag in self.tags:
+                if tag not in self.prev.tags:
+                    out.append(tag)
+        return out
+
+
+    def undo(self):
+        try: self.next.public_undo()
+        except: pass
+
+        if self.source:
+            if self.prev:
+                self.face.source = self.prev.source
+            else:
+                self.face.source = ""
+
+        if not self.prev:
+            return
+        else:
+            tags = ""
+        for tag in self.prev.tags:
+            tags += tag.name + ","
+        self.face.tags = tags
+        self.delete()
+        return True
+
 
     def __str__(self):
-        s = ""
+        if self.flag:
+            return "Flagged with: " + self.flag.reason
+        if self.prev:
+            if self.prev.source != self.source:
+                s = str(self.prev.source) + " -> " + str(self.source)
+            else:
+                s = "same source"
+        else:
+            s = "None -> " + str(self.source)
+        s += " - "
         for tag in self.added():
             s += "+%s, " % str(tag)
         for tag in self.removed():
@@ -670,8 +583,7 @@ class TagLog(models.Model):
         return s[:-2]
 
 
-
-tagging.register(TagLog)
+tagging.register(ChangeLog)
 
 
 class Feedback(models.Model):
