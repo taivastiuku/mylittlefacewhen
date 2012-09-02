@@ -21,6 +21,7 @@ window.SingleView = Backbone.View.extend
   render: ->
     if @model.isNew()
       @model.fetch()
+      $(window).scrollTop(0)
     else
       face = @model.toJSON()
       image = @model.getImage()
@@ -51,8 +52,6 @@ window.SingleView = Backbone.View.extend
       
       @$el.html Mustache.render(@template, to_template)
       $(".single").css "max-height", screen.height
-
-      $(window).scrollTop(0)
 
     return @
 
@@ -140,7 +139,7 @@ window.SingleView = Backbone.View.extend
       submit_tags.push {"name": tag}
 
     saver = =>
-      @model.save {tags: submit_tags,source: event.currentTarget[1].value},
+      @model.save {tags: submit_tags,source: event.currentTarget[1].value}
         success: =>
           @updateTags submit_tags
           $("#source").html(event.currentTarget[1].value)

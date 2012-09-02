@@ -28,6 +28,7 @@ window.SingleView = Backbone.View.extend({
     var face, image, resizes, thumb, to_template;
     if (this.model.isNew()) {
       this.model.fetch();
+      $(window).scrollTop(0);
     } else {
       face = this.model.toJSON();
       image = this.model.getImage();
@@ -78,7 +79,6 @@ window.SingleView = Backbone.View.extend({
       };
       this.$el.html(Mustache.render(this.template, to_template));
       $(".single").css("max-height", screen.height);
-      $(window).scrollTop(0);
     }
     return this;
   },
