@@ -59,14 +59,16 @@ window.RandomsView = Backbone.View.extend({
             }).render().el);
           });
           $("#loader").hide();
-          _this.loading = false;
-          if (data.length > 0) {
-            if (atBottom(500)) {
-              return _this.loadMore();
+          return setTimeout(function() {
+            _this.loading = false;
+            if (data.length > 0) {
+              if (atBottom(500)) {
+                return _this.loadMore();
+              }
+            } else {
+              return $("#loadMore").hide();
             }
-          } else {
-            return $("#loadMore").hide();
-          }
+          }, 1000);
         },
         error: function() {
           $("#loader").hide();

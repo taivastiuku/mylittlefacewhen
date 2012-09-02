@@ -45,11 +45,13 @@ window.RandomsView = Backbone.View.extend
             $("#randoms").append new RandomsImage(model:model).render().el
 
           $("#loader").hide()
-          @loading = false
-          if data.length > 0
-            @loadMore() if atBottom(500)
-          else
-            $("#loadMore").hide()
+          setTimeout( =>
+            @loading = false
+            if data.length > 0
+              @loadMore() if atBottom(500)
+            else
+              $("#loadMore").hide()
+          , 1000)
         error: ->
           $("#loader").hide()
           @loading = false
