@@ -74,6 +74,7 @@ window.SearchView = Backbone.View.extend({
     $("meta[name=description]").attr("content", "Search reslut for pony reaction tag '" + tags + "'");
     $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
     $("#cd-layout").remove();
-    return $("link[rel=image_src]").remove();
+    $("link[rel=image_src]").remove();
+    return $("link[rel=canonical]").remove();
   }
 });

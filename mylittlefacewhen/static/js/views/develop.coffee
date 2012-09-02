@@ -21,6 +21,7 @@ window.APIDocView = Backbone.View.extend
     $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
     $("#cd-layout").remove()
     $("link[rel=image_src]").remove()
+    $("link[rel=canonical]").remove()
 
 
 window.DevelopView = Backbone.View.extend
@@ -49,6 +50,7 @@ window.DevelopView = Backbone.View.extend
     $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
     $("#cd-layout").remove()
     $("link[rel=image_src]").remove()
+    $("link[rel=canonical]").remove()
  
   random: (event) ->
     event.preventDefault()
@@ -74,4 +76,5 @@ window.ChangesView = Backbone.View.extend
     $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
     $("#cd-layout").remove()
     $("link[rel=image_src]").remove()
+    $("link[rel=canonical]").remove()
   

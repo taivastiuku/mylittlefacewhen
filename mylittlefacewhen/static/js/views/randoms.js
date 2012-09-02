@@ -33,7 +33,8 @@ window.RandomsView = Backbone.View.extend({
     $("meta[name=description]").attr("content", "Endless list of random pony-related reaction images. Goes on-and-on-and-on-and...");
     $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
     $("#cd-layout").remove();
-    return $("link[rel=image_src]").remove();
+    $("link[rel=image_src]").remove();
+    return $("link[rel=canonical]").remove();
   },
   loadMore: function() {
     var collection,

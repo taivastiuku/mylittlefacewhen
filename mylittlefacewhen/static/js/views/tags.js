@@ -72,7 +72,8 @@ window.TagsView = Backbone.View.extend({
     $("meta[name=description]").attr("content", "All tags known by the service and some of the most frequently needed ones with random pictures.");
     $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
     $("#cd-layout").remove();
-    return $("link[rel=image_src]").remove();
+    $("link[rel=image_src]").remove();
+    return $("link[rel=canonical]").remove();
   }
 });
 

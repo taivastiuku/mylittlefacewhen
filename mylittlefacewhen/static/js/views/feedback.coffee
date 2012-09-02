@@ -20,6 +20,7 @@ window.FeedbackView = Backbone.View.extend
     $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
     $("#cd-layout").remove()
     $("link[rel=image_src]").remove()
+    $("link[rel=canonical]").remove()
 
   submit: (event) ->
     # submit feedback through backbone model

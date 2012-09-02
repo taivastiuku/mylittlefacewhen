@@ -2,6 +2,7 @@ window.SingleView = Backbone.View.extend
   el: "#content"
   initialize: ->
     @template = tpl.get('single')
+    @model.on "change", => @render()
 
   events:
     "click .tag": "navigateAnchor"
@@ -15,20 +16,12 @@ window.SingleView = Backbone.View.extend
     "submit form": "saveInfo"
     "click #flag": "showWindow"
 
-
-  fetcher: (callback) ->
-    if @model.get("not_fetched")
-      @model.fetch
-        success: =>
-          @model.set("not_fetched", false)
-          callback()
-    else
-      callback()
-
-    return undefined
+  beforeClose: -> @model.off("change")
 
   render: ->
-    @fetcher =>
+    if @model.isNew()
+      @model.fetch()
+    else
       face = @model.toJSON()
       image = @model.getImage()
       thumb = @model.getThumb()
@@ -45,19 +38,11 @@ window.SingleView = Backbone.View.extend
       resizes.push({size:"small", image:face.resizes.small}) if face.resizes.small
 
       face.resizes = resizes
-      
-      tags = ""
-      artist = false
-      for tag in face.tags
-        if tag.name.indexOf("artist:") == 0
-          console.log tag.name
-          artist = $.trim tag.name.split(":",2)[1]
-          console.log artist
-        tags += tag.name + ", "
-      @updateMeta(face, tags)
+
+      @updateMeta(face)
 
       to_template =
-        artist: artist
+        artist: face.artist
         face: face
         image: image
         static_prefix: static_prefix
@@ -69,7 +54,6 @@ window.SingleView = Backbone.View.extend
 
       $(window).scrollTop(0)
 
-
     return @
 
   updateTags: (tags) ->
@@ -79,12 +63,24 @@ window.SingleView = Backbone.View.extend
       taglist.append(new TagView(model: new Tag(name:tag.name)).render().el) unless tag.name == ""
 
 
-  updateMeta: (face, tags) ->
-    $("title").html "Image #{face.id} - MyLittleFaceWhen"
-    $("meta[name=description]").attr "content", "Reaction containing: #{tags}"
+  updateMeta: (face) ->
+    $("title").html face.title + " - MyLittleFaceWhen"
+    $("meta[name=description]").attr "content", face.description
     $("#og-image").attr "content", face.image
-    $("head").append("<meta id='#cd-layout' poperty='cd:layout' content='banner'>") if $("#cd-layout") == []
-    $("head").append("<link rel='image_src' href='#{face.image}'>") if $("link[rel=image_src]") == []
+    if $("#cd-layout") == []
+      $("head").append("<meta id='#cd-layout' poperty='cd:layout' content='banner'>")
+    
+    image_src = $("link[rel=image_src]")
+    if image_src == []
+      $("head").append("<link rel='image_src' href='#{face.image}'>")
+    else
+      image_src.attr("href", face.image)
+    
+    canonical = $("link[rel=canonical]")
+    if canonical == []
+      $("head").append("<link rel='canonical' href='http://mylittlefacewhen.com/f/#{face.id}/'>")
+    else
+      canonical.attr "href", "http://mylittlefacewhen.com/f/#{face.id}/"
 
   activate: (event) ->
     $(event.currentTarget).addClass("activated")

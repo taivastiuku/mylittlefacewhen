@@ -19,8 +19,13 @@
 <meta id="og-image" property="og:image" content="{{ default_image }}">
 <meta property="og:site_name" content="MyLittleFaceWhen.com">
 {{# alt_image }}
-<meta image_src="">
+<link rel="image_src" href="{{default_image}}">
 {{/ alt_image }}
+
+{{# canonical }}
+<link rel="canonical" href="{{ canonical }}">
+{{/ canonical }}
+
 <!--[if lte IE 9]><style type="text/css">a.tag {color: black!important; }</style><![endif]-->
 <!--[if lte IE 8]><link rel="stylesheet" href={{ static_prefix }}css/oldie.css type="text/css"><style>#top_front {background:transparent;filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#706152A3,endColorstr=#706152A3);zoom:1;}</style><![endif]-->
 

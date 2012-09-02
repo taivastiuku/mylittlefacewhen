@@ -75,6 +75,10 @@ class FaceResource(ModelResource):
 
 
     def dehydrate(self, bundle):
+        artist, title, description = bundle.obj.getMeta()
+        bundle.data["artist"] = artist
+        bundle.data["title"] = title
+        bundle.data["description"] = description
 
         bundle.data["thumbnails"] = {}
         for itm in ("png", "jpg", "webp", "gif"):

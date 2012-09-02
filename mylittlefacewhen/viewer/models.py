@@ -1,26 +1,25 @@
-from django.db import models
-from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.mail import send_mail
-import tagging
-
-from resizor.restful import process_image as resizor
-
 import os
 import random
 import re
+#import base64
 from cStringIO import StringIO
 from datetime import datetime, timedelta
-import requests
-#import base64
+
 try:    import simplejson as json
 except: import json
+try:    import Image
+except: from PIL import Image
 
+import requests
+
+from django.db import models
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.mail import send_mail
+
+import tagging
+from resizor.restful import process_image as resizor
 from viewer import forms
 
-try:
-  import Image
-except:
-  from PIL import Image
 
 
 #IMAGESERVICE = "https://mylittlefacewhen.com/api/resizor/"
@@ -31,12 +30,7 @@ PONYCHAN = "http://pinkie.ponychan.net/chan/files/src/"
 SIZES = ((0,100), (320,320), (640,640), (1000,1000), (1920,1920))
 SIZENAMES = ("thumb", "small", "medium", "large", "huge")
 
-try:
-    import Image
-except:
-    from PIL import Image
-
-
+PONIES = ("celestia", "molestia", "luna", "pinkie pie", "twilight sparkle", "applejack", "rarity", "fluttershy", "rainbow dash", "lyra", "bon bon", "bon bon", "rose", "sweetie belle", "spike", "scootaloo", "applebloom", "cheerilee", "big macintosh", "berry punch", "discord", "nightmare moon", "chrysalis", "cadance", "shining armor", "colgate", "silver spoon", "diamond tiara")
 
 def _detectSource(filename):
     face = filename.rpartition("/")[2]
@@ -48,22 +42,22 @@ def _detectSource(filename):
         tags = ""
 
     # ponibooru
-    if re.match("[0-9]+[ +_]-[ +_]", part[0]): 
-        pid = part[0].replace("+", " ").replace("_", " ").partition(" ")[0]
-        r = requests.get(PONIBOORU + pid)
-        if r.status_code == 200:
-            source = r.content.partition("Source:")[2].partition("'")[2].partition("'")[0]
-            if not source:
-                source = PONIBOORU + pid
-            boorutags = r.content.partition("cols=50 rows=2>")[2].partition("</textarea>")[0].split()
+#    if re.match("[0-9]+[ +_]-[ +_]", part[0]): 
+#        pid = part[0].replace("+", " ").replace("_", " ").partition(" ")[0]
+#        r = requests.get(PONIBOORU + pid)
+#        if r.status_code == 200:
+#            source = r.content.partition("Source:")[2].partition("'")[2].partition("'")[0]
+#            if not source:
+#                source = PONIBOORU + pid
+#            boorutags = r.content.partition("cols=50 rows=2>")[2].partition("</textarea>")[0].split()
 
-            for tag in boorutags:
-                tags += tag.replace("_", " ") + ", "
-
-            return (source, tags,)
+#            for tag in boorutags:
+#                tags += tag.replace("_", " ") + ", "
+#
+#            return (source, tags,)
 
     # imgur
-    elif len(part[0]) == 5:
+    if len(part[0]) == 5:
         if requests.head("http://imgur.com/%s" % part[0]).status_code == 200:
             return ("http://imgur.com/%s" % part[0], tags)
 
@@ -73,7 +67,7 @@ def _detectSource(filename):
         return (ep, tags + ep + ", ",)
 
     #DeviantART
-    elif re.search("_by_[a-zA-Z0-9]+-[a-z0-9]{7}", part[0]):
+    elif re.search("_by_[a-zA-Z0-9_]+-[a-z0-9]{7}", part[0]):
         artist = part[0].rpartition("_by_")[2].rpartition("-")[0]
         imghash = part[0].rpartition("-")[2]
         source = "http://%s.deviantart.com/#/%s" % (artist, imghash)
@@ -82,21 +76,6 @@ def _detectSource(filename):
     #tumblr
     elif re.match("tumblr_", part[0]):
         return ("http://www.tumblr.com/", tags,)
-
-    #ponychan/ponilauta
-    elif re.match("^[0-9]{12}$", part[0]):
-        if requests.head(PONYCHAN + face).status_code == 200:
-            return ("http://www.ponychan.net/", tags,)
-        else:
-            for board in ("k", "poni", "art", "int", "meta"):
-                if requests.head("http://ponilauta.fi/%s/src/%s" % (board, face)).status_code == 200:
-                    return ("http://ponilauta.fi/", tags,)
-
-    # magicznastajnia.pl
-    elif re.match("^[0-9]{10}$", part[0]):
-        for board in ("moon", "art", "fim", "ms"):
-            if requests.head("http://magicznastajnia.pl/%s/img/%s" % (board, face)).status_code == 200:
-                return ("http://magicznastajnia.pl/", tags,)
 
     return ("",tags,)
 
@@ -416,6 +395,42 @@ class Face(models.Model):
             self.width = i.size[0]
             self.height = i.size[1]
             self.save()
+
+
+    def getMeta(self):
+        """
+        Artist, title and description
+        """
+        tags = ""
+        ponies = ""
+        longest = ""
+        artist = None
+
+        for tag in self.tags:
+            if tag.name.startswith("artist:"):
+                artist = tag.name.partition(":")[2].strip()
+            
+            elif tag.name in PONIES:
+                ponies += tag.name + ", "
+            elif len(tag.name) > len(longest):
+                if longest:
+                    tags += longest + ", "
+                longest = tag.name
+            else:
+                tags += tag.name + ", "
+            
+        ponies = ponies[:-2].title()
+
+        if ponies and longest:
+            title = ponies + ": " + longest
+            description = ponies + " reacting with '" + longest + "' and " + tags[:-2]
+            if artist:
+                description += " by " + artist
+        else:
+            title = "Pony Reaction Image " + str(self.id)
+            description = ponies + ", " + tags + longest
+
+        return (artist,title,description,)
 
 
     def __str__(self):

@@ -20,7 +20,8 @@ window.FeedbackView = Backbone.View.extend({
     $("meta[name=description]").attr("content", "Any suggestions or other feedback is more than welcome.");
     $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
     $("#cd-layout").remove();
-    return $("link[rel=image_src]").remove();
+    $("link[rel=image_src]").remove();
+    return $("link[rel=canonical]").remove();
   },
   submit: function(event) {
     var fb, response;

@@ -53,6 +53,7 @@ window.MainView = Backbone.View.extend
     $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
     $("#cd-layout").remove()
     $("link[rel=image_src]").remove()
+    $("link[rel=canonical]").remove()
 
   
   loadMore: ->
@@ -144,6 +145,7 @@ window.UnreviewedView = Backbone.View.extend
     $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
     $("#cd-layout").remove()
     $("link[rel=image_src]").remove()
+    $("link[rel=canonical]").remove()
 
 
 window.Thumbnail = Backbone.View.extend

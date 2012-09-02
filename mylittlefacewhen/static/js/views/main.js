@@ -54,7 +54,8 @@ window.MainView = Backbone.View.extend({
     $("meta[name=description]").attr("content", "Lots of well-tagged pony reaction images.");
     $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
     $("#cd-layout").remove();
-    return $("link[rel=image_src]").remove();
+    $("link[rel=image_src]").remove();
+    return $("link[rel=canonical]").remove();
   },
   loadMore: function() {
     var collection,
@@ -166,7 +167,8 @@ window.UnreviewedView = Backbone.View.extend({
     $("meta[name=description]").attr("content", "Lots of well-tagged pony reaction images.");
     $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
     $("#cd-layout").remove();
-    return $("link[rel=image_src]").remove();
+    $("link[rel=image_src]").remove();
+    return $("link[rel=canonical]").remove();
   }
 });
 

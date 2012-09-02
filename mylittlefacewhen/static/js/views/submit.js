@@ -25,7 +25,8 @@ window.SubmitView = Backbone.View.extend({
     $("meta[name=description]").attr("content", "Upload more images to the service");
     $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
     $("#cd-layout").remove();
-    return $("link[rel=image_src]").remove();
+    $("link[rel=image_src]").remove();
+    return $("link[rel=canonical]").remove();
   },
   handleChoose: function(event) {
     return this.handleFiles(event.target.files);

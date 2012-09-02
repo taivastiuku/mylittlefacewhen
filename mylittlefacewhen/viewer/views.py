@@ -23,7 +23,6 @@ DEFAULT_META = {
         "default_image": STATIC_PREFIX + "cheerilee-square-300.png",
     }
         
-PONIES = ("celestia", "molestia", "luna", "pinkie pie", "twilight sparkle", "applejack", "rarity", "fluttershy", "rainbow dash", "lyra", "bon bon", "bon bon", "rose", "sweetie belle", "spike", "scootaloo", "applebloom", "cheerilee", "big macintosh", "berry punch", "discord", "nightmare moon", "chrysalis", "cadance", "shining armor")
 
 
 def main(request, listing="normal"):
@@ -121,14 +120,7 @@ def single(request, face_id):
     if f.get("source"):
         f["source"] = [f["source"]]
 
-    f["tags"] = []
-    artist = False
-    for tag in face.tags:
-        f["tags"].append({"name":tag.name})
-        if tag.name.startswith("artist:"):
-            artist = tag.name.partition(":")[2].strip()
-
-
+    f["tags"] = [{"name":tag.name} for tag in face.tags]
 
     f["image"] = face.image.url
 
@@ -136,7 +128,9 @@ def single(request, face_id):
     for itm in ("huge","large","medium","small"):
         if getattr(face, itm):
             f["resizes"].append({"image":getattr(face, itm).url, "size": itm})
-    
+   
+    artist, title, description = face.getMeta()
+
     to_content = {
             "artist": artist,
             "face": f,
@@ -144,29 +138,8 @@ def single(request, face_id):
             "image":image,
             "static_prefix": STATIC_PREFIX,
             "image_service": imageurl,
+            "alt": description,
             }
-
-    tags = ""
-    ponies = ""
-    longest = ""
-    for tag in f["tags"]:
-        if tag["name"] in PONIES:
-            ponies += tag["name"] + ", "
-        elif len(tag["name"]) > len(longest):
-            tags += longest + ", "
-            longest = tag["name"]
-        else:
-            tags += tag["name"] + ", "
-
-    ponies = ponies[:-2].title()
-    
-    if ponies and longest:
-        title = ponies + ": " + longest
-        description = ponies + " reacting with '" + longest + "' and " + tags[:-2]
-        to_content["alt"] = description
-    else:
-        title = "Pony Reaction Image " + str(face.id)
-        description = "Poorly tagged image"
 
     to_template = {
             "content": "single.mustache",
@@ -177,6 +150,8 @@ def single(request, face_id):
                 "static_prefix": STATIC_PREFIX,
                 "default_image": imageurl + f["image"],
                 "path": request.path,
+                "alt_image": True,
+                "canonical": "http://mylittlefacewhen.com/f/" + str(f["id"]) + "/",
                 },
             }
 
