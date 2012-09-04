@@ -88,8 +88,7 @@ window.RandomsImage = Backbone.View.extend({
   render: function() {
     var image, model, to_template;
     model = this.model.toJSON();
-    image = this.getImageBySize(model);
-    image = app.getImageService() + image;
+    image = app.getImageService() + this.model.getImage(640);
     to_template = {
       model: model,
       image: image,
@@ -101,29 +100,5 @@ window.RandomsImage = Backbone.View.extend({
       return $(this).removeClass('fixedHeight');
     });
     return this;
-  },
-  getImageBySize: function(data) {
-    var browser_width;
-    browser_width = $(document).width();
-    if (data.width > data.height) {
-      if (browser_width < 450 && data.resizes.small) {
-        return data.resizes.small;
-      } else if (browser_width < 750 && data.resizes.medium) {
-        return data.resizes.medium;
-      } else {
-        return data.image;
-      }
-    } else {
-      if (browser_width < 320 && data.resizes.small) {
-        return data.resizes.small;
-      }
-      if (browser_width < 640 && data.resizes.medium) {
-        return data.resizes.medium;
-      } else if (data.resizes.large) {
-        return data.resizes.large;
-      } else {
-        return data.image;
-      }
-    }
   }
 });

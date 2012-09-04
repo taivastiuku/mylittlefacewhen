@@ -61,10 +61,7 @@ AppRouter = Backbone.Router.extend({
     return _gaq.push(['_trackPageview', "/" + url]);
   },
   getImageService: function() {
-    if (this.fastest.service) {
-      return this.fastest.service;
-    }
-    return this.imageServices[0];
+    return this.fastest.service || this.imageServices[0];
   },
   routes: {
     "": "main",
@@ -88,7 +85,7 @@ AppRouter = Backbone.Router.extend({
     return this.before(function() {
       _this.select("#m_new");
       return new MainView({
-        model: _this.faceList
+        collection: _this.faceList
       }).render();
     });
   },
@@ -201,7 +198,7 @@ AppRouter = Backbone.Router.extend({
     return this.before(function() {
       _this.select("#m_tags");
       return _this.pageload(new TagsView({
-        model: _this.tagList
+        collection: _this.tagList
       }));
     });
   },
@@ -211,7 +208,7 @@ AppRouter = Backbone.Router.extend({
       _this.select("none");
       _this.randFaceList = new FaceCollection();
       return new UnreviewedView({
-        model: _this.randFaceList
+        collection: _this.randFaceList
       }).render();
     });
   },

@@ -40,8 +40,6 @@ window.DevelopView = Backbone.View.extend
   render: ->
     @updateMeta()
     $(@el).html @template
-#    for item in $(@el).find(".navigate")
-#      $(item).on "click", @navigateAnchor
     return @
 
   updateMeta: ->

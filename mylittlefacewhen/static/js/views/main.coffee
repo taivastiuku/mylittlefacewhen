@@ -5,31 +5,18 @@ window.MainView = Backbone.View.extend
 
   initialize: ->
     @template = tpl.get('main')
-    #@meta = tpl.get('meta')
-    #@metadata =
-    #  title: "Pony Reaction Pictures"
-    #  description: "Lots of well-tagged pony reaction images, add yours!"
-    #  default_image: "#{static_prefix}cheerilee-square-300.png"
-    #  static_prefix: static_prefix
-
     @offset = 0 if not @offset
     @loading = false
-    $(window).on "resize.main", (event) =>
-      @loadMore() if atBottom(300)
-    $(window).on "scroll.main", (event) =>
-      @loadMore() if atBottom(300)
+    $(window).on "resize.main", (event) => @loadMore() if atBottom(300)
+    $(window).on "scroll.main", (event) => @loadMore() if atBottom(300)
 
   events:
     "click #loadMore": "loadMore"
     "click .thumb a": "navigateAnchor"
 
-#  remove: ->
-#    Backbone.View::remove.call @
-
   render: ->
     @updateMeta()
     @$el.html Mustache.render(@template,{static_prefix: static_prefix, message: []})
-    #$("head").html Mustache.render(@meta, @metadata)
     if @html
       # load html from memory if user has visited the main view
       # during current visit
@@ -63,19 +50,22 @@ window.MainView = Backbone.View.extend
       $("#loader").show()
       collection = new FaceCollection()
       collection.fetch
-        data: $.param({offset:@offset, order_by:"-id", accepted:true})
+        data:
+          offset: @offset
+          order_by:"-id"
+          accepted:true
         success: (data) =>
-          _.each collection.models, (model) ->
+          collection.each (model) ->
             $("#thumbs").append new Thumbnail(model:model).render().el
 
           imgs = $('.lazy')
-          if $.browser.webkit
+          if $.browser.webkit # Only webkit is fast enough for this
             imgs.removeClass('lazy').lazyload effect: "fadeIn"
           else
             imgs.removeClass('lazy').lazyload()
 
           $("#loader").hide()
-          @model.add collection.models
+          @collection.add collection.models
           @offset += 20
           @loading = false
           if data.length > 0
@@ -97,8 +87,6 @@ window.MainView = Backbone.View.extend
     window.MainView::html = $("#thumbs").html()
     window.MainView::offset = @offset
     window.MainView::scroll = $(window).scrollTop()
-  
-
 
 
 window.UnreviewedView = Backbone.View.extend
@@ -121,13 +109,13 @@ window.UnreviewedView = Backbone.View.extend
     $("#loader").show()
     $("#loadMore").hide()
 
-    @model.fetch
-      data: $.param
+    @collection.fetch
+      data:
         accepted: false
         limit: 1000
         order_by: "-id"
       success: (data) =>
-        _.each @model.models, (model) ->
+        @collection.each (model) ->
           $("#thumbs").append new Thumbnail(model:model).render().el
 
         imgs = $('.lazy')
@@ -150,7 +138,6 @@ window.UnreviewedView = Backbone.View.extend
 
 window.Thumbnail = Backbone.View.extend
   # Not sure if some of this functionality should be in the model.
-  
   tagName: "span"
   className: "thumb"
 
@@ -163,14 +150,7 @@ window.Thumbnail = Backbone.View.extend
     
   render: ->
     model = @model.toJSON()
-
-    if model.thumbnails.png
-      model.thumb = model.thumbnails.png
-    else if @webp and model.thumbnails.webp
-      model.thumb = model.thumbnails.webp
-    else
-      model.thumb = model.thumbnails.jpg
-    
+    model.thumb = @model.getThumb(@webp)
     model.thumb = app.getImageService() + model.thumb if model.thumb and model.accepted
 
     if model.thumbnails.gif

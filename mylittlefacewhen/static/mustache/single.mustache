@@ -19,7 +19,7 @@
     <div class="editable" id="info-show">
       <b>Tags: </b><br>
       <span id="tags">
-      {{# face.tags }}<a class="tag" href="/search/?tag={{ name }}">{{ name }}</a>{{/ face.tags}}
+        {{# face.tags }}{{# name }}<a class="tag" href="/search/?tag={{ name }}">{{ name }}</a>{{/ name }}{{/ face.tags}}
       </span><br>
       <b>Source: </b><br>
       {{# artist }}

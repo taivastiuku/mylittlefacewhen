@@ -14,11 +14,11 @@ window.TagsView = Backbone.View.extend({
   render: function() {
     var _this = this;
     this.updateMeta();
-    if (this.model.models.length === 0) {
-      this.model.fetch({
-        data:  $.param({
+    if (this.collection.models.length === 0) {
+      this.collection.fetch({
+        data: {
           limit: 10000
-        }),
+        },
         success: function() {
           return _this.renderIt();
         }
@@ -29,26 +29,28 @@ window.TagsView = Backbone.View.extend({
     return this;
   },
   renderIt: function() {
-    var $tags, data,
+    var $tags, data, face, tag, tagsItem, _i, _len, _ref, _results,
       _this = this;
-    data = this.model.toJSON();
+    data = this.collection.toJSON();
     $(this.el).html(Mustache.render(this.template, {
       models: data
     }));
     $tags = $("#tags");
-    return _.each(this.tags, function(tag) {
-      var face, tagsItem;
-      tagsItem = $(Mustache.render(_this.tagsItem_template, {
+    _ref = this.tags;
+    _results = [];
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      tag = _ref[_i];
+      tagsItem = $(Mustache.render(this.tagsItem_template, {
         tag: tag
       }));
       $tags.append(tagsItem);
       face = new FaceCollection();
-      return face.fetch({
-        data: $.param({
+      _results.push(face.fetch({
+        data: {
           search: JSON.stringify([tag]),
           order_by: "random",
           limit: 1
-        }),
+        },
         success: function(data) {
           var imgs, thumb;
           thumb = new Thumbnail({
@@ -64,8 +66,9 @@ window.TagsView = Backbone.View.extend({
             return imgs.removeClass('lazy').lazyload();
           }
         }
-      });
-    });
+      }));
+    }
+    return _results;
   },
   updateMeta: function() {
     $("title").html("Tagcloud and popular tags - MyLittleFaceWhen");
@@ -87,7 +90,7 @@ window.TagView = Backbone.View.extend({
   },
   render: function() {
     $(this.el).html(Mustache.render(this.template, {
-      name: this.model.get("name")
+      name: this.collection.get("name")
     }));
     return this;
   }

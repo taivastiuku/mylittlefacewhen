@@ -65,14 +65,14 @@ window.MainView = Backbone.View.extend({
       $("#loader").show();
       collection = new FaceCollection();
       return collection.fetch({
-        data: $.param({
+        data: {
           offset: this.offset,
           order_by: "-id",
           accepted: true
-        }),
+        },
         success: function(data) {
           var imgs;
-          _.each(collection.models, function(model) {
+          collection.each(function(model) {
             return $("#thumbs").append(new Thumbnail({
               model: model
             }).render().el);
@@ -86,7 +86,7 @@ window.MainView = Backbone.View.extend({
             imgs.removeClass('lazy').lazyload();
           }
           $("#loader").hide();
-          _this.model.add(collection.models);
+          _this.collection.add(collection.models);
           _this.offset += 20;
           _this.loading = false;
           if (data.length > 0) {
@@ -136,15 +136,15 @@ window.UnreviewedView = Backbone.View.extend({
     this.$el.html(Mustache.render(this.template, to_template));
     $("#loader").show();
     $("#loadMore").hide();
-    this.model.fetch({
-      data: $.param({
+    this.collection.fetch({
+      data: {
         accepted: false,
         limit: 1000,
         order_by: "-id"
-      }),
+      },
       success: function(data) {
         var imgs;
-        _.each(_this.model.models, function(model) {
+        _this.collection.each(function(model) {
           return $("#thumbs").append(new Thumbnail({
             model: model
           }).render().el);
@@ -187,13 +187,7 @@ window.Thumbnail = Backbone.View.extend({
   render: function() {
     var gif, model;
     model = this.model.toJSON();
-    if (model.thumbnails.png) {
-      model.thumb = model.thumbnails.png;
-    } else if (this.webp && model.thumbnails.webp) {
-      model.thumb = model.thumbnails.webp;
-    } else {
-      model.thumb = model.thumbnails.jpg;
-    }
+    model.thumb = this.model.getThumb(this.webp);
     if (model.thumb && model.accepted) {
       model.thumb = app.getImageService() + model.thumb;
     }

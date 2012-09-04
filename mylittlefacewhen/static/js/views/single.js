@@ -5,9 +5,10 @@ window.SingleView = Backbone.View.extend({
   initialize: function() {
     var _this = this;
     this.template = tpl.get('single');
-    return this.model.on("change", function() {
+    this.model.on("change", function() {
       return _this.render();
     });
+    return $(window).scrollTop(0);
   },
   events: {
     "click .tag": "navigateAnchor",
@@ -25,14 +26,13 @@ window.SingleView = Backbone.View.extend({
     return this.model.off("change");
   },
   render: function() {
-    var face, image, resizes, thumb, to_template;
-    if (this.model.isNew()) {
-      this.model.fetch();
-      $(window).scrollTop(0);
-    } else {
+    var current_scroll, face, image, resizes, thumb, to_template;
+    if (!this.model.isNew()) {
+      $("#loader").hide();
+      current_scroll = $(window).scrollTop();
       face = this.model.toJSON();
       image = this.model.getImage();
-      thumb = this.model.getThumb();
+      thumb = this.model.getThumb(false, true);
       if (face.source) {
         face.source = [
           {
@@ -79,22 +79,11 @@ window.SingleView = Backbone.View.extend({
       };
       this.$el.html(Mustache.render(this.template, to_template));
       $(".single").css("max-height", screen.height);
+      setTimeout(function() {
+        return $(window).scrollTop(current_scroll);
+      }, 300);
     }
     return this;
-  },
-  updateTags: function(tags) {
-    var taglist;
-    taglist = $(this.el).find("#tags");
-    taglist.html("");
-    return _.each(tags, function(tag) {
-      if (tag.name !== "") {
-        return taglist.append(new TagView({
-          model: new Tag({
-            name: tag.name
-          })
-        }).render().el);
-      }
-    });
   },
   updateMeta: function(face) {
     var canonical, image_src;
@@ -165,46 +154,36 @@ window.SingleView = Backbone.View.extend({
     });
   },
   saveInfo: function(event) {
-    var i, saver, submit_tags, tags,
+    var save, source, submit_tags, tag, tags, _i, _len,
       _this = this;
     event.preventDefault();
-    tags = event.currentTarget[0].value.split(",");
-    i = 0;
-    while (i < tags.length) {
-      tags[i] = $.trim(tags[i]);
-      i++;
-    }
     $("#loader").show();
     this.$el.find("#info-edit").hide();
+    source = event.currentTarget[1].value;
+    tags = event.currentTarget[0].value.split(",");
     submit_tags = [];
-    _.each(tags, function(tag) {
-      return submit_tags.push({
-        "name": tag
+    for (_i = 0, _len = tags.length; _i < _len; _i++) {
+      tag = tags[_i];
+      submit_tags.push({
+        name: $.trim(tag)
       });
-    });
-    saver = function() {
+    }
+    save = function() {
       return _this.model.save({
         tags: submit_tags,
-        source: event.currentTarget[1].value
+        source: source
       }, {
-        success: function() {
-          var show;
-          _this.updateTags(submit_tags);
-          $("#source").html(event.currentTarget[1].value);
-          show = function() {
-            $("#loader").hide();
-            return $("#info-show").show();
-          };
-          return window.setTimeout(show, 1000);
-        }
+        wait: true
       });
     };
     if (this.model.isNew()) {
-      return this.fetcher(function() {
-        return saver();
+      return this.model.fetch({
+        success: function() {
+          return save();
+        }
       });
     } else {
-      return saver();
+      return save();
     }
   },
   showWindow: function(event) {

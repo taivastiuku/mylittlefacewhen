@@ -5,10 +5,8 @@ window.RandomsView = Backbone.View.extend
   initialize: ->
     @loading = false
     @template = tpl.get("randoms")
-    $(window).on "resize.randoms", (event) =>
-      @loadMore() if atBottom(500)
-    $(window).on "scroll.randoms", (event) =>
-      @loadMore() if atBottom(500)
+    $(window).on "resize.randoms", (event) => @loadMore() if atBottom(500)
+    $(window).on "scroll.randoms", (event) => @loadMore() if atBottom(500)
 
   beforeClose: ->
     $(window).off ".randoms"
@@ -45,6 +43,7 @@ window.RandomsView = Backbone.View.extend
             $("#randoms").append new RandomsImage(model:model).render().el
 
           $("#loader").hide()
+          #Timeout prevents client from making multiple queries
           setTimeout( =>
             @loading = false
             if data.length > 0
@@ -55,8 +54,6 @@ window.RandomsView = Backbone.View.extend
         error: ->
           $("#loader").hide()
           @loading = false
-
-
 
 
 window.RandomsImage = Backbone.View.extend
@@ -70,9 +67,7 @@ window.RandomsImage = Backbone.View.extend
 
   render: ->
     model = @model.toJSON()
-    image = @getImageBySize(model)
-
-    image = app.getImageService() + image
+    image = app.getImageService() + @model.getImage(640)
     
     to_template =
       model: model
@@ -85,28 +80,3 @@ window.RandomsImage = Backbone.View.extend
       $(this).removeClass('fixedHeight')
 
     return @
-
-
-  getImageBySize: (data) ->
-    #TODO move to model ?
-    browser_width = $(document).width()
-    
-    if data.width > data.height
-      if browser_width < 450 and data.resizes.small
-        return data.resizes.small
-      else if browser_width < 750 and data.resizes.medium
-        return data.resizes.medium
-        #    else if data.resizes.large
-        #  return data.resizes.large
-      else
-        return data.image
-
-    else
-      if browser_width < 320 and data.resizes.small
-        return data.resizes.small
-      if browser_width < 640 and data.resizes.medium
-        return data.resizes.medium
-      else if data.resizes.large
-        return data.resizes.large
-      else
-        return data.image

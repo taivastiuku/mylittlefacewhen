@@ -1,9 +1,10 @@
 window.Face = Backbone.Model.extend
   urlRoot: "/api/v2/face/"
 
-  getImage: ->
+  getImage: (forced_width) ->
     image = undefined
     browser_width = $(window).width()
+    browser_width = Math.min(browser_width, forced_width) if forced_width
 
     if browser_width > @get("width")
       image = @get("image")
@@ -16,16 +17,18 @@ window.Face = Backbone.Model.extend
     else if @get("resizes").small
       image = @get("resizes").small
     else
-      image = face.image
+      image = @get("image")
 
     return image
 
 
-  getThumb: ->
-    if @get("thumbnails").gif
+  getThumb: (webp, gif) ->
+    if @get("thumbnails").gif and gif
       thumb = @get("thumbnails").gif
     else if @get("thumbnails").png
       thumb = @get("thumbnails").png
+    else if @get("thumbnails").webp and webp
+      thumb = @get("thumbnails").webp
     else if @get("thumbnails").jpg
       thumb = @get("thumbnails").jpg
     return thumb

@@ -3,6 +3,8 @@ window.SingleView = Backbone.View.extend
   initialize: ->
     @template = tpl.get('single')
     @model.on "change", => @render()
+#    @model.fetch() if @model.isNew() and not @options.firstload
+    $(window).scrollTop(0)
 
   events:
     "click .tag": "navigateAnchor"
@@ -19,13 +21,12 @@ window.SingleView = Backbone.View.extend
   beforeClose: -> @model.off("change")
 
   render: ->
-    if @model.isNew()
-      @model.fetch()
-      $(window).scrollTop(0)
-    else
+    unless @model.isNew() #Still loading data from initialize
+      $("#loader").hide()
+      current_scroll = $(window).scrollTop() #hax for tagedits
       face = @model.toJSON()
       image = @model.getImage()
-      thumb = @model.getThumb()
+      thumb = @model.getThumb(false, true)
 
       if face.source
         face.source = [{source:face.source}]
@@ -52,15 +53,12 @@ window.SingleView = Backbone.View.extend
       
       @$el.html Mustache.render(@template, to_template)
       $(".single").css "max-height", screen.height
+      setTimeout( -> #damn chrome :/
+        $(window).scrollTop(current_scroll)
+      , 300)
+
 
     return @
-
-  updateTags: (tags) ->
-    taglist = $(@el).find("#tags")
-    taglist.html("")
-    _.each tags, (tag) ->
-      taglist.append(new TagView(model: new Tag(name:tag.name)).render().el) unless tag.name == ""
-
 
   updateMeta: (face) ->
     $("title").html face.title + " - MyLittleFaceWhen"
@@ -125,37 +123,29 @@ window.SingleView = Backbone.View.extend
 
   saveInfo: (event) ->
     event.preventDefault()
-    tags = event.currentTarget[0].value.split(",")
-    i = 0
-    while i < tags.length
-      tags[i] = $.trim(tags[i])
-      i++
     $("#loader").show()
-
     @$el.find("#info-edit").hide()
     
+    source = event.currentTarget[1].value
+    tags = event.currentTarget[0].value.split(",")
     submit_tags = []
-    _.each tags, (tag) ->
-      submit_tags.push {"name": tag}
+    for tag in tags
+      submit_tags.push name: $.trim(tag)
 
-    saver = =>
-      @model.save {tags: submit_tags,source: event.currentTarget[1].value}
-        success: =>
-          @updateTags submit_tags
-          $("#source").html(event.currentTarget[1].value)
 
-          show = ->
-            $("#loader").hide()
-            $("#info-show").show()
-
-          window.setTimeout show, 1000
+    save = =>
+      @model.save
+        tags: submit_tags
+        source: source
+      , wait: true
 
     if @model.isNew()
-      @fetcher =>
-        saver()
+      @model.fetch
+        success: =>
+          save()
     else
-      saver()
-
+      save()
+      
   showWindow: (event) ->
     id = "#dialog"
     winH = $(window).height()

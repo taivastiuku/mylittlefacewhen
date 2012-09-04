@@ -5,12 +5,10 @@ window.SearchView = Backbone.View.extend
     @template = tpl.get("search")
     @model = new FaceCollection()
 
-
-
   render: ->
-    @updateMeta
-    tags = getUrlParam("tags")
-    tags = getUrlParam("tag") if not tags
+    tags = getUrlParam("tags") or getUrlParam("tag")
+    @updateMeta tags
+
     if not tags
       to_template =
         query: "Search by typing some tags into the searchbox __^"
@@ -21,6 +19,7 @@ window.SearchView = Backbone.View.extend
     to_template =
       query: tags
       static_prefix: static_prefix
+
     @$el.html Mustache.render(@template, to_template)
     loader = @$el.children("#loader")
     loader.show()
@@ -53,13 +52,12 @@ window.SearchView = Backbone.View.extend
         @$el.children("h2").html "There was an error"
         loader.hide()
 
-
     return @
 
 
-  updateMeta: ->
+  updateMeta: (tags) ->
     $("title").html "#{tags} - MyLittleFaceWhen"
-    $("meta[name=description]").attr "content", "Search reslut for pony reaction tag '#{tags}'"
+    $("meta[name=description]").attr "content", "Search result for pony reaction tag '#{tags}'"
     $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
     $("#cd-layout").remove()
     $("link[rel=image_src]").remove()

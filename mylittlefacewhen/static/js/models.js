@@ -2,10 +2,13 @@
 
 window.Face = Backbone.Model.extend({
   urlRoot: "/api/v2/face/",
-  getImage: function() {
+  getImage: function(forced_width) {
     var browser_width, image;
     image = void 0;
     browser_width = $(window).width();
+    if (forced_width) {
+      browser_width = Math.min(browser_width, forced_width);
+    }
     if (browser_width > this.get("width")) {
       image = this.get("image");
     } else if (browser_width > 1050 && this.get("resizes").huge) {
@@ -17,16 +20,18 @@ window.Face = Backbone.Model.extend({
     } else if (this.get("resizes").small) {
       image = this.get("resizes").small;
     } else {
-      image = face.image;
+      image = this.get("image");
     }
     return image;
   },
-  getThumb: function() {
+  getThumb: function(webp, gif) {
     var thumb;
-    if (this.get("thumbnails").gif) {
+    if (this.get("thumbnails").gif && gif) {
       thumb = this.get("thumbnails").gif;
     } else if (this.get("thumbnails").png) {
       thumb = this.get("thumbnails").png;
+    } else if (this.get("thumbnails").webp && webp) {
+      thumb = this.get("thumbnails").webp;
     } else if (this.get("thumbnails").jpg) {
       thumb = this.get("thumbnails").jpg;
     }

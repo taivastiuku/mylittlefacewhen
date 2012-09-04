@@ -12,7 +12,7 @@ from datetime import datetime
 #IMAGEURL =  "http://173.208.196.219"
 #IMAGEURL = "http://images.mlfw.info"
 
-IMAGEURL = "http://mylittlefacewhen.com"
+IMAGEURL = "http://denver.mylittlefacewhen.com"
 
 STATIC_PREFIX = "/static/"
 

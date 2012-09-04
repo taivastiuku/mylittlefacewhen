@@ -7,7 +7,6 @@ Backbone.View::close = ->
 #  @remove()
   @undelegateEvents()
 
-
 Backbone.View::navigateAnchor = (event) ->
   # Make links work with backbone.js
   event.preventDefault()
@@ -59,7 +58,6 @@ AppRouter = Backbone.Router.extend
     #unless debug
     #  $("head").append "<style type='text/css'>" + collated_stylesheets + "</style>"
   
-   
     # Top bar
     @topView = new TopView().render()
 
@@ -70,8 +68,7 @@ AppRouter = Backbone.Router.extend
 
   getImageService: ->
     # Images may start loading before image service is decided.
-    return @fastest.service if @fastest.service
-    return @imageServices[0]
+    return @fastest.service or @imageServices[0]
 
   routes:
     "": "main"
@@ -94,7 +91,7 @@ AppRouter = Backbone.Router.extend
   main: ->
     @before =>
       @select("#m_new")
-      return new MainView(model:@faceList).render()
+      return new MainView(collection:@faceList).render()
 
   apidoc: (version) ->
     @before =>
@@ -163,13 +160,13 @@ AppRouter = Backbone.Router.extend
   tags: ->
     @before =>
       @select("#m_tags")
-      return @pageload new TagsView(model:@tagList)
+      return @pageload new TagsView(collection:@tagList)
 
   unreviewed: ->
     @before =>
       @select("none")
       @randFaceList = new FaceCollection()
-      return new UnreviewedView(model:@randFaceList).render()
+      return new UnreviewedView(collection:@randFaceList).render()
 
   pageload: (page) ->
     # Don't redraw the page if it's rendered by the server
@@ -203,7 +200,7 @@ tpl.loadTemplates [ "main", "thumbnail", "top", "single", "tag", "randoms", "ran
 
   app = new AppRouter()
 
-  if $.browser.msie and $.browser.version == "9.0" 
+  if $.browser.msie and $.browser.version == "9.0"
     # Internet Explorer lte9 doesn't support pushState history
     Backbone.history.start()
   else

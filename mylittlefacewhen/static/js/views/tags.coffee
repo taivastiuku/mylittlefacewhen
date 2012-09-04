@@ -42,9 +42,9 @@ window.TagsView = Backbone.View.extend
 
   render: ->
     @updateMeta()
-    if @model.models.length == 0
-      @model.fetch
-        data: $.param
+    if @collection.models.length == 0
+      @collection.fetch
+        data:
           limit: 10000
         success: =>
           @renderIt()
@@ -55,19 +55,17 @@ window.TagsView = Backbone.View.extend
   
 
   renderIt: ->
-    data = @model.toJSON()
-    #console.log data
+    data = @collection.toJSON()
     $(@el).html Mustache.render(@template, models: data)
 
-
     $tags = $("#tags")
-    _.each @tags, (tag) =>
+    for tag in @tags
       tagsItem = $(Mustache.render(@tagsItem_template,tag:tag))
       $tags.append tagsItem
       face = new FaceCollection()
       face.fetch
-        data: $.param
-          search: JSON.stringify([tag])
+        data:
+          search: JSON.stringify [tag]
           order_by: "random"
           limit: 1
         success: (data) =>
@@ -88,9 +86,6 @@ window.TagsView = Backbone.View.extend
     $("link[rel=image_src]").remove()
     $("link[rel=canonical]").remove()
 
-
-
-
 window.TagView = Backbone.View.extend
   tagName: "span"
 
@@ -101,6 +96,5 @@ window.TagView = Backbone.View.extend
     @template = tpl.get("tag")
 
   render: ->
-    #    console.log @model
-    $(@el).html Mustache.render(@template, name: @model.get("name"))
+    $(@el).html Mustache.render(@template, name: @collection.get("name"))
     return @
