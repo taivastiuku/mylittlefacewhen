@@ -167,7 +167,7 @@ class Face(models.Model):
         tags_exist = True
 
         andlist = []
-        anylist = [Face.tags.filter(name__contains=tag) for tag in tags if (len(str(tag)) > 1)]
+        anylist = [Face.tags.filter(name__contains=tag) for tag in tags if (len(unicode(tag)) > 1)]
         if not anylist:
             return []
         for l in anylist:

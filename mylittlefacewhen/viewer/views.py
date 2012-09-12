@@ -134,7 +134,7 @@ def single(request, face_id):
     to_content = {
             "artist": artist,
             "face": f,
-            "thumb":face.thumb.url,
+            "thumb":getattr(face.thumb, "url", None), #Avoid error when no thumb has been generated
             "image":image,
             "static_prefix": STATIC_PREFIX,
             "image_service": imageurl,
