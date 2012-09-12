@@ -116,9 +116,9 @@ AppRouter = Backbone.Router.extend
       r = @randFaceList.get(id)
       model = r if r
       unless model
-        page = new SingleView(model: new Face({id:id, not_fetched:true}))
+        page = new SingleView({model: new Face({id:id}), firstLoad: @firstLoad})
       else
-        page = new SingleView(model:model)
+        page = new SingleView({model:model, firstLoad: @firstLoad})
       return @pageload page
 
   feedback: ->

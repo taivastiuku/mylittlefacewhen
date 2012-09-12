@@ -8,6 +8,9 @@ window.SingleView = Backbone.View.extend({
     this.model.on("change", function() {
       return _this.render();
     });
+    if (this.model.isNew() && !this.options.firstLoad) {
+      this.model.fetch();
+    }
     return $(window).scrollTop(0);
   },
   events: {

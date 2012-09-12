@@ -3,7 +3,7 @@ window.SingleView = Backbone.View.extend
   initialize: ->
     @template = tpl.get('single')
     @model.on "change", => @render()
-#    @model.fetch() if @model.isNew() and not @options.firstload
+    @model.fetch() if @model.isNew() and not @options.firstLoad
     $(window).scrollTop(0)
 
   events:

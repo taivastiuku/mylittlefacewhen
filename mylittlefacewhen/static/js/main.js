@@ -128,13 +128,14 @@ AppRouter = Backbone.Router.extend({
       if (!model) {
         page = new SingleView({
           model: new Face({
-            id: id,
-            not_fetched: true
-          })
+            id: id
+          }),
+          firstLoad: _this.firstLoad
         });
       } else {
         page = new SingleView({
-          model: model
+          model: model,
+          firstLoad: _this.firstLoad
         });
       }
       return _this.pageload(page);
