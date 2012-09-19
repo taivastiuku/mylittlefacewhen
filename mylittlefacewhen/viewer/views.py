@@ -22,7 +22,7 @@ DEFAULT_META = {
         "description": "Lots of well-tagged pony reaction images, add yours!",
         "default_image": STATIC_PREFIX + "cheerilee-square-300.png",
     }
-        
+
 
 
 def main(request, listing="normal"):
@@ -48,7 +48,7 @@ def main(request, listing="normal"):
             "content_data": {"static_prefix":STATIC_PREFIX},
             "metadata": DEFAULT_META,
             }
-    
+
     ret = render_to_response("backbone.html", to_template, context_instance = RequestContext(request))
     return ret
 
@@ -56,7 +56,7 @@ def randoms(request):
     """
     list of random images
     """
-        
+
     meta = DEFAULT_META.copy()
     meta["title"] = "Random ponies!"
     meta["description"] = "Endless list of reacting ponies that just goes on and on and on... "
@@ -83,8 +83,8 @@ def search(request):
         query = "Search by typing some tags into the searchbox __^"
     else:
         query = query + ", "
-        
-   
+
+
 
     meta = DEFAULT_META.copy()
     meta["path"] = request.path
@@ -102,7 +102,7 @@ def search(request):
             "metadata": meta,
             }
 
-    return render_to_response("backbone.html", to_template, context_instance = RequestContext(request)) 
+    return render_to_response("backbone.html", to_template, context_instance = RequestContext(request))
 
 def single(request, face_id):
     """
@@ -128,7 +128,7 @@ def single(request, face_id):
     for itm in ("huge","large","medium","small"):
         if getattr(face, itm):
             f["resizes"].append({"image":getattr(face, itm).url, "size": itm})
-   
+
     artist, title, description = face.getMeta()
 
     to_content = {
@@ -161,16 +161,16 @@ def develop(request):
     """
     Info page about the site.
     """
-    
+
     meta = DEFAULT_META.copy()
     meta["path"] = request.path
     meta["title"] = "Information"
     meta["description"] = "Details about mylittlefacewhen.com development and future"
-    
+
     to_template = {
             "content": "develop.mustache",
             "content_data": {},
-            "metadata": meta, 
+            "metadata": meta,
             }
     return render_to_response("backbone.html", to_template, context_instance = RequestContext(request))
 
@@ -186,7 +186,7 @@ def api(request):
     to_template = {
             "content": "apidoc-v2.mustache",
             "content_data": {},
-            "metadata": meta, 
+            "metadata": meta,
             }
     return render_to_response("backbone.html", to_template, context_instance = RequestContext(request))
 
@@ -195,7 +195,7 @@ def rand(request):
     Redirect to random face.
     """
     face = Face.random()
-    return redirect("/f/%d/" % face.id) 
+    return redirect("/f/%d/" % face.id)
 
 #def salute(request, salute_id=None):
 #    """
@@ -231,7 +231,7 @@ def changes(request, page=1):
         face = log.face
         face.setThumbWithRequest(request)
         faces.append(face)
-        
+
     z = zip(logs, faces)
 
     to_template = {
@@ -279,7 +279,7 @@ def submit(request):
     to_template = {
             "content": "submit.mustache",
             "content_data": {"static_prefix":STATIC_PREFIX},
-            "metadata": meta, 
+            "metadata": meta,
             }
     return render_to_response("backbone.html", to_template, context_instance=RequestContext(request))
 
@@ -294,7 +294,7 @@ def tags(request):
     to_template = {
             "content": "tags.mustache",
             "content_data": {"models": [{"name":tag.name} for tag in Face.tags.all()]},
-            "metadata": meta, 
+            "metadata": meta,
             }
 
     return render_to_response("backbone.html", to_template, context_instance = RequestContext(request))
@@ -307,7 +307,7 @@ def changelog(request):
     to_template = {
             "content": "changelog.mustache",
             "content_data": {},
-            "metadata": meta, 
+            "metadata": meta,
             }
     return render_to_response("backbone.html", to_template, context_instance = RequestContext(request))
 
