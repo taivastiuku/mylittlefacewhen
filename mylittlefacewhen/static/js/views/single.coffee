@@ -50,7 +50,7 @@ window.SingleView = Backbone.View.extend
         static_prefix: static_prefix
         thumb: thumb
         image_service: app.getImageService()
-      
+
       @$el.html Mustache.render(@template, to_template)
       $(".single").css "max-height", screen.height
       setTimeout( -> #damn chrome :/
@@ -66,13 +66,13 @@ window.SingleView = Backbone.View.extend
     $("#og-image").attr "content", face.image
     if $("#cd-layout") == []
       $("head").append("<meta id='#cd-layout' poperty='cd:layout' content='banner'>")
-    
+
     image_src = $("link[rel=image_src]")
     if image_src == []
       $("head").append("<link rel='image_src' href='#{face.image}'>")
     else
       image_src.attr("href", face.image)
-    
+
     canonical = $("link[rel=canonical]")
     if canonical == []
       $("head").append("<link rel='canonical' href='http://mylittlefacewhen.com/f/#{face.id}/'>")
@@ -93,7 +93,7 @@ window.SingleView = Backbone.View.extend
     @$el.find("#info-show").hide()
     @$el.find("#info-edit").show()
     $(document).scrollTop $(document).height()
-   
+
   random: (event) ->
     event.preventDefault()
     @undelegateEvents()
@@ -103,7 +103,7 @@ window.SingleView = Backbone.View.extend
 
   report: (event) ->
     event.preventDefault()
-    reason = $(".window textarea").val()
+    reason = $(".window textarea").val().replace("\n", "\\n")
     return unless reason
 
     @undelegateEvents()
@@ -119,13 +119,12 @@ window.SingleView = Backbone.View.extend
         info = $(".window h2")
         info.css("color", "black").css("background-color", "red")
         info.html("An error has ocurred with this report !")
-    
+
 
   saveInfo: (event) ->
     event.preventDefault()
     $("#loader").show()
     @$el.find("#info-edit").hide()
-    
     source = event.currentTarget[1].value
     tags = event.currentTarget[0].value.split(",")
     submit_tags = []
@@ -145,12 +144,12 @@ window.SingleView = Backbone.View.extend
           save()
     else
       save()
-      
+
   showWindow: (event) ->
     id = "#dialog"
     winH = $(window).height()
     winW = $(window).width()
-    
+
     $("#mask")
       .css({ width: winW, height: winH })
       .show()

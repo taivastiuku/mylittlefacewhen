@@ -8,7 +8,7 @@ window.FeedbackView = Backbone.View.extend
 
   events:
     "click #feedbackSubmit": "submit"
-    
+
   render: ->
     @updateMeta()
     @$el.html Mustache.render(@template, {"message":"Submit feedback"})
@@ -43,5 +43,5 @@ window.FeedbackView = Backbone.View.extend
     fb.save undefined,
       success: response
       error: response
-        
+
     return undefined
