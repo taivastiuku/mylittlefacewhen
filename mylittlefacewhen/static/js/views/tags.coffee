@@ -52,7 +52,7 @@ window.TagsView = Backbone.View.extend
       @renderIt()
 
     return @
-  
+
 
   renderIt: ->
     data = @collection.toJSON()
@@ -67,6 +67,8 @@ window.TagsView = Backbone.View.extend
         data:
           search: JSON.stringify [tag]
           order_by: "random"
+          removed: false
+          accepted: true
           limit: 1
         success: (data) =>
           thumb = new Thumbnail(model:face.models[0]).render()
@@ -77,7 +79,7 @@ window.TagsView = Backbone.View.extend
             imgs.removeClass('lazy').lazyload effect: "fadeIn"
           else
             imgs.removeClass('lazy').lazyload()
-  
+
   updateMeta: ->
     $("title").html "Tagcloud and popular tags - MyLittleFaceWhen"
     $("meta[name=description]").attr "content", "All tags known by the service and some of the most frequently needed ones with random pictures."

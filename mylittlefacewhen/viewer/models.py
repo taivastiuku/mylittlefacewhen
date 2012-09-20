@@ -1,6 +1,7 @@
 import os
 import random
 import re
+import hashlib
 #import base64
 from cStringIO import StringIO
 from datetime import datetime, timedelta
@@ -42,7 +43,7 @@ def _detectSource(filename):
         tags = ""
 
     # ponibooru
-#    if re.match("[0-9]+[ +_]-[ +_]", part[0]): 
+#    if re.match("[0-9]+[ +_]-[ +_]", part[0]):
 #        pid = part[0].replace("+", " ").replace("_", " ").partition(" ")[0]
 #        r = requests.get(PONIBOORU + pid)
 #        if r.status_code == 200:
@@ -112,8 +113,9 @@ class Face(models.Model):
     medium = models.ImageField(upload_to="f/rsz/", default="")
     large  = models.ImageField(upload_to="f/rsz/", default="")
     huge   = models.ImageField(upload_to="f/rsz/", default="")
-   
+
     source = models.URLField(verify_exists=False, blank=True, default="")
+    md5 = models.CharField(max_length=32, default="")
 
     duplicate_of = models.ForeignKey('self', null=True, default=None)
     removed = models.BooleanField(default=False)
@@ -161,7 +163,7 @@ class Face(models.Model):
             return Face.tagged.with_all(tags)
         else:
             return []
-    
+
     @staticmethod
     def search(tags):
         tags_exist = True
@@ -181,7 +183,7 @@ class Face(models.Model):
     @staticmethod
     def random(tags=None, tag=None, number = None):
         if tag:
-            objs = Face.tagged.with_all((tag,))  
+            objs = Face.tagged.with_all((tag,))
         elif tags:
             objs = Face.tagged.with_all(tags)
         else:
@@ -198,16 +200,16 @@ class Face(models.Model):
     def generateImages(self, format=None):
 #        self.image.open()
         request_data = {
-            #    "image":base64.b64encode(self.image.read()), 
+            #    "image":base64.b64encode(self.image.read()),
             #    "sizes":str(SIZES)[1:-1],
                 "image":self.image,
                 "sizes":SIZES,
                 }
 #        self.image.close()
-        
+
         if self.image.name.rpartition(".")[2].lower() == "gif":
         #    request_data["sizes"] = str(SIZES[0])
-            request_data["sizes"] = [SIZES[0]]    
+            request_data["sizes"] = [SIZES[0]]
             request_data["write_gif"] = True
 
         if format:
@@ -216,11 +218,11 @@ class Face(models.Model):
             request_data["format"] = "jpg"
         else:
             request_data["format"] = "png"
-            
+
 
 #        r = requests.post(
-#                IMAGESERVICE, 
-#                request_data, 
+#                IMAGESERVICE,
+#                request_data,
 #                headers={"Accept-Encoding":"identity"}
 #                )
 #        print r.content
@@ -234,7 +236,7 @@ class Face(models.Model):
 #        except:
 #            return False
 #        resize_data = process_image(request_data)
-        
+
         if resize_data.get("jpg"):
             ext = "jpg"
         elif resize_data.get("png"):
@@ -243,7 +245,7 @@ class Face(models.Model):
                 tagging.models.Tag.objects.add_tag(self, "transparent")
         else:
             ext = ""
-        
+
         if not ext:
             return False
 
@@ -315,7 +317,7 @@ class Face(models.Model):
         else:
             self.thumb = None
             return "None"
-        
+
     def get_absolute_url(self):
         """
         Not sure how this should be done.
@@ -329,7 +331,7 @@ class Face(models.Model):
             return img.url
         else:
             return self.image.url
-    
+
     def age(self):
         return str(datetime.utcnow() - self.added).rpartition(":")[0]
 
@@ -365,7 +367,7 @@ class Face(models.Model):
 
             if cleaned_data.get("source") or cleaned_data.get("tags"):
                 ChangeLog.new_edit(self)
-            
+
             self.save()
             return True
         return False
@@ -380,15 +382,25 @@ class Face(models.Model):
                 except:
                     pass
                 setattr(self, item, "")
-                
+
         self.comment = reason
+        self.removed = True
         self.save()
 
     def remove_duplicate(self, duplicate_of):
+        tags = ""
+        for face in (self, duplicate_of):
+            for tag in face.tags:
+                tags += tag.name + ", "
         self.duplicate_of = duplicate_of
+        duplicate_of.tags = tags
+        self.tags = ""
+        ChangeLog.new_edit(self)
+        ChangeLog.new_edit(duplicate_of)
         self.remove("Duplicate of id#%d" % duplicate_of.id)
 
     def save(self, *args, **kwargs):
+        self.md5 = self.md5sum()
         super(Face, self).save(*args, **kwargs)
         if (not self.height or not self.width) and self.image:
             i = Image.open(self.image.path)
@@ -396,6 +408,21 @@ class Face(models.Model):
             self.height = i.size[1]
             self.save()
 
+        if self.md5 != "":
+            faces = Face.objects.filter(md5=self.md5).order_by("-id")
+            if len(faces) > 1:
+                self.remove_duplicate(faces[0])
+
+
+    def md5sum(self):
+        md5 = hashlib.md5()
+        try:
+            with open(self.image.path, 'rb') as f:
+                for chunk in iter(lambda: f.read(128*md5.block_size), b''):
+                    md5.update(chunk)
+            return md5.hexdigest()
+        except:
+            return ""
 
     def getMeta(self):
         """
@@ -409,7 +436,7 @@ class Face(models.Model):
         for tag in self.tags:
             if tag.name.startswith("artist:"):
                 artist = tag.name.partition(":")[2].strip()
-            
+
             elif tag.name in PONIES:
                 ponies += tag.name + ", "
             elif len(tag.name) > len(longest):
@@ -418,7 +445,7 @@ class Face(models.Model):
                 longest = tag.name
             else:
                 tags += tag.name + ", "
-            
+
         ponies = ponies[:-2].title()
 
         if ponies and longest:
@@ -452,7 +479,7 @@ class Flag(models.Model):
     def save(self, *args, **kwargs):
         s = "Face:\thttp://mlfw.info/f/%s/\nReason:\t%s\nUseragent:\t%s\n" % (str(self.face.id), self.reason, self.user_agent)
         send_mail("reported! mlfw " + str(self.face.id), s, "server@mylittlefacewhen.com", ["taivastiuku@mylittlefacewhen.com"])
-        
+
         ret = super(Flag, self).save(*args, **kwargs)
         ChangeLog(face=self.face, flag=self).save()
         return ret
@@ -470,7 +497,7 @@ class Advert(models.Model):
         objs = Advert.objects.all()
         count = objs.count()
         return objs[ random.randint(0, count-1) ]
-      
+
 class Salute(models.Model):
     """
     Rainbow Salute images
@@ -497,7 +524,7 @@ class ChangeLog(models.Model):
             prev = None
         else:
             prev = prev[0]
-            
+
             if len(prev.tags) == len(face.tags):
                 same_tags = []
                 for cur, pre in zip(face.tags, prev.tags):
@@ -543,7 +570,7 @@ class ChangeLog(models.Model):
                 if tag not in self.tags:
                     out.append(tag)
         return out
-    
+
     def added(self):
         """
         What tags were added from previous taglog?
@@ -602,7 +629,7 @@ tagging.register(ChangeLog)
 
 
 class Feedback(models.Model):
-    
+
     contact = models.CharField(max_length=256, default="")
     image = models.ImageField(max_length=256, upload_to="upload/")
     text = models.TextField()

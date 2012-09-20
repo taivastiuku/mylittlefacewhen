@@ -32,10 +32,11 @@ window.RandomsView = Backbone.View.extend
       $("#loader").show()
       collection = new FaceCollection()
       collection.fetch
-        data: $.param
+        data:
           order_by: "random"
           limit: 3
           accepted: true
+          removed: false
         success: (data) =>
           _.each collection.models, (model) ->
             #adding same model twice to a collection causes error
@@ -68,7 +69,7 @@ window.RandomsImage = Backbone.View.extend
   render: ->
     model = @model.toJSON()
     image = app.getImageService() + @model.getImage(640)
-    
+
     to_template =
       model: model
       image: image

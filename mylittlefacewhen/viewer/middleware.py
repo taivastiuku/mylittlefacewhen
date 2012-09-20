@@ -44,7 +44,7 @@ class RedirectDomain(object):
         host = request.META.get("HTTP_HOST")
         if not host:
             return None
-        if host not in ("vbox1:8000", "mylittlefacewhen.com", "0.0.0.0:8000", "pyramidi:8000", "192.168.56.3:8000"):
+        if host not in ("vbox1:8000", "mylittlefacewhen.com", "0.0.0.0:8000", "pyramidi:8000", "192.168.56.3:8000", "lime:8000"):
             return HttpResponsePermanentRedirect("http://mylittlefacewhen.com" + request.path)
 
 class SpacelessHTML(object):
@@ -63,8 +63,8 @@ class Style(object):
                 pass
         else:
             pony = request.COOKIES.get("best_pony")
-            
-        
+
+
         if pony not in PONIES:
             #request.best_pony = random.choice(PONIES)
             request.best_pony = "rarity"

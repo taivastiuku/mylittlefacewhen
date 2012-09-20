@@ -33,8 +33,8 @@ window.TopView = Backbone.View.extend
           $ad.show("fast")
 
     return undefined
-      
-    
+
+
 
   search: (event) ->
     event.preventDefault()

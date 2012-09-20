@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Duplicates{% endblock %}
+{% block description %}List of md5 duplicates{% endblock %}
+
+{% block content %}
+
+{% for dupes in dupeslist %}
+<div>
+    {% for dupe in dupes %}
+    <span>{{dupe.id}}</span>
+    <img src="{{dupe.thumb.url}}">
+    {% endfor %}
+</div>
+{% endfor %}
+
+{% endblock %}

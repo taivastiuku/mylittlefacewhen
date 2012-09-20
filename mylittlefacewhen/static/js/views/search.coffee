@@ -15,7 +15,7 @@ window.SearchView = Backbone.View.extend
         static_prefix: static_prefix
       @$el.html Mustache.render(@template, to_template)
       return @
-     
+
     to_template =
       query: tags
       static_prefix: static_prefix
@@ -23,11 +23,11 @@ window.SearchView = Backbone.View.extend
     @$el.html Mustache.render(@template, to_template)
     loader = @$el.children("#loader")
     loader.show()
-    
+
     tags = JSON.stringify(tags.split(","))
 
     @model.fetch
-      data: $.param
+      data:
         search: tags
         limit: 1000
         order_by: "-id"

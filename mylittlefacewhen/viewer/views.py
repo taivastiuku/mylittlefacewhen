@@ -1,16 +1,14 @@
-#from django.http import HttpResponseRedirect
-from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render_to_response, get_object_or_404, redirect
-from django.forms.models import model_to_dict
-from django.template import RequestContext
-from django.contrib.auth.decorators import login_required
-from django.template import loader
-from viewer.models import *
-from viewer import forms
 from datetime import datetime
 
-#IMAGEURL =  "http://173.208.196.219"
-#IMAGEURL = "http://images.mlfw.info"
+#from django.http import HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
+from django.forms.models import model_to_dict
+from django.template import RequestContext, loader
+from django.shortcuts import render_to_response, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+
+from viewer.models import *
+from viewer import forms
 
 IMAGEURL = "http://denver.mylittlefacewhen.com"
 
@@ -84,8 +82,6 @@ def search(request):
     else:
         query = query + ", "
 
-
-
     meta = DEFAULT_META.copy()
     meta["path"] = request.path
     meta["title"] = "Search for "
@@ -109,6 +105,9 @@ def single(request, face_id):
     Single face with given id.
     """
     face = get_object_or_404(Face, id=face_id)
+    if face.duplicate_of:
+        return redirect("/f/%d/" % face.duplicate_of.id, permanent=True)
+
     image = face.get_image("large")
     face.setThumb(webp=False, gif=True)
     if face.accepted:
@@ -333,6 +332,37 @@ def viewFlags(request):
             "flags": flags,
             }
     return render_to_response("flags.html", to_template, context_instance = RequestContext(request))
+
+@login_required
+def md5Duplicates(request):
+    duplicateSets = []
+    duplicateIds = []
+    for face in Face.objects.all():
+        if not face.md5:
+            continue
+        faces = Face.objects.filter(md5=face.md5)
+        if len(faces) > 1:
+            cont = False
+            for f in faces:
+                if f.id in duplicateIds:
+                    cont = True
+                    break
+                duplicateIds.append(f.id)
+            if cont:
+                continue
+
+            out = []
+            for f in faces:
+                f.setThumb(webp=False, gif=True)
+                out.append(f)
+
+            duplicateSets.append(out)
+
+    to_template = {"dupeslist": duplicateSets}
+
+    return render_to_response("duplicates.html", to_template, context_instance = RequestContext(request))
+
+
 
 
 def notfound(request):

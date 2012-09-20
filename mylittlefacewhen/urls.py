@@ -52,8 +52,9 @@ urlpatterns = patterns('',
 
 #    (r'^errors/500/$', "viewer.views.error"),
 #    (r'^errors/404/$', "viewer.views.notfound"),
-    
+
     #admin
+    (r'^duplicates/$', "viewer.views.md5Duplicates"),
     (r'^changes/$', "viewer.views.changes"),
     (r'^changes/(?P<page>\d+)/$', "viewer.views.changes"),
     (r'^acceptimages/$', "viewer.views.acceptImages"),
@@ -63,7 +64,7 @@ urlpatterns = patterns('',
 
     #Django registration
     (r'^accounts/', include('registration.urls')),
-    
+
     #API v1 (deprecated)
     url(r'^api/faces/?$', faces_handler),
     url(r'^api/faces/(?P<uid>[^/]+)/?$', faces_handler),

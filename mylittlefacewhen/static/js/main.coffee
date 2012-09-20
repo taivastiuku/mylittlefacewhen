@@ -15,7 +15,7 @@ Backbone.View::navigateAnchor = (event) ->
 AppRouter = Backbone.Router.extend
   initialize: ->
     @bind 'all', @_trackPageview
-    
+
     #TODO Could these infused as one?
     @faceList = new FaceCollection() #loaded from main view
     @randFaceList = new FaceCollection() #loaded from randoms
@@ -38,7 +38,7 @@ AppRouter = Backbone.Router.extend
     @fastest =
       service: undefined
       speed: 10000
-  
+
     #PING PONG
     _.each @imageServices, (service) =>
       time = new Date().getTime()
@@ -51,13 +51,13 @@ AppRouter = Backbone.Router.extend
             @fastest =
               service: service
               speed: speed
-    
+
     # CSS is stuffed in the main app.js built during deployment
     # TODO: stuff it as <style type='text/css'> into a template instead of js
     # TODO: Think a better way
     #unless debug
     #  $("head").append "<style type='text/css'>" + collated_stylesheets + "</style>"
-  
+
     # Top bar
     @topView = new TopView().render()
 
@@ -108,7 +108,7 @@ AppRouter = Backbone.Router.extend
     @before =>
       @select("#m_develop")
       return @pageload new DevelopView()
-  
+
   face: (id) ->
     @before =>
       @select("none")
@@ -133,6 +133,7 @@ AppRouter = Backbone.Router.extend
           order_by: "random"
           limit: 3
           accepted: true
+          removed: false
         success: (data) =>
           @random()
     else
@@ -146,7 +147,7 @@ AppRouter = Backbone.Router.extend
     @before =>
       @select("#m_randoms")
       return new RandomsView().render()
-    
+
   submit: ->
     @before =>
       @select("#m_submit")
@@ -156,7 +157,7 @@ AppRouter = Backbone.Router.extend
     @before =>
       @select("none")
       return new SearchView().render()
-  
+
   tags: ->
     @before =>
       @select("#m_tags")

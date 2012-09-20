@@ -28,10 +28,11 @@ class FaceResource(ModelResource):
         max_limit = 1000
         allowed_methods = ('get', 'post', 'put', 'delete', )
         filtering = {
-                "accepted": ("exact",),
+                "accepted": ["exact"],
+                "removed": ["exact"],
                 }
         ordering = ("id",)
-        excludes = ("views", "comment", "removed", "gif", "png", "jpg", "webp", "small", "medium", "large", "huge", )
+        excludes = ("views", "gif", "png", "jpg", "webp", "small", "medium", "large", "huge", )
         authorization = auths.AnonMethodAllowed().set_allowed(["GET", "POST", "PUT"])
 
     def get_object_list(self, request):
@@ -48,7 +49,7 @@ class FaceResource(ModelResource):
             objects = super(FaceResource, self).get_object_list(request)
 
         return objects
-    
+
     def apply_sorting(self, obj_list, options=None):
         global FACES_LEN
         if options.get("order_by") == "random":
@@ -63,7 +64,7 @@ class FaceResource(ModelResource):
                 if FACES_LEN == -1 or random.randint(0, 1000) > 999:
                     FACES_LEN = len(obj_list)
                 faces_len = FACES_LEN
-           
+
             if limit >= faces_len:
                 return obj_list
             else:
@@ -88,7 +89,7 @@ class FaceResource(ModelResource):
         bundle.data["resizes"] = {}
         for itm in ("small", "medium", "large", "huge"):
             if getattr(bundle.obj, itm):
-                bundle.data["resizes"][itm] = MEDIA + str(getattr(bundle.obj, itm))        
+                bundle.data["resizes"][itm] = MEDIA + str(getattr(bundle.obj, itm))
 
         return bundle
 
@@ -99,7 +100,7 @@ class FaceResource(ModelResource):
 
 
         face = models.Face.objects.get(pk=bundle.data["id"])
-        
+
         return face.public_update({"tags":tags[:-2], "source":bundle.data.get("source", "")})
 
     def obj_create(self, bundle, request=None, **kwargs):
@@ -124,7 +125,7 @@ class TagResource(ModelResource):
                 "name": ("contains","startswith",),
                 }
 
-        
+
 API.register(TagResource())
 
 
@@ -145,14 +146,14 @@ class FeedbackResource(ModelResource):
             "useragent": request.META.get("HTTP_USER_AGENT", ""),
             }
         form = forms.FeedbackForm(feedback)
-        
+
         if form.is_valid():
             bundle = super(FeedbackResource, self).obj_create(bundle, request, **kwargs)
-            bundle.data = form.cleaned_data 
+            bundle.data = form.cleaned_data
 
             for key, value in form.cleaned_data.iteritems():
                 setattr(bundle.obj, key, value)
-            
+
             bundle.obj.save()
             return bundle
         else:
@@ -190,7 +191,7 @@ class FlagResource(ModelResource):
         reason = bundle.data.get("reason")
         if not all((face_id, reason)):
             raise BadRequest(": referer or report not included")
-        
+
         try:
             face_id = int(face_id.rpartition("/")[2])
             face = models.Face.objects.get(id=face_id)
@@ -199,7 +200,7 @@ class FlagResource(ModelResource):
 
         flag = models.Flag(
                 face=face,
-                user_agent=user_agent, 
+                user_agent=user_agent,
                 reason=reason
                 )
         flag.save()

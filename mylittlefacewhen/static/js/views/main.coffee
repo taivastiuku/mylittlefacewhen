@@ -42,7 +42,7 @@ window.MainView = Backbone.View.extend
     $("link[rel=image_src]").remove()
     $("link[rel=canonical]").remove()
 
-  
+
   loadMore: ->
     #load more thumbnails
     unless @loading
@@ -53,7 +53,8 @@ window.MainView = Backbone.View.extend
         data:
           offset: @offset
           order_by:"-id"
-          accepted:true
+          accepted: true
+          removed: false
         success: (data) =>
           collection.each (model) ->
             $("#thumbs").append new Thumbnail(model:model).render().el
@@ -78,7 +79,7 @@ window.MainView = Backbone.View.extend
 
 
   beforeClose: ->
-    # Clean up a few event handlers and save current state and position of 
+    # Clean up a few event handlers and save current state and position of
     # the page
     $(window).off ".main"
     _.each $(".fixedWidth"), (img) ->
@@ -90,7 +91,7 @@ window.MainView = Backbone.View.extend
 
 
 window.UnreviewedView = Backbone.View.extend
-  # Unreviewed images, pretty much the same as main view except all 
+  # Unreviewed images, pretty much the same as main view except all
   # images are fetched.
 
   el: "#content"
@@ -102,7 +103,7 @@ window.UnreviewedView = Backbone.View.extend
     @updateMeta()
     to_template =
       static_prefix: static_prefix
-      message: [ {message: "unreviewed images"} ]
+      message: [ {message: "Unreviewed images"}, {message:"Uploaded images may take a few seconds to appear here and duplicates may get automatically removed."} ]
 
     @$el.html Mustache.render(@template, to_template)
 
@@ -112,6 +113,7 @@ window.UnreviewedView = Backbone.View.extend
     @collection.fetch
       data:
         accepted: false
+        removed: false
         limit: 1000
         order_by: "-id"
       success: (data) =>
@@ -147,7 +149,7 @@ window.Thumbnail = Backbone.View.extend
   initialize: ->
     @template = tpl.get('thumbnail')
     @detectWebp() if @webp == undefined
-    
+
   render: ->
     model = @model.toJSON()
     model.thumb = @model.getThumb(@webp)
