@@ -10,8 +10,8 @@ class LatestAcceptedImages(Feed):
     description = "Newest pony reactions accepted at MyLittleFaceWhen.com"
 
     def items(self):
-        return models.Face.objects.filter(accepted=True).order_by('-added')[:20]
-    
+        return models.Face.objects.filter(accepted=True, removed=False).order_by('-added')[:20]
+
     def item_title(self, item):
         return item.get_absolute_url()
 
