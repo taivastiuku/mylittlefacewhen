@@ -4,6 +4,8 @@ window.MainView = Backbone.View.extend({
   el: "#content",
   initialize: function() {
     var _this = this;
+    this.title = "Pony Reaction Pictures - MyLittleFaceWhen";
+    this.description = "Lots of well-tagged pony reaction images.";
     this.template = tpl.get('main');
     if (!this.offset) {
       this.offset = 0;
@@ -27,7 +29,7 @@ window.MainView = Backbone.View.extend({
   render: function() {
     var thumbs,
       _this = this;
-    this.updateMeta();
+    this.updateMeta(this.title, this.description);
     this.$el.html(Mustache.render(this.template, {
       static_prefix: static_prefix,
       message: []
@@ -48,14 +50,6 @@ window.MainView = Backbone.View.extend({
     }
     this.loadMore();
     return this;
-  },
-  updateMeta: function() {
-    $("title").html("Pony Reaction Pictures - MyLittleFaceWhen");
-    $("meta[name=description]").attr("content", "Lots of well-tagged pony reaction images.");
-    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
-    $("#cd-layout").remove();
-    $("link[rel=image_src]").remove();
-    return $("link[rel=canonical]").remove();
   },
   loadMore: function() {
     var collection,
@@ -120,12 +114,14 @@ window.MainView = Backbone.View.extend({
 window.UnreviewedView = Backbone.View.extend({
   el: "#content",
   initialize: function() {
+    this.title = "Pony Reaction Pictures - MyLittleFaceWhen";
+    this.description = "Lots of well-tagged pony reaction images.";
     return this.template = tpl.get('main');
   },
   render: function() {
     var to_template,
       _this = this;
-    this.updateMeta();
+    this.updateMeta(this.title, this.description);
     to_template = {
       static_prefix: static_prefix,
       message: [
@@ -165,14 +161,6 @@ window.UnreviewedView = Backbone.View.extend({
       }
     });
     return this;
-  },
-  updateMeta: function() {
-    $("title").html("Pony Reaction Pictures - MyLittleFaceWhen");
-    $("meta[name=description]").attr("content", "Lots of well-tagged pony reaction images.");
-    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
-    $("#cd-layout").remove();
-    $("link[rel=image_src]").remove();
-    return $("link[rel=canonical]").remove();
   }
 });
 

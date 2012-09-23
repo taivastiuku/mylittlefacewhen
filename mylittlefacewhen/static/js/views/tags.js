@@ -3,17 +3,19 @@
 window.TagsView = Backbone.View.extend({
   el: "#content",
   tags: ["applejack", "fluttershy", "pinkie pie", "rainbow dash", "rarity", "twilight sparkle", "princess celestia", "princess luna", "spike", "derpy hooves", "trixie", "animated", "transparent", "fanart", "screenshot", "untagged", "yes", "do want", "no", "do not want", "creepy", "omg", "lol", "rage", "u mad", "u jelly", "do it filly", "hug"],
+  initialize: function() {
+    this.title = "Tagcloud and popular tags - MyLittleFaceWhen";
+    this.description = "All tags known by the service and some of the most frequently needed ones with random pictures.";
+    this.template = tpl.get("tags");
+    return this.tagsItem_template = tpl.get("tagsItem");
+  },
   events: {
     "click .thumb a": "navigateAnchor",
     "click #tagcloud a": "navigateAnchor"
   },
-  initialize: function() {
-    this.template = tpl.get("tags");
-    return this.tagsItem_template = tpl.get("tagsItem");
-  },
   render: function() {
     var _this = this;
-    this.updateMeta();
+    this.updateMeta(this.title, this.description);
     if (this.collection.models.length === 0) {
       this.collection.fetch({
         data: {
@@ -29,23 +31,21 @@ window.TagsView = Backbone.View.extend({
     return this;
   },
   renderIt: function() {
-    var $tags, data, face, tag, tagsItem, _i, _len, _ref, _results,
+    var $tags, data,
       _this = this;
     data = this.collection.toJSON();
     $(this.el).html(Mustache.render(this.template, {
       models: data
     }));
     $tags = $("#tags");
-    _ref = this.tags;
-    _results = [];
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      tag = _ref[_i];
-      tagsItem = $(Mustache.render(this.tagsItem_template, {
+    return _.each(this.tags, function(tag) {
+      var face, tagsItem;
+      tagsItem = $(Mustache.render(_this.tagsItem_template, {
         tag: tag
       }));
       $tags.append(tagsItem);
       face = new FaceCollection();
-      _results.push(face.fetch({
+      return face.fetch({
         data: {
           search: JSON.stringify([tag]),
           order_by: "random",
@@ -68,27 +68,18 @@ window.TagsView = Backbone.View.extend({
             return imgs.removeClass('lazy').lazyload();
           }
         }
-      }));
-    }
-    return _results;
-  },
-  updateMeta: function() {
-    $("title").html("Tagcloud and popular tags - MyLittleFaceWhen");
-    $("meta[name=description]").attr("content", "All tags known by the service and some of the most frequently needed ones with random pictures.");
-    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
-    $("#cd-layout").remove();
-    $("link[rel=image_src]").remove();
-    return $("link[rel=canonical]").remove();
+      });
+    });
   }
 });
 
 window.TagView = Backbone.View.extend({
   tagName: "span",
-  events: {
-    "click a": "navigateAnchor"
-  },
   initialize: function() {
     return this.template = tpl.get("tag");
+  },
+  events: {
+    "click a": "navigateAnchor"
   },
   render: function() {
     $(this.el).html(Mustache.render(this.template, {

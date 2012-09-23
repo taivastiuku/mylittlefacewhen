@@ -7,7 +7,7 @@ window.SearchView = Backbone.View.extend
 
   render: ->
     tags = getUrlParam("tags") or getUrlParam("tag")
-    @updateMeta tags
+    @updateMeta("Search for '#{tags}' - MyLittleFaceWhen", "Search result for pony reaction tag '#{tags}'")
 
     if not tags
       to_template =
@@ -53,13 +53,3 @@ window.SearchView = Backbone.View.extend
         loader.hide()
 
     return @
-
-
-  updateMeta: (tags) ->
-    $("title").html "#{tags} - MyLittleFaceWhen"
-    $("meta[name=description]").attr "content", "Search result for pony reaction tag '#{tags}'"
-    $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
-    $("#cd-layout").remove()
-    $("link[rel=image_src]").remove()
-    $("link[rel=canonical]").remove()
-

@@ -3,8 +3,10 @@ window.RandomsView = Backbone.View.extend
   el: "#content"
 
   initialize: ->
-    @loading = false
+    @title = "Random images - MyLittleFaceWhen"
+    @description = "Endless list of random pony-related reaction images. Goes on-and-on-and-on-and..."
     @template = tpl.get("randoms")
+    @loading = false
     $(window).on "resize.randoms", (event) => @loadMore() if atBottom(500)
     $(window).on "scroll.randoms", (event) => @loadMore() if atBottom(500)
 
@@ -12,18 +14,10 @@ window.RandomsView = Backbone.View.extend
     $(window).off ".randoms"
 
   render: ->
-    @updateMeta()
+    @updateMeta(@title, @description)
     @$el.html Mustache.render(@template, {static_prefix: static_prefix})
     @loadMore()
     return @
-
-  updateMeta: ->
-    $("title").html "Random images - MyLittleFaceWhen"
-    $("meta[name=description]").attr "content", "Endless list of random pony-related reaction images. Goes on-and-on-and-on-and..."
-    $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
-    $("#cd-layout").remove()
-    $("link[rel=image_src]").remove()
-    $("link[rel=canonical]").remove()
 
   loadMore: ->
     # Similar loadmore to the one in main view

@@ -10,6 +10,15 @@ Backbone.View.prototype.close = function() {
   return this.undelegateEvents();
 };
 
+Backbone.View.prototype.updateMeta = function(title, description) {
+  $("title").html(title);
+  $("meta[name=description]").attr("content", description);
+  $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
+  $("#cd-layout").remove();
+  $("link[rel=image_src]").remove();
+  return $("link[rel=canonical]").remove();
+};
+
 Backbone.View.prototype.navigateAnchor = function(event) {
   event.preventDefault();
   return app.navigate(event.currentTarget.getAttribute("href"), {

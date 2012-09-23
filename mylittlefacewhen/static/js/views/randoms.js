@@ -4,8 +4,10 @@ window.RandomsView = Backbone.View.extend({
   el: "#content",
   initialize: function() {
     var _this = this;
-    this.loading = false;
+    this.title = "Random images - MyLittleFaceWhen";
+    this.description = "Endless list of random pony-related reaction images. Goes on-and-on-and-on-and...";
     this.template = tpl.get("randoms");
+    this.loading = false;
     $(window).on("resize.randoms", function(event) {
       if (atBottom(500)) {
         return _this.loadMore();
@@ -21,20 +23,12 @@ window.RandomsView = Backbone.View.extend({
     return $(window).off(".randoms");
   },
   render: function() {
-    this.updateMeta();
+    this.updateMeta(this.title, this.description);
     this.$el.html(Mustache.render(this.template, {
       static_prefix: static_prefix
     }));
     this.loadMore();
     return this;
-  },
-  updateMeta: function() {
-    $("title").html("Random images - MyLittleFaceWhen");
-    $("meta[name=description]").attr("content", "Endless list of random pony-related reaction images. Goes on-and-on-and-on-and...");
-    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
-    $("#cd-layout").remove();
-    $("link[rel=image_src]").remove();
-    return $("link[rel=canonical]").remove();
   },
   loadMore: function() {
     var collection,

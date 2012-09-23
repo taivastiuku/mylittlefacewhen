@@ -10,7 +10,7 @@ window.SearchView = Backbone.View.extend({
     var loader, tags, to_template,
       _this = this;
     tags = getUrlParam("tags") || getUrlParam("tag");
-    this.updateMeta(tags);
+    this.updateMeta("Search for '" + tags + "' - MyLittleFaceWhen", "Search result for pony reaction tag '" + tags + "'");
     if (!tags) {
       to_template = {
         query: "Search by typing some tags into the searchbox __^",
@@ -65,13 +65,5 @@ window.SearchView = Backbone.View.extend({
       }
     });
     return this;
-  },
-  updateMeta: function(tags) {
-    $("title").html("" + tags + " - MyLittleFaceWhen");
-    $("meta[name=description]").attr("content", "Search result for pony reaction tag '" + tags + "'");
-    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
-    $("#cd-layout").remove();
-    $("link[rel=image_src]").remove();
-    return $("link[rel=canonical]").remove();
   }
 });

@@ -7,6 +7,15 @@ Backbone.View::close = ->
 #  @remove()
   @undelegateEvents()
 
+Backbone.View::updateMeta = (title, description) ->
+    $("title").html title
+    $("meta[name=description]").attr "content", description
+    $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
+    $("#cd-layout").remove()
+    $("link[rel=image_src]").remove()
+    $("link[rel=canonical]").remove()
+
+
 Backbone.View::navigateAnchor = (event) ->
   # Make links work with backbone.js
   event.preventDefault()
@@ -46,7 +55,7 @@ AppRouter = Backbone.Router.extend
         method: "GET"
         url: service + "/media/speedtest.txt"
         complete: =>
-          speed =  new Date().getTime() - time
+          speed = new Date().getTime() - time
           if speed < @fastest.speed
             @fastest =
               service: service

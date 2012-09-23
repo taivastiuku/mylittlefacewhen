@@ -31,7 +31,7 @@ PONYCHAN = "http://pinkie.ponychan.net/chan/files/src/"
 SIZES = ((0,100), (320,320), (640,640), (1000,1000), (1920,1920))
 SIZENAMES = ("thumb", "small", "medium", "large", "huge")
 
-PONIES = ("celestia", "molestia", "luna", "pinkie pie", "twilight sparkle", "applejack", "rarity", "fluttershy", "rainbow dash", "lyra", "bon bon", "bon bon", "rose", "sweetie belle", "spike", "scootaloo", "applebloom", "cheerilee", "big macintosh", "berry punch", "discord", "nightmare moon", "chrysalis", "cadance", "shining armor", "colgate", "silver spoon", "diamond tiara")
+PONIES = ("celestia", "molestia", "luna", "pinkie pie", "twilight sparkle", "applejack", "rarity", "fluttershy", "rainbow dash", "lyra", "bon bon", "bon bon", "rose", "sweetie belle", "spike", "scootaloo", "applebloom", "cheerilee", "big macintosh", "berry punch", "discord", "nightmare moon", "chrysalis", "cadance", "shining armor", "colgate", "silver spoon", "diamond tiara", "vinyl scratch", "derpy hooves", "hoity toity", "gummy", "snips", "snails", "spiderman", "granny smith", "opalescence", "angel", "doctor whooves", "trixie", "gilda", "skeletor")
 
 def _detectSource(filename):
     face = filename.rpartition("/")[2]
@@ -387,17 +387,17 @@ class Face(models.Model):
         self.removed = True
         self.save()
 
-    def remove_duplicate(self, duplicate_of):
+    def is_duplicate_of(self, original):
         tags = ""
-        for face in (self, duplicate_of):
+        for face in (self, original):
             for tag in face.tags:
                 tags += tag.name + ", "
-        self.duplicate_of = duplicate_of
+        self.duplicate_of = original
         duplicate_of.tags = tags
         self.tags = ""
         ChangeLog.new_edit(self)
-        ChangeLog.new_edit(duplicate_of)
-        self.remove("Duplicate of id#%d" % duplicate_of.id)
+        ChangeLog.new_edit(original)
+        self.remove("Duplicate of id#%d" % original.id)
 
     def save(self, *args, **kwargs):
         self.md5 = self.md5sum()
@@ -433,38 +433,50 @@ class Face(models.Model):
         longest = ""
         artist = None
 
-        for tag in self.tags:
-            if tag.name.startswith("artist:"):
-                artist = tag.name.partition(":")[2].strip()
+        tagslist = [tag.name for tag in self.tags]
+        tagslist.sort(key=len, reverse=True)
 
-            elif tag.name in PONIES:
-                ponies += tag.name + ", "
-            elif len(tag.name) > len(longest):
-                if longest:
-                    tags += longest + ", "
-                longest = tag.name
+        for tag in tagslist:
+            if tag.startswith("artist:"):
+                artist = tag.partition(":")[2].strip()
+
+            elif tag in PONIES:
+                ponies += tag + ", "
+            elif not longest:
+                longest = tag
             else:
-                tags += tag.name + ", "
+                tags += "'%s', " % tag
 
-        ponies = ponies[:-2].title()
 
-        if ponies and longest:
+        if tags.count(",") > 1:
+            tags = " and".join(tags[:-2].rsplit(",", 1)) #rrpelace()
+        else:
+            tags = tags[:-2]
+
+
+        if ponies.count(",") > 1:
+            ponies = " and".join(ponies[:-2].title().rsplit(",", 1)) #rrpelace()
+        else:
+            ponies = ponies[:-2].title()
+
+
+        if ponies:# and longest:
             title = ponies + ": " + longest
-            description = ponies + " reacting with '" + longest + "' and " + tags[:-2]
+            description = ponies + " reacting with '" + longest + "', " + tags
             if artist:
+                title += " by " + artist
                 description += " by " + artist
         else:
             title = "Pony Reaction Image " + str(self.id)
             description = ponies + ", " + tags + longest
 
-        return (artist,title,description,)
+        return (artist,title,description)
 
 
     def __str__(self):
         s = str(self.id) + " - "
-        for tag in self.tags:
-            s += str(tag) + ", "
-        return s[:-2]
+        artist, title, description = self.getMeta()
+        return s + title
 
 tagging.register(Face)
 
@@ -478,7 +490,7 @@ class Flag(models.Model):
 
     def save(self, *args, **kwargs):
         s = "Face:\thttp://mlfw.info/f/%s/\nReason:\t%s\nUseragent:\t%s\n" % (str(self.face.id), self.reason, self.user_agent)
-        send_mail("reported! mlfw " + str(self.face.id), s, "server@mylittlefacewhen.com", ["taivastiuku@mylittlefacewhen.com"])
+        send_mail("reported! mlfw " + str(self.face.id), s, "server@mylittlefacewhen.com", ["taivastiuku@mylittlefacewhen.com", "leonard.dulitz@bronies-germany.de"])
 
         ret = super(Flag, self).save(*args, **kwargs)
         ChangeLog(face=self.face, flag=self).save()
@@ -640,7 +652,7 @@ class Feedback(models.Model):
     def save(self, *args, **kwargs):
         if (self.text):
             s = "Contact:\t%s\nFeedback:\t%s\nTime:\t%s\nUseragent:\t%s\n" % (self.contact, self.text, str(self.datetime), self.useragent)
-            send_mail("mlfw feedback: " + self.contact, s, "server@mylittlefacewhen.com", ["taivastiuku@mylittlefacewhen.com"])
+            send_mail("mlfw feedback: " + self.contact, s, "server@mylittlefacewhen.com", ["taivastiuku@mylittlefacewhen.com", "leonard.dulitz@bronies-germany.de"])
             return super(Feedback, self).save(*args, **kwargs)
 
 

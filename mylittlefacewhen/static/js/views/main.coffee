@@ -1,9 +1,9 @@
 window.MainView = Backbone.View.extend
   # The main views that list newest images
-
   el: "#content"
-
   initialize: ->
+    @title = "Pony Reaction Pictures - MyLittleFaceWhen"
+    @description = "Lots of well-tagged pony reaction images."
     @template = tpl.get('main')
     @offset = 0 if not @offset
     @loading = false
@@ -15,7 +15,7 @@ window.MainView = Backbone.View.extend
     "click .thumb a": "navigateAnchor"
 
   render: ->
-    @updateMeta()
+    @updateMeta(@title, @description)
     @$el.html Mustache.render(@template,{static_prefix: static_prefix, message: []})
     if @html
       # load html from memory if user has visited the main view
@@ -33,15 +33,6 @@ window.MainView = Backbone.View.extend
     setTimeout("$(window).scrollTop(#{@scroll});", 100) if @scroll
     @loadMore()
     return @
-
-  updateMeta: ->
-    $("title").html "Pony Reaction Pictures - MyLittleFaceWhen"
-    $("meta[name=description]").attr "content", "Lots of well-tagged pony reaction images."
-    $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
-    $("#cd-layout").remove()
-    $("link[rel=image_src]").remove()
-    $("link[rel=canonical]").remove()
-
 
   loadMore: ->
     #load more thumbnails
@@ -97,10 +88,12 @@ window.UnreviewedView = Backbone.View.extend
   el: "#content"
 
   initialize: ->
+    @title = "Pony Reaction Pictures - MyLittleFaceWhen"
+    @description = "Lots of well-tagged pony reaction images."
     @template = tpl.get('main')
 
   render: ->
-    @updateMeta()
+    @updateMeta(@title, @description)
     to_template =
       static_prefix: static_prefix
       message: [ {message: "Unreviewed images"}, {message:"Uploaded images may take a few seconds to appear here and duplicates may get automatically removed."} ]
@@ -128,15 +121,6 @@ window.UnreviewedView = Backbone.View.extend
 
         $("#loader").hide()
     return @
-
-  updateMeta: ->
-    $("title").html "Pony Reaction Pictures - MyLittleFaceWhen"
-    $("meta[name=description]").attr "content", "Lots of well-tagged pony reaction images."
-    $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
-    $("#cd-layout").remove()
-    $("link[rel=image_src]").remove()
-    $("link[rel=canonical]").remove()
-
 
 window.Thumbnail = Backbone.View.extend
   # Not sure if some of this functionality should be in the model.

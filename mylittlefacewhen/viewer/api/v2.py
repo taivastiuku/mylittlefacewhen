@@ -1,19 +1,19 @@
-import random
 import datetime
+import random
 try:    import simplejson as json
 except: import json
 
-from viewer import models
-from viewer import forms
-from viewer.api import auths
-from tagging.models import Tag
-
-from tastypie.resources import ModelResource, Resource
-from tastypie.api import Api
-from tastypie.utils import trailing_slash
 from tastypie import fields
+from tastypie.api import Api
 from tastypie.constants import ALL
 from tastypie.exceptions import BadRequest
+from tastypie.resources import ModelResource, Resource
+
+from tagging.models import Tag
+from viewer import forms
+from viewer import models
+from viewer.api import auths
+
 
 API = Api(api_name="v2")
 

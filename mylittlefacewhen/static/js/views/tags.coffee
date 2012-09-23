@@ -32,16 +32,18 @@ window.TagsView = Backbone.View.extend
     "hug"
   ]
 
+  initialize: ->
+    @title = "Tagcloud and popular tags - MyLittleFaceWhen"
+    @description = "All tags known by the service and some of the most frequently needed ones with random pictures."
+    @template = tpl.get("tags")
+    @tagsItem_template = tpl.get("tagsItem")
+
   events:
     "click .thumb a": "navigateAnchor"
     "click #tagcloud a": "navigateAnchor"
 
-  initialize: ->
-    @template = tpl.get("tags")
-    @tagsItem_template = tpl.get("tagsItem")
-
   render: ->
-    @updateMeta()
+    @updateMeta(@title, @description)
     if @collection.models.length == 0
       @collection.fetch
         data:
@@ -59,7 +61,7 @@ window.TagsView = Backbone.View.extend
     $(@el).html Mustache.render(@template, models: data)
 
     $tags = $("#tags")
-    for tag in @tags
+    _.each @tags, (tag) =>
       tagsItem = $(Mustache.render(@tagsItem_template,tag:tag))
       $tags.append tagsItem
       face = new FaceCollection()
@@ -80,23 +82,11 @@ window.TagsView = Backbone.View.extend
           else
             imgs.removeClass('lazy').lazyload()
 
-  updateMeta: ->
-    $("title").html "Tagcloud and popular tags - MyLittleFaceWhen"
-    $("meta[name=description]").attr "content", "All tags known by the service and some of the most frequently needed ones with random pictures."
-    $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
-    $("#cd-layout").remove()
-    $("link[rel=image_src]").remove()
-    $("link[rel=canonical]").remove()
-
 window.TagView = Backbone.View.extend
   tagName: "span"
-
+  initialize: -> @template = tpl.get("tag")
   events:
     "click a": "navigateAnchor"
-
-  initialize: ->
-    @template = tpl.get("tag")
-
   render: ->
     $(@el).html Mustache.render(@template, name: @collection.get("name"))
     return @

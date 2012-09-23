@@ -3,25 +3,19 @@
 window.FeedbackView = Backbone.View.extend({
   el: "#content",
   initialize: function() {
+    this.title = "Feedback - MyLittleFaceWhen";
+    this.description = "Any suggestions or other feedback is more than welcome.";
     return this.template = tpl.get("feedback");
   },
   events: {
     "click #feedbackSubmit": "submit"
   },
   render: function() {
-    this.updateMeta();
+    this.updateMeta(this.title, this.description);
     this.$el.html(Mustache.render(this.template, {
       "message": "Submit feedback"
     }));
     return this;
-  },
-  updateMeta: function() {
-    $("title").html("Feedback - MyLittleFaceWhen");
-    $("meta[name=description]").attr("content", "Any suggestions or other feedback is more than welcome.");
-    $("#og-image").attr("content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png");
-    $("#cd-layout").remove();
-    $("link[rel=image_src]").remove();
-    return $("link[rel=canonical]").remove();
   },
   submit: function(event) {
     var fb, response;

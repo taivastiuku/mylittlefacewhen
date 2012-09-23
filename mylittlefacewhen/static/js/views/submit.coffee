@@ -1,8 +1,10 @@
 window.SubmitView = Backbone.View.extend
   el: "#content"
   initialize: ->
+    @title = "Submit Images - MyLittleFaceWhen"
+    @descripition = "Upload more images to the service"
     @template = _.template tpl.get("submit")
-  
+
   events:
     "dragover #dropzone": "handleDragover"
     "drop #dropzone" : "handleDrop"
@@ -10,20 +12,11 @@ window.SubmitView = Backbone.View.extend
     "click #upload" : "upload"
     "click #instructions button" : "toggleInstructions"
     "click #to-unreviewed a" : "navigateAnchor"
-  
+
   render: ->
     @updateMeta()
     $(@el).html @template({static_prefix:static_prefix})
-    
     return @
-
-  updateMeta: ->
-    $("title").html "Submit Images - MyLittleFaceWhen"
-    $("meta[name=description]").attr "content", "Upload more images to the service"
-    $("#og-image").attr "content", "http://mylittlefacewhen.com/static/cheerilee-square-300.png"
-    $("#cd-layout").remove()
-    $("link[rel=image_src]").remove()
-    $("link[rel=canonical]").remove()
 
   handleChoose: (event) ->
     @handleFiles event.target.files
@@ -78,7 +71,7 @@ window.SubmitView = Backbone.View.extend
       if $(item).find("input[name=screenshot]")[0].checked
         tags += ", screenshot"
       source = $(item).find(".source").val()
-      
+
       img = $(item).find("img")
 
       face = new Face
