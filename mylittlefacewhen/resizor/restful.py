@@ -50,7 +50,7 @@ def process_image(data):
         #return bad request
         return False
 
- 
+
     output = {"png":{}, "jpg":{}}
 
     for size in data["sizes"]:
@@ -67,30 +67,34 @@ def process_image(data):
             rgba = True
             cpy = image.convert("RGBA")
             png = True
+            jpg = False
         elif image.mode == "RGBA":
             rgba = True
             cpy = image.copy()
             png = True
+            jpg = False
         elif image.mode == "L":
             cpy = image.convert("RGB")
             png = False
+            jpg = True
         else: # image.mode == "RGB":
             cpy = image.copy()
             png = False
+            jpg = True
 
-        if data.get("format"):
-            if data["format"] == "png":
-                png = True
-                jpg = False
-            elif data["format"] == "jpg":
-                if rgba:
-                    i = Image.new("RGB", cpy.size,(255,255,255))
-                    i.paste(cpy,(0,0,cpy.size[0],cpy.size[1],), cpy)
-                    cpy = i
-                png = False
-                jpg = True
+#        if data.get("format"):
+#            if data["format"] == "png":
+#                png = True
+#                jpg = False
+#            elif data["format"] == "jpg":
+#                if rgba:
+#                    i = Image.new("RGB", cpy.size,(255,255,255))
+#                    i.paste(cpy,(0,0,cpy.size[0],cpy.size[1],), cpy)
+#                    cpy = i
+#                png = False
+#                jpg = True
 
-        
+
         if size[0] == 0:
             resize = (cpy.size[0], size[1])
         elif size[1] == 0:
@@ -113,7 +117,7 @@ def process_image(data):
             y1 = y0 + g_height
 
             cpy.paste(gif, (x0, y0, x1, y1), gif)
-            
+
 
         if cpy.mode == "RGB" and not data.get("format", "").lower() == "png":
             if size[1] <= 100 :
@@ -124,13 +128,13 @@ def process_image(data):
         else:
             cpy.save(temp_handle, "PNG")
             format = "png"
-        
+
         temp_handle.seek(0)
 
         #output[format][str(size)] = base64.b64encode(temp_handle.read())
         output[format][json.dumps(size)] = temp_handle.read()
         temp_handle.close()
-    
+
     return output
 
 #class TaskHandler(BaseHandler):

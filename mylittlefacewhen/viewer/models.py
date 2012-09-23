@@ -409,9 +409,9 @@ class Face(models.Model):
             self.save()
 
         if self.md5 != "":
-            faces = Face.objects.filter(md5=self.md5).order_by("-id")
+            faces = Face.objects.filter(md5=self.md5).order_by("id")
             if len(faces) > 1:
-                self.remove_duplicate(faces[0])
+                self.is_duplicate_of(faces[0])
 
 
     def md5sum(self):
