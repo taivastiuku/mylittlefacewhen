@@ -2,7 +2,7 @@ window.TopView = Backbone.View.extend
   el: $("#top")
   initialize: ->
     @template = tpl.get("top")
-    @collection = new AdvertCollection()
+#    @collection = new AdvertCollection()
 
   events:
     "focus #topmenu a":"focused"
@@ -25,13 +25,13 @@ window.TopView = Backbone.View.extend
     return undefined
 
   updateAd: ->
-    unless $.cookie('noads') or $(window).width() < 700
-      @collection.fetch
-        success: =>
-          $ad = $("#mainos")
-          $ad.find("span").html @collection.models[0].get("htmlad")
-          $ad.show("fast")
-
+#    unless $.cookie('noads') or $(window).width() < 700
+#      @collection.fetch
+#        success: =>
+#          $ad = $("#mainos")
+#          $ad.find("span").html @collection.models[0].get("htmlad")
+#          $ad.show("fast")
+#
     return undefined
 
 

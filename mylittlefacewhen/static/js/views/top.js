@@ -4,8 +4,7 @@ var ac_extractLast, ac_split;
 window.TopView = Backbone.View.extend({
   el: $("#top"),
   initialize: function() {
-    this.template = tpl.get("top");
-    return this.collection = new AdvertCollection();
+    return this.template = tpl.get("top");
   },
   events: {
     "focus #topmenu a": "focused",
@@ -31,17 +30,6 @@ window.TopView = Backbone.View.extend({
     return void 0;
   },
   updateAd: function() {
-    var _this = this;
-    if (!($.cookie('noads') || $(window).width() < 700)) {
-      this.collection.fetch({
-        success: function() {
-          var $ad;
-          $ad = $("#mainos");
-          $ad.find("span").html(_this.collection.models[0].get("htmlad"));
-          return $ad.show("fast");
-        }
-      });
-    }
     return void 0;
   },
   search: function(event) {

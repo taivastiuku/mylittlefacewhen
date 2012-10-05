@@ -1,18 +1,21 @@
 from django.contrib import admin
+from django_extensions.admin import ForeignKeyAutocompleteAdmin
+
 from viewer import models
 
-class Face(admin.ModelAdmin):
-    pass
+class Face(ForeignKeyAutocompleteAdmin):
+    related_search_fields = {"duplicate_of": ["id"]}
 
 admin.site.register(models.Face, Face)
 
-class Flag(admin.ModelAdmin):
-    pass
+class Flag(ForeignKeyAutocompleteAdmin):
+    related_search_fields = {"face": ["id"]}
+
 
 admin.site.register(models.Flag, Flag)
 
-class ChangeLog(admin.ModelAdmin):
-    pass
+class ChangeLog(ForeignKeyAutocompleteAdmin):
+    related_search_fields = {"face": ["id"]}
 
 admin.site.register(models.ChangeLog, ChangeLog)
 

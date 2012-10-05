@@ -393,7 +393,7 @@ class Face(models.Model):
             for tag in face.tags:
                 tags += tag.name + ", "
         self.duplicate_of = original
-        duplicate_of.tags = tags
+        original.tags = tags
         self.tags = ""
         ChangeLog.new_edit(self)
         ChangeLog.new_edit(original)
@@ -473,7 +473,7 @@ class Face(models.Model):
         return (artist,title,description)
 
 
-    def __str__(self):
+    def __unicode__(self):
         s = str(self.id) + " - "
         artist, title, description = self.getMeta()
         return s + title
@@ -497,7 +497,7 @@ class Flag(models.Model):
         return ret
 
 
-    def __str__(self):
+    def __unicode__(self):
         return str(self.face.id) + " - " + self.reason
 
 
@@ -619,7 +619,7 @@ class ChangeLog(models.Model):
         return True
 
 
-    def __str__(self):
+    def __unicode__(self):
         if self.flag:
             return "Flagged with: " + self.flag.reason
         if self.prev:
@@ -656,7 +656,7 @@ class Feedback(models.Model):
             return super(Feedback, self).save(*args, **kwargs)
 
 
-    def __str__(self):
+    def __unicode__(self):
         return self.contact + " - " + self.text
 
 class AccessLog(models.Model):
@@ -680,6 +680,6 @@ class TagPopularity(models.Model):
     tag = models.ForeignKey(tagging.models.Tag)
     popularity = models.IntegerField(default=0)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.tag.name
 
