@@ -4,7 +4,11 @@ var ac_extractLast, ac_split;
 window.TopView = Backbone.View.extend({
   el: $("#top"),
   initialize: function() {
-    return this.template = tpl.get("top");
+    var _this = this;
+    this.template = tpl.get("top");
+    return KeyboardJS.bind.key('s', null, function(event) {
+      return $("#searchbar").focus();
+    });
   },
   events: {
     "focus #topmenu a": "focused",

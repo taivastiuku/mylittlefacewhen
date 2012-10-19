@@ -3,6 +3,7 @@ window.TopView = Backbone.View.extend
   initialize: ->
     @template = tpl.get("top")
 #    @collection = new AdvertCollection()
+    KeyboardJS.bind.key 's', null, (event) => $("#searchbar").focus()
 
   events:
     "focus #topmenu a":"focused"

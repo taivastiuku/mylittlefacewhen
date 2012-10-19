@@ -11,7 +11,25 @@ window.SingleView = Backbone.View.extend({
     if (this.model.isNew() && !this.options.firstLoad) {
       this.model.fetch();
     }
-    return $(window).scrollTop(0);
+    $(window).scrollTop(0);
+    KeyboardJS.bind.key('r', function(event) {
+      return _this.random(event);
+    });
+    KeyboardJS.bind.key('left', function(event) {
+      return _this.previous(event);
+    });
+    KeyboardJS.bind.key('right', function(event) {
+      return _this.next(event);
+    });
+    KeyboardJS.bind.key('h', function(event) {
+      return _this.previous(event);
+    });
+    KeyboardJS.bind.key('l', function(event) {
+      return _this.next(event);
+    });
+    return KeyboardJS.bind.key('esc', function(event) {
+      return _this.cancel(event);
+    });
   },
   events: {
     "click .tag": "navigateAnchor",
@@ -26,10 +44,11 @@ window.SingleView = Backbone.View.extend({
     "click #flag": "showWindow"
   },
   beforeClose: function() {
-    return this.model.off("change");
+    this.model.off("change");
+    return KeyboardJS.unbind.key('r, left, right, h, l, esc');
   },
   render: function() {
-    var current_scroll, face, image, resizes, thumb, to_template;
+    var current_scroll, face, image, resizes, size, thumb, to_template, _i, _len, _ref;
     if (!this.model.isNew()) {
       $("#loader").hide();
       current_scroll = $(window).scrollTop();
@@ -46,29 +65,15 @@ window.SingleView = Backbone.View.extend({
         face.source = [];
       }
       resizes = [];
-      if (face.resizes.huge) {
-        resizes.push({
-          size: "huge",
-          image: face.resizes.huge
-        });
-      }
-      if (face.resizes.large) {
-        resizes.push({
-          size: "large",
-          image: face.resizes.large
-        });
-      }
-      if (face.resizes.medium) {
-        resizes.push({
-          size: "medium",
-          image: face.resizes.medium
-        });
-      }
-      if (face.resizes.small) {
-        resizes.push({
-          size: "small",
-          image: face.resizes.small
-        });
+      _ref = ["huge", "large", "medium", "small"];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        size = _ref[_i];
+        if (face.resizes[size]) {
+          resizes.push({
+            size: size,
+            image: face.resizes[size]
+          });
+        }
       }
       face.resizes = resizes;
       this.updateMeta(face);
@@ -114,7 +119,7 @@ window.SingleView = Backbone.View.extend({
   },
   cancel: function(event) {
     event.preventDefault();
-    return $("#mask, .window").hide();
+    return $("#mask, .window").fadeOut("fast");
   },
   deactivate: function(event) {
     return $(event.currentTarget).removeClass("activated");
@@ -134,7 +139,7 @@ window.SingleView = Backbone.View.extend({
   report: function(event) {
     var reason;
     event.preventDefault();
-    reason = $(".window textarea").val().replace("\n", "\\n");
+    reason = $(".window textarea").val().replace(/\n/g, "\\n");
     if (!reason) {
       return;
     }
@@ -197,10 +202,39 @@ window.SingleView = Backbone.View.extend({
     $("#mask").css({
       width: winW,
       height: winH
-    }).show();
+    }).fadeIn("fast");
     return $(id).css({
       top: winH / 3,
       left: winW / 2 - $(id).width() / 2
-    }).show();
+    }).fadeIn("fast");
+  },
+  previous: function(event) {
+    return this.gotoDir(event, "-id", "lt");
+  },
+  next: function(event) {
+    return this.gotoDir(event, "id", "gt");
+  },
+  gotoDir: function(event, order, dir) {
+    var col, params,
+      _this = this;
+    col = new FaceCollection();
+    params = {
+      order_by: order,
+      limit: 1,
+      accepted: true,
+      removed: false
+    };
+    params["id__" + dir] = this.model.get("id");
+    return col.fetch({
+      data: params,
+      success: function(data) {
+        if (!(col.length > 0)) {
+          return void 0;
+        }
+        return app.navigate("f/" + (col.models[0].get("id")) + "/", {
+          trigger: true
+        });
+      }
+    });
   }
 });

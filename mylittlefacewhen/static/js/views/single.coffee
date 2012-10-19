@@ -5,6 +5,12 @@ window.SingleView = Backbone.View.extend
     @model.on "change", => @render()
     @model.fetch() if @model.isNew() and not @options.firstLoad
     $(window).scrollTop(0)
+    KeyboardJS.bind.key 'r', (event) => @random(event)
+    KeyboardJS.bind.key 'left', (event) => @previous(event)
+    KeyboardJS.bind.key 'right', (event) => @next(event)
+    KeyboardJS.bind.key 'h', (event) => @previous(event)
+    KeyboardJS.bind.key 'l', (event) => @next(event)
+    KeyboardJS.bind.key 'esc', (event) => @cancel(event)
 
   events:
     "click .tag": "navigateAnchor"
@@ -18,7 +24,9 @@ window.SingleView = Backbone.View.extend
     "submit form": "saveInfo"
     "click #flag": "showWindow"
 
-  beforeClose: -> @model.off("change")
+  beforeClose: ->
+    @model.off("change")
+    KeyboardJS.unbind.key 'r, left, right, h, l, esc'
 
   render: ->
     unless @model.isNew() #Still loading data from initialize
@@ -32,13 +40,10 @@ window.SingleView = Backbone.View.extend
         face.source = [{source:face.source}]
       else
         face.source = []
+
       resizes = []
-
-      resizes.push({size:"huge", image:face.resizes.huge}) if face.resizes.huge
-      resizes.push({size:"large", image:face.resizes.large}) if face.resizes.large
-      resizes.push({size:"medium", image:face.resizes.medium}) if face.resizes.medium
-      resizes.push({size:"small", image:face.resizes.small}) if face.resizes.small
-
+      for size in ["huge", "large", "medium", "small"]
+        resizes.push({size:size, image:face.resizes[size]}) if face.resizes[size]
       face.resizes = resizes
 
       @updateMeta(face)
@@ -84,7 +89,7 @@ window.SingleView = Backbone.View.extend
 
   cancel: (event) ->
     event.preventDefault()
-    $("#mask, .window").hide()
+    $("#mask, .window").fadeOut("fast")
 
   deactivate: (event) ->
     $(event.currentTarget).removeClass("activated")
@@ -103,7 +108,7 @@ window.SingleView = Backbone.View.extend
 
   report: (event) ->
     event.preventDefault()
-    reason = $(".window textarea").val().replace("\n", "\\n")
+    reason = $(".window textarea").val().replace(/\n/g, "\\n")
     return unless reason
 
     @undelegateEvents()
@@ -152,8 +157,29 @@ window.SingleView = Backbone.View.extend
 
     $("#mask")
       .css({ width: winW, height: winH })
-      .show()
+      .fadeIn("fast")
 
     $(id)
       .css({ top: winH/3, left: winW/2 - $(id).width() / 2 })
-      .show()
+      .fadeIn("fast")
+
+  previous: (event) -> @gotoDir(event, "-id", "lt")
+
+  next: (event) -> @gotoDir(event, "id", "gt")
+
+  gotoDir: (event, order, dir) ->
+    col = new FaceCollection()
+    params =
+      order_by: order
+      limit: 1
+      accepted: true
+      removed: false
+    params["id__#{dir}"] = @model.get("id")
+
+    col.fetch
+      data: params
+      success: (data) =>
+        return undefined unless col.length > 0
+        app.navigate("f/#{col.models[0].get("id")}/", trigger:true)
+
+
