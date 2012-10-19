@@ -4,16 +4,16 @@ import base64
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 #mokeypatch
-old_build_attrs = forms.Widget.build_attrs
-def build_attrs(self, extra_attrs=None, **kwargs):
-  attrs = old_build_attrs(self, extra_attrs, **kwargs)
-
-  if self.is_required:
-    attrs["required"] = "required"
-
-  return attrs
-
-forms.Widget.build_attrs = build_attrs
+#old_build_attrs = forms.Widget.build_attrs
+#def build_attrs(self, extra_attrs=None, **kwargs):
+#  attrs = old_build_attrs(self, extra_attrs, **kwargs)
+#
+#  if self.is_required:
+#    attrs["required"] = "required"
+#
+#  return attrs
+#
+#forms.Widget.build_attrs = build_attrs
 
 
 class FeedbackForm(forms.Form):
@@ -58,7 +58,7 @@ class UpdateFace(forms.Form):
     gif = forms.CharField(max_length=5000000, required=False)
     tags = forms.CharField(max_length=1024, required=False)
     processed = forms.BooleanField(required=False)
-    
+
     small  = forms.CharField(max_length=6400000, required=False)
     medium = forms.CharField(max_length=6400000, required=False)
     large  = forms.CharField(max_length=6400000, required=False)
@@ -101,7 +101,7 @@ class UpdateFace(forms.Form):
                 self.cleaned_data.pop("image")
             except:
                 pass
-        
+
         for item in ("png", "gif", "webp", "jpg"):
             if cleaned_data.get(item):
                 mime = item
