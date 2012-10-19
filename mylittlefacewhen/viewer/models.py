@@ -624,16 +624,16 @@ class ChangeLog(models.Model):
             return "Flagged with: " + self.flag.reason
         if self.prev:
             if self.prev.source != self.source:
-                s = str(self.prev.source) + " -> " + str(self.source)
+                s = unicode(self.prev.source) + " -> " + unicode(self.source)
             else:
                 s = "same source"
         else:
-            s = "None -> " + str(self.source)
+            s = "None -> " + unicode(self.source)
         s += " - "
         for tag in self.added():
-            s += "+%s, " % str(tag)
+            s += "+%s, " % unicode(tag)
         for tag in self.removed():
-            s += "-%s, " % str(tag)
+            s += "-%s, " % unicode(tag)
         return s[:-2]
 
 
