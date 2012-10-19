@@ -91,7 +91,7 @@ def fetch_media(days=None):
         local("""rm ~/webapps/mlfw_media/ ~/fetch_media.tar.gz -rf""")
     except:
         pass
-    
+
     get("""~/fetch_media.tar.gz""", """~/""")
     local("""tar xzfP ~/fetch_media.tar.gz""")
 
@@ -103,7 +103,7 @@ def _prepare_deploy():
 	os.mkdir("/tmp/mlfw_deploy/")
     os.chdir("/tmp/mlfw_deploy/")
 
-	
+
     # Database
     if env.install_db:
         cmd = """mysqldump --databases %s -u%s -p"%s" --ignore-table=inopia_mlfw.viewer_accesslog > dump.sql""" % (env.mysql_user, env.mysql_user, env.mysql_pass)
@@ -113,7 +113,7 @@ def _prepare_deploy():
 	cmd = "tar czf dump.sql.tar.gz dump.sql"
 	local(cmd)
 
-	
+
     # media
     if env.install_media:
 	os.chdir(env.home)
@@ -125,7 +125,7 @@ def _prepare_deploy():
     # static
     if env.install_static:
 	os.chdir(env.home)
-        css = ""   
+        css = ""
         #css = "var collated_stylesheets = '"
 
         cssdir = env.staticdir + "css/"
@@ -139,7 +139,7 @@ def _prepare_deploy():
 
         lib = ""
         libdir = env.staticdir + "lib/"
-        for filu in ("jquery-1.8.0.min.js", "underscore-min.js", "backbone-min.js", "backbone-tastypie.js","jquery.lazyload.min.js", "jquery.cookie.min.js", "jquery-ui-1.8.22.custom.min.js", "mustache.min.js"):
+        for filu in ("jquery-1.8.0.min.js", "underscore-min.js", "backbone-min.js", "backbone-tastypie.js","jquery.lazyload.min.js", "jquery.cookie.min.js", "jquery-ui-1.8.22.custom.min.js", "mustache.min.js", "keyboard.js"):
             with open(libdir + filu) as libfile:
                 lib += libfile.read()
 
@@ -147,7 +147,7 @@ def _prepare_deploy():
 
         jsdir = env.staticdir + "js/"
         views = ""
-        app = "" 
+        app = ""
         main = ""
 
         for filu in ("models.js", "utils.js", "main.js"):
@@ -171,7 +171,7 @@ def _prepare_deploy():
                     name = template.partition(".")[0]
                     data = strip_spaces_between_tags(filu.read())
                     templates[name] = data
-        
+
         with open(env.staticdir + "app.js", "w") as out:
             out.write(css + lib + views + app + "tpl.templates = " + json.dumps(templates) + ";\n" + main)
         local( env.minifier + " " + env.staticdir + "app.js " + env.staticdir + "app.js")
@@ -180,12 +180,12 @@ def _prepare_deploy():
 
         loc = env.staticdeploydir
         local("rm %s* -rf" % loc)
-        local("cp %s* %s -r" % (env.staticdir, loc)) 
+        local("cp %s* %s -r" % (env.staticdir, loc))
 	relative_dir = loc.lstrip(env.home)
 	cmd = """tar czf static.tar.gz --exclude='*.coffee' --exclude='*.sass' %s""" % relative_dir
 	local(cmd)
 	local("mv static.tar.gz /tmp/mlfw_deploy/")
-	
+
     # application
     if env.install_app:
 	os.chdir(env.home)
@@ -194,7 +194,7 @@ def _prepare_deploy():
 
 	cmd = cmd % relative_dir
 	local(cmd)
-	
+
 	local("mv application.tar.gz /tmp/mlfw_deploy")
 
 
@@ -226,22 +226,22 @@ def _install():
 
 	for filu in env.files:
 	    run("tar xzf %s" % filu)
-	
+
 
 
 	if env.install_db:
             cmd = """mysql -u%s -p"%s" %s < dump.sql""" % \
                     (env.mysql_user, env.mysql_pass, env.mysql_user)
 	    run(cmd)
-	
-	
+
+
 	with cd(appdir + "mylittlefacewhen/"):
 	    run("python2.7 manage.py migrate viewer")
 	    run("find settings.py -type f -exec sed -i 's/DEBUG = True/DEBUG = False/g' {} ';'")
 	    with cd("templates"):
 		run("find ./ -type f -exec sed -i 's/<!--remove//g' {} ';'")
 		run("find ./ -type f -exec sed -i 's/remove-->//g' {} ';'")
-    
+
         if env.install_static:
             update_cache()
 

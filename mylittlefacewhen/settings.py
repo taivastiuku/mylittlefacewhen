@@ -176,15 +176,15 @@ INSTALLED_APPS = (
     "viewer",
     "resizor",
 )
- 
-DEVSERVER_MODULES = (  
-    'devserver.modules.sql.SQLRealTimeModule', 
-    'devserver.modules.sql.SQLSummaryModule', 
-    'devserver.modules.profile.ProfileSummaryModule', 
-    'devserver.modules.ajax.AjaxDumpModule', 
-    'devserver.modules.cache.CacheSummaryModule', 
-    #'devserver.modules.profile.LineProfilerModule', 
-    #'devserver.modules.profile.MemoryUseModule', 
+
+DEVSERVER_MODULES = (
+    'devserver.modules.sql.SQLRealTimeModule',
+    'devserver.modules.sql.SQLSummaryModule',
+    'devserver.modules.profile.ProfileSummaryModule',
+    'devserver.modules.ajax.AjaxDumpModule',
+    'devserver.modules.cache.CacheSummaryModule',
+    #'devserver.modules.profile.LineProfilerModule',
+    #'devserver.modules.profile.MemoryUseModule',
 )
 
 
