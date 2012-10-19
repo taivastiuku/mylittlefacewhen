@@ -17,6 +17,7 @@
         <li>offset=&lt;integer&gt;</li>
         <li>search=[tag, tag2]</li>
         <li>format=(json, xml)</li>
+        <li>id__gt=(id), id__lt=(id), id__gte=(id), id__lte=(id)</li>
       </ul>
     </td>
     <td class="explanation">Collection of all the reaction faces on the service. Default number of fetched records (limit) is 20 except with 'random' order which has the default limit of 2. Maximum limit is 100.<br> You can also use search to search for specified tags. Tags need to be given as a json array as in examples. Search results may differ from APIv1 search results. 1 charecter tags will be ignored. <br> Format is optional if you supply accept http header specifying what you want.</td>

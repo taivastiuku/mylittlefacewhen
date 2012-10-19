@@ -28,6 +28,7 @@ class FaceResource(ModelResource):
         max_limit = 1000
         allowed_methods = ('get', 'post', 'put', 'delete', )
         filtering = {
+                "id": ["lte", "lt", "gte", "gt"],
                 "accepted": ["exact"],
                 "removed": ["exact"],
                 }
