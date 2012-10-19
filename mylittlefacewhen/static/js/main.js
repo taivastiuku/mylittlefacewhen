@@ -39,7 +39,7 @@ AppRouter = Backbone.Router.extend({
     } else {
       this.firstLoad = true;
     }
-    this.imageServices = ["http://denver.mylittlefacewhen.com", "http://scranton.mylittlefacewhen.com"];
+    this.imageServices = ["http://pinkie.mylittlefacewhen.com", "http://dashie.mylittlefacewhen.com"];
     this.fastest = {
       service: void 0,
       speed: 10000

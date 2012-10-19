@@ -40,8 +40,8 @@ AppRouter = Backbone.Router.extend
     # All image services have 2kB file for speed testing and allow main site
     # with cross origin resource sharing.
     @imageServices = [
-      "http://denver.mylittlefacewhen.com"
-      "http://scranton.mylittlefacewhen.com"
+      "http://pinkie.mylittlefacewhen.com"
+      "http://dashie.mylittlefacewhen.com"
     ]
 
     @fastest =
