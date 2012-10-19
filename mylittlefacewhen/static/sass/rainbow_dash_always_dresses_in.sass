@@ -10,7 +10,7 @@
   padding-bottom: 3em
   input,textarea
     width: 98%
-  
+
 
 ul ul
   margin-top: 0
@@ -225,16 +225,16 @@ span.thumb img:hover, div.thumb:hover
   width: 24px
   height: 24px
   cursor: pointer
-  
+
   &.faded
-    opacity: 0.4
-    filter: alpha(opacity = 40)
+    opacity: 0.8
+    filter: alpha(opacity = 80)
 
-  &:hover, &.focus
-    opacity: 0.6
-    filter: alpha(opacity = 60)
+  &:hover, &.focus, &.activated
+    opacity: 1.0
+    filter: alpha(opacity = 100)
 
-  &.activated
+    /*&.activated
     opacity: 1.0
     filter: alpha(opacity = 100)
 
@@ -268,7 +268,7 @@ span.thumb img:hover, div.thumb:hover
     background: url("/static/icons/star_yellow_24.png")
 
 #flag
-  background: url("/static/icons/white_flag_24.png")
+  background: url("/static/icons/red_flag_24.png")
   &:hover, &.activated, &.focus
     background: url("/static/icons/red_flag_24.png")
 
