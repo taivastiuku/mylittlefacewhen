@@ -1,11 +1,8 @@
-import datetime
 import random
-try:    import simplejson as json
-except: import json
 
+from django.utils import simplejson as json
 from tastypie import fields
 from tastypie.api import Api
-from tastypie.constants import ALL
 from tastypie.exceptions import BadRequest
 from tastypie.resources import ModelResource, Resource
 
@@ -21,19 +18,25 @@ MEDIA = "/media/"
 
 FACES_LEN = -1
 
+
 class FaceResource(ModelResource):
-    tags = fields.ToManyField('viewer.api.v2.TagResource', 'tags', full=True, null=True)
+    tags = fields.ToManyField(
+        'viewer.api.v2.TagResource',
+        'tags',
+        full=True,
+        null=True)
+
     class Meta:
         queryset = models.Face.objects.all()
         max_limit = 1000
         allowed_methods = ('get', 'post', 'put', 'delete', )
         filtering = {
-                "id": ["lte", "lt", "gte", "gt"],
-                "accepted": ["exact"],
-                "removed": ["exact"],
-                }
-        ordering = ("id",)
-        excludes = ("views", "gif", "png", "jpg", "webp", "small", "medium", "large", "huge", )
+            "id": ["lte", "lt", "gte", "gt"],
+            "accepted": ["exact"],
+            "removed": ["exact"]}
+
+        ordering = ["id"]
+        excludes = ["views", "gif", "png", "jpg", "webp", "small", "medium", "large", "huge"]
         authorization = auths.AnonMethodAllowed().set_allowed(["GET", "POST", "PUT"])
 
     def get_object_list(self, request):
@@ -69,12 +72,11 @@ class FaceResource(ModelResource):
             if limit >= faces_len:
                 return obj_list
             else:
-                i = random.randint(0, faces_len - 1- limit)
+                i = random.randint(0, faces_len - 1 - limit)
                 orders = ["id", "-id", "source", "-source", "width", "-width", "height", "-height"]
-                return obj_list.order_by(random.choice(orders))[i:i+limit + 1]
+                return obj_list.order_by(random.choice(orders))[i:i + limit + 1]
 
         return super(FaceResource, self).apply_sorting(obj_list, options)
-
 
     def dehydrate(self, bundle):
         artist, title, description = bundle.obj.getMeta()
@@ -85,12 +87,14 @@ class FaceResource(ModelResource):
         bundle.data["thumbnails"] = {}
         for itm in ("png", "jpg", "webp", "gif"):
             if getattr(bundle.obj, itm):
-                bundle.data["thumbnails"][itm] = MEDIA + str(getattr(bundle.obj, itm))
+                relative_uri = MEDIA + str(getattr(bundle.obj, itm))
+                bundle.data["thumbnails"][itm] = relative_uri
 
         bundle.data["resizes"] = {}
         for itm in ("small", "medium", "large", "huge"):
             if getattr(bundle.obj, itm):
-                bundle.data["resizes"][itm] = MEDIA + str(getattr(bundle.obj, itm))
+                relative_uri = MEDIA + str(getattr(bundle.obj, itm))
+                bundle.data["resizes"][itm] = relative_uri
 
         return bundle
 
@@ -99,10 +103,10 @@ class FaceResource(ModelResource):
         for tag in bundle.data.get("tags"):
             tags += tag["name"] + ", "
 
-
         face = models.Face.objects.get(pk=bundle.data["id"])
 
-        return face.public_update({"tags":tags[:-2], "source":bundle.data.get("source", "")})
+        return face.public_update(
+            {"tags": tags[:-2], "source": bundle.data.get("source", "")})
 
     def obj_create(self, bundle, request=None, **kwargs):
         form = forms.CreateFace(bundle.data)
@@ -116,36 +120,33 @@ API.register(FaceResource())
 
 
 class TagResource(ModelResource):
+
     class Meta:
         queryset = Tag.objects.all()
         include_resource_uri = False
         max_limit = 10000
-        allowed_methods = ('get', )
-        fields = ('name', )
-        filtering = {
-                "name": ("contains","startswith",),
-                }
-
+        allowed_methods = ['get']
+        fields = ['name']
+        filtering = {"name": ["contains", "startswith"]}
 
 API.register(TagResource())
 
 
 class FeedbackResource(ModelResource):
+
     class Meta:
         queryset = models.Feedback.objects.all()
         include_resource_uri = False
-        filtering = {
-                "processed": ("exact",),
-                }
-        ordering = ("id", "processed", )
+        filtering = {"processed": ["exact"]}
+        ordering = ["id", "processed"]
         authorization = auths.AnonMethodAllowed().set_allowed(["POST"])
 
     def obj_create(self, bundle, request=None, **kwargs):
         feedback = {
             "text": bundle.data["feedback"],
             "contact": bundle.data.get("contact"),
-            "useragent": request.META.get("HTTP_USER_AGENT", ""),
-            }
+            "useragent": request.META.get("HTTP_USER_AGENT", "")}
+
         form = forms.FeedbackForm(feedback)
 
         if form.is_valid():
@@ -162,7 +163,9 @@ class FeedbackResource(ModelResource):
 
 API.register(FeedbackResource())
 
+
 class DetectResource(Resource):
+
     class Meta:
         include_resource_uri = False
         allowed_methods = ('get',)
@@ -173,18 +176,19 @@ class DetectResource(Resource):
             source, tags = models._detectSource(filename)
         else:
             raise BadRequest("Invalid tags")
-        return self.create_response(request, {"source":source, "tags": tags })
+        return self.create_response(request, {"source": source, "tags": tags})
 
 API.register(DetectResource())
 
+
 class FlagResource(ModelResource):
+
     class Meta:
         queryset = models.Flag.objects.all()
         include_resource_uri = False
         ordering = ("id", )
         authorization = auths.AnonMethodAllowed().set_allowed(["POST"])
         allowed_methods = ('post',)
-
 
     def obj_create(self, bundle, request=None, **kwargs):
         user_agent = request.META.get("HTTP_USER_AGENT", "")
@@ -200,23 +204,25 @@ class FlagResource(ModelResource):
             raise BadRequest(": couldn't detect the page you're on")
 
         flag = models.Flag(
-                face=face,
-                user_agent=user_agent,
-                reason=reason
-                )
+            face=face,
+            user_agent=user_agent,
+            reason=reason)
+
         flag.save()
         return flag
 
 API.register(FlagResource())
 
+
 class AdResource(ModelResource):
+
     class Meta:
         queryset = models.Advert.objects.all()
-        allowed_mathods = ('get',)
+        allowed_mathods = ['get']
         include_resource_uri = False
 
     def apply_sorting(self, obj_list, options=None):
         i = random.randint(0, len(obj_list) - 1)
-        return obj_list[i:i+1]
+        return obj_list[i:i + 1]
 
 API.register(AdResource())

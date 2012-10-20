@@ -20,20 +20,20 @@ ADMINS = (
 MANAGERS = ADMINS
 
 DATABASES = {
-	'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': secrets.DB_CONF["dbname"],                      # Or path to database file if using sqlite3.
-        'USER': secrets.DB_CONF["username"],                      # Not used with sqlite3.
-        'PASSWORD': secrets.DB_CONF["password"],                  # Not used with sqlite3.
-        'HOST': secrets.DB_CONF["host"],                      # Set to empty string for localhost. Not used with sqlite3.
-	'PORT': secrets.DB_CONF["port"],                      # Set to empty string for default. Not used with sqlite3.
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': secrets.DB_CONF["dbname"],
+        'USER': secrets.DB_CONF["username"],
+        'PASSWORD': secrets.DB_CONF["password"],
+        'HOST': secrets.DB_CONF["host"],
+        'PORT': secrets.DB_CONF["port"],
     }
 }
 DEVSERVER_MODULES = (
     'devserver.modules.sql.SQLRealTimeModule',
     'devserver.modules.sql.SQLSummaryModule',
     'devserver.modules.profile.ProfileSummaryModule',
-    )
+)
 
 
 # Local time zone for this installation. Choices can be found here:
@@ -91,14 +91,14 @@ STATIC_URL = '/static/'
 # Additional locations of static files
 if DEBUG:
     STATICFILES_DIRS = (
-            '/home/inopia/webapps/mylittlefacewhen/mylittlefacewhen/static/',
-            )
+        '/home/inopia/webapps/mylittlefacewhen/mylittlefacewhen/static/',
+    )
 else:
     STATICFILES_DIRS = (
-	'/home/inopia/webapps/mlfw_static/',
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
+        '/home/inopia/webapps/mlfw_static/',
+        # Put strings here, like "/home/html/static" or "C:/www/django/static".
+        # Always use forward slashes, even on Windows.
+        # Don't forget to use absolute paths, not relative paths.
     )
 
 
@@ -107,7 +107,7 @@ else:
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    #'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -118,42 +118,42 @@ TEMPLATE_LOADERS = (
     'viewer.templatetags.mustache.Loader',
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
+    #'django.template.loaders.eggs.Loader',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
-        'django.contrib.auth.context_processors.auth',
-        'django.contrib.messages.context_processors.messages',
-        'django.core.context_processors.request',
-        'django.core.context_processors.debug',
-        'django.core.context_processors.media',
-        'django.core.context_processors.static',
-        )
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
+    'django.core.context_processors.request',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.gzip.GZipMiddleware',
     'viewer.middleware.RedirectDomain',
     'viewer.middleware.RedirectIE9',
-#    'viewer.middleware.SpacelessHTML',
+    #'viewer.middleware.SpacelessHTML',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-#    'viewer.middleware.ContentTypeMiddleware',
+    #'viewer.middleware.ContentTypeMiddleware',
     'viewer.middleware.NoCache',
-#    'viewer.middleware.DetectWebp',
-#    'viewer.middleware.DetectMobile',
-#    'viewer.middleware.Style',
+    #'viewer.middleware.DetectWebp',
+    #'viewer.middleware.DetectMobile',
+    #'viewer.middleware.Style',
     #'viewer.middleware.AppCache',
 )
 
 ROOT_URLCONF = 'mylittlefacewhen.urls'
 
 TEMPLATE_DIRS = (
-	"/home/inopia/webapps/mylittlefacewhen/mylittlefacewhen/templates",
-        "/home/inopia/webapps/mylittlefacewhen/mylittlefacewhen/static/mustache",
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
+    "/home/inopia/webapps/mylittlefacewhen/mylittlefacewhen/templates",
+    "/home/inopia/webapps/mylittlefacewhen/mylittlefacewhen/static/mustache",
+    # Put strings here, like "/home/html/django_templates"
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
 )
@@ -172,7 +172,7 @@ INSTALLED_APPS = (
     "registration",
     "tagging",
     "south",
-#    "devserver",
+    # "devserver",
     "viewer",
     "resizor",
 )
@@ -214,7 +214,7 @@ LOGGING = {
 FORCE_LOWERCASE_TAGS = True
 
 LOGIN_URL = "/accounts/login/"
-ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window; you may, of course, use a different valueh
+ACCOUNT_ACTIVATION_DAYS = 7
 
 EMAIL_HOST = 'smtp.webfaction.com'
 EMAIL_HOST_USER = secrets.EMAIL_CONF["username"]

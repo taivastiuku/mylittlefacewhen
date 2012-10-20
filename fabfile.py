@@ -8,32 +8,40 @@ It's not pretty but it works.
 
 """
 
-try:    import simplejson
-except: import json
 import os
-import re
-import time
 
+from django.utils import simplejson as json
 from django.utils.html import strip_spaces_between_tags
-from fabric.api import * #oh my god... it's full of stars
-from fabric.contrib.files import exists
+#from fabric.api import *  # oh my god... it's full of stars
+from fabric.api import cd, local, get, run, put, env
 
 import secrets
 
+LIBS = (
+    "jquery-1.8.0.min.js",
+    "underscore-min.js",
+    "backbone-min.js",
+    "backbone-tastypie.js",
+    "jquery.lazyload.min.js",
+    "jquery.cookie.min.js",
+    "jquery-ui-1.8.22.custom.min.js",
+    "mustache.min.js",
+    "keyboard.js"
+)
 
 
 def _config():
     env.user = "inopia"
-    env.home = "/home/inopia/"
+    env.home = "/home/%s/" % env.user
     #pubkey authentication
     #env.key_filename = "/home/%s/.ssh/id_staging_rsa" % env.user
     env.mysql_user = "inopia_mlfw"
     env.mysql_pass = secrets.MYSQLPASS
     env.hosts = ["mlfw.info"]
-    env.appdir = "/home/inopia/webapps/mylittlefacewhen/"
-    env.mediadir = "/home/inopia/webapps/mlfw_media/"
-    env.staticdir = "/home/inopia/webapps/mylittlefacewhen/mylittlefacewhen/static/"
-    env.staticdeploydir = "/home/inopia/webapps/mlfw_static/"
+    env.appdir = env.home + "webapps/mylittlefacewhen/"
+    env.mediadir = env.home + "webapps/mlfw_media/"
+    env.staticdir = env.appdir + "mylittlefacewhen/static/"
+    env.staticdeploydir = env.home + "webapps/mlfw_static/"
 
     env.minifier = "yui-compressor -o"
 
@@ -44,20 +52,25 @@ def _config():
 
     env.files = []
 
+
 def production():
     _config()
+
 
 def db():
     env.files.append("dump.sql.tar.gz")
     env.install_db = True
 
+
 def media():
     env.files.append("media.tar.gz")
     env.install_media = True
 
+
 def static():
     env.files.append("static.tar.gz")
     env.install_static = True
+
 
 def app():
     env.files.append("application.tar.gz")
@@ -68,13 +81,17 @@ def update_cache():
     with cd(env.appdir + "mylittlefacewhen/"):
         run("""python2.7 manage.py updatecache""")
 
+
 def deploy():
     _prepare_deploy()
     _put()
     _install()
 
+
 def fetch_db():
-    run("""mysqldump --databases inopia_mlfw -u%s -p"%s" --ignore-table=inopia_mlfw.viewer_accesslog > ~/dump.sql""" % (env.mysql_user, env.mysql_pass))
+    run("""mysqldump --databases inopia_mlfw -u%s -p"%s" \
+        --ignore-table=inopia_mlfw.viewer_accesslog > ~/dump.sql"""
+        % (env.mysql_user, env.mysql_pass))
     run("""tar czfP ~/dump.sql.tar.gz ~/dump.sql""")
     try:
 
@@ -83,13 +100,16 @@ def fetch_db():
         pass
     get("~/dump.sql.tar.gz", "~/")
     local("""tar xzfP ~/dump.sql.tar.gz""")
-    local("""mysql -u%s -p"%s" inopia_mlfw < ~/dump.sql""" % (env.mysql_user, env.mysql_pass))
+    local("""mysql -u%s -p"%s" inopia_mlfw < ~/dump.sql"""
+          % (env.mysql_user, env.mysql_pass))
+
 
 def fetch_media(days=None):
     if not days:
         run("""tar czfP ~/fetch_media.tar.gz ~/webapps/mlfw_media/""")
     else:
-        run("""tar czfPN '%d days ago' ~/fetch_media.tar.gz ~/webapps/mlfw_media/""" % int(days))
+        run("""tar czfPN '%d days ago' \
+                ~/fetch_media.tar.gz ~/webapps/mlfw_media/""" % int(days))
 
     try:
         local("""rm ~/webapps/mlfw_media/ ~/fetch_media.tar.gz -rf""")
@@ -99,36 +119,36 @@ def fetch_media(days=None):
     get("""~/fetch_media.tar.gz""", """~/""")
     local("""tar xzfP ~/fetch_media.tar.gz""")
 
+
 def _prepare_deploy():
     """
     Collects all files needed for service and puts them to /tmp/.
     """
     if not os.path.exists("/tmp/mlfw_deploy/"):
-	os.mkdir("/tmp/mlfw_deploy/")
+        os.mkdir("/tmp/mlfw_deploy/")
     os.chdir("/tmp/mlfw_deploy/")
-
 
     # Database
     if env.install_db:
-        cmd = """mysqldump --databases %s -u%s -p"%s" --ignore-table=inopia_mlfw.viewer_accesslog > dump.sql""" % (env.mysql_user, env.mysql_user, env.mysql_pass)
-	#cmd = """mysqldump --databases %s -u%s -p"%s" --ignore-table=inopia_mlfw.tagging_tag --ignore-table=inopia_mlfw.tagging_taggeditem --ignore-table=inopia_mlfw.viewer_taglog --ignore-table=inopia_mlfw.viewer_feedback --ignore-table=inopia_mlfw.viewer_apilog --ignore-table=inopia_mlfw.viewer_accesslog --ignore-table=inopia_mlfw.tagging_sourcelog > dump.sql""" % (env.mysql_user, env.mysql_user, env.mysql_pass)
-	local(cmd)
+        mysqlp = (env.mysql_user, env.mysql_user, env.mysql_pass)
+        cmd = """mysqldump --databases %s -u%s -p"%s" \
+            --ignore-table=inopia_mlfw.viewer_accesslog > dump.sql""" % mysqlp
+        local(cmd)
 
-	cmd = "tar czf dump.sql.tar.gz dump.sql"
-	local(cmd)
-
+        cmd = "tar czf dump.sql.tar.gz dump.sql"
+        local(cmd)
 
     # media
     if env.install_media:
-	os.chdir(env.home)
-	relative_dir = env.mediadir.lstrip(env.home)
-	#cmd = """tar czf media.tar.gz %s""" % relative_dir
-	#local(cmd)
-	#local("mv media.tar.gz /tmp/mlfw_deploy/")
+        os.chdir(env.home)
+        relative_dir = env.mediadir.lstrip(env.home)
+        #cmd = """tar czf media.tar.gz %s""" % relative_dir
+        #local(cmd)
+        #local("mv media.tar.gz /tmp/mlfw_deploy/")
 
     # static
     if env.install_static:
-	os.chdir(env.home)
+        os.chdir(env.home)
         css = ""
         #css = "var collated_stylesheets = '"
 
@@ -143,11 +163,9 @@ def _prepare_deploy():
 
         lib = ""
         libdir = env.staticdir + "lib/"
-        for filu in ("jquery-1.8.0.min.js", "underscore-min.js", "backbone-min.js", "backbone-tastypie.js","jquery.lazyload.min.js", "jquery.cookie.min.js", "jquery-ui-1.8.22.custom.min.js", "mustache.min.js", "keyboard.js"):
+        for filu in LIBS:
             with open(libdir + filu) as libfile:
                 lib += libfile.read()
-
-
 
         jsdir = env.staticdir + "js/"
         views = ""
@@ -166,7 +184,6 @@ def _prepare_deploy():
                 with open(jsdir + "views/" + filu) as jsfile:
                     views += jsfile.read() + "\n"
 
-
         templatedir = env.staticdir + "mustache/"
         templates = {}
         for template in os.listdir(templatedir):
@@ -177,29 +194,30 @@ def _prepare_deploy():
                     templates[name] = data
 
         with open(env.staticdir + "app.js", "w") as out:
-            out.write(css + lib + views + app + "tpl.templates = " + json.dumps(templates) + ";\n" + main)
-        local( env.minifier + " " + env.staticdir + "app.js " + env.staticdir + "app.js")
-
-
+            out.write(css + lib + views + app + "tpl.templates = " +
+                      json.dumps(templates) + ";\n" + main)
+        local(env.minifier + " " + env.staticdir + "app.js " +
+              env.staticdir + "app.js")
 
         loc = env.staticdeploydir
         local("rm %s* -rf" % loc)
         local("cp %s* %s -r" % (env.staticdir, loc))
-	relative_dir = loc.lstrip(env.home)
-	cmd = """tar czf static.tar.gz --exclude='*.coffee' --exclude='*.sass' %s""" % relative_dir
-	local(cmd)
-	local("mv static.tar.gz /tmp/mlfw_deploy/")
+        relative_dir = loc.lstrip(env.home)
+        cmd = """tar czf static.tar.gz --exclude='*.coffee' \
+                --exclude='*.sass' %s""" % relative_dir
+        local(cmd)
+        local("mv static.tar.gz /tmp/mlfw_deploy/")
 
     # application
     if env.install_app:
-	os.chdir(env.home)
-	relative_dir = env.appdir.lstrip(env.home)
-	cmd = """tar czf application.tar.gz %s"""
+        os.chdir(env.home)
+        relative_dir = env.appdir.lstrip(env.home)
+        cmd = """tar czf application.tar.gz %s"""
 
-	cmd = cmd % relative_dir
-	local(cmd)
+        cmd = cmd % relative_dir
+        local(cmd)
 
-	local("mv application.tar.gz /tmp/mlfw_deploy")
+        local("mv application.tar.gz /tmp/mlfw_deploy")
 
 
 def _put():
@@ -209,44 +227,42 @@ def _put():
     for filu in env.files:
         if filu.startswith("media"):
             continue
-	put("/tmp/mlfw_deploy/%s" % filu, "/home/inopia/")
+        put("/tmp/mlfw_deploy/%s" % filu, "/home/inopia/")
+
 
 def _install():
     with cd("/home/inopia/"):
 
-	appdir = env.appdir
-	mediadir = env.mediadir
+        appdir = env.appdir
+        mediadir = env.mediadir
         staticdir = env.staticdeploydir
 
+        run(appdir + "apache2/bin/stop")
 
-	run(appdir + "apache2/bin/stop")
-
-	if env.install_app:
-	    run("rm %smylittlefacewhen/* -rf" % appdir)
-	if env.install_media:
+        if env.install_app:
+            run("rm %smylittlefacewhen/* -rf" % appdir)
+        if env.install_media:
             run("rm %s* -rf" % mediadir)
         if env.install_static:
             run("rm %s* -rf" % staticdir)
 
-	for filu in env.files:
-	    run("tar xzf %s" % filu)
+        for filu in env.files:
+            run("tar xzf %s" % filu)
 
-
-
-	if env.install_db:
+        if env.install_db:
             cmd = """mysql -u%s -p"%s" %s < dump.sql""" % \
-                    (env.mysql_user, env.mysql_pass, env.mysql_user)
-	    run(cmd)
+                (env.mysql_user, env.mysql_pass, env.mysql_user)
+            run(cmd)
 
-
-	with cd(appdir + "mylittlefacewhen/"):
-	    run("python2.7 manage.py migrate viewer")
-	    run("find settings.py -type f -exec sed -i 's/DEBUG = True/DEBUG = False/g' {} ';'")
-	    with cd("templates"):
-		run("find ./ -type f -exec sed -i 's/<!--remove//g' {} ';'")
-		run("find ./ -type f -exec sed -i 's/remove-->//g' {} ';'")
+        with cd(appdir + "mylittlefacewhen/"):
+            run("python2.7 manage.py migrate viewer")
+            run("find settings.py -type f -exec sed -i \
+                's/DEBUG = True/DEBUG = False/g' {} ';'")
+            with cd("templates"):
+                run("find ./ -type f -exec sed -i 's/<!--remove//g' {} ';'")
+                run("find ./ -type f -exec sed -i 's/remove-->//g' {} ';'")
 
         if env.install_static:
             update_cache()
 
-	run(appdir + "apache2/bin/start")
+        run(appdir + "apache2/bin/start")

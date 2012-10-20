@@ -1,25 +1,22 @@
+from datetime import datetime
+import random
+
 from django.contrib.auth import login as auth_login
 from django.contrib.auth.forms import AuthenticationForm
-
 from django.shortcuts import get_object_or_404
+from django.utils import simplejson as json
 from piston.handler import BaseHandler
 from piston.utils import validate, rc
+
+import tagging
 from viewer import models
 from viewer import forms
-from tagging.models import Tag
-import tagging
-import base64
-import random
-import re
-
-try:    import simplejson as json
-except: import json
-from datetime import datetime
 
 #IMAGEURL = "http://images.mlfw.info"
-IMAGEURL = "http://images.mylittlefacewhen.com"
+IMAGEURL = "http://pinkie.mylittlefacewhen.com"
 #IMAGEURL = "http://mylittlefacewhen.com"
 SERVICEURL = "http://mylittlefacewhen.com"
+
 
 def limit_and_order(function):
     def decorator(handler, request, *args, **kvargs):
@@ -49,12 +46,13 @@ def limit_and_order(function):
         return function(handler, request, *args, **kvargs)
     return decorator
 
+
 class FaceHandler(BaseHandler):
     """
     base class for models.Face handlers
     """
     model = models.Face
-    
+
     fields = ('link', 'shortlink', 'image', 'thumbnails', 'accepted', 'processed', 'views', 'tags', 'id', 'resizes', 'source', 'width', 'height')
 
     @staticmethod
@@ -126,21 +124,20 @@ class FacesHandler(FaceHandler):
                 faces = self.model.search(tags)
 
             if request.order == "random":
-               random.shuffle(faces)
+                random.shuffle(faces)
             return faces[0:request.limit]
 
         else:
-        
             try:
                 page = int(request.GET.get("page"))
             except:
                 page = 1
-            
-            if request.order not in ("-id","id","-views","views", "random", None):
+
+            if request.order not in ("-id", "id", "-views", "views", "random", None):
                 ret = rc.BAD_REQUEST
                 ret.write(""": order should be in ("-id","id","-views","views", "random")""")
                 return ret
-            if request.order == None:
+            if request.order is None:
                 request.order = "id"
 
             offset = (page - 1) * request.limit
@@ -178,9 +175,9 @@ class FacesHandler(FaceHandler):
                 for tag in put["tags"]:
                     tags += tag + ", "
                 put = {
-                        "tags": tags,
-                        "source": put["source"],
-                        }
+                    "tags": tags,
+                    "source": put["source"],
+                }
             except:
                 ret = rc.BAD_REQUEST
                 ret.write(""": something went wrong""")
@@ -188,10 +185,10 @@ class FacesHandler(FaceHandler):
 
             face.public_update(put)
         return face
-            
+
     def delete(self, request, uid=None):
         face = get_object_or_404(self.model, pk=uid)
-        if face.accepted == False:
+        if face.accepted is False:
             face.delete()
             return True
         else:
@@ -203,17 +200,18 @@ class LoginHandler(BaseHandler):
     Some resources need authentication.
     """
     allowed_method = ('POST',)
-    def create(self,request):
+
+    def create(self, request):
         # not authenticated, call authentication form
         f = AuthenticationForm(data={
-            'username': request.POST.get('username',''),
-            'password': request.POST.get('password',''),
+            'username': request.POST.get('username', ''),
+            'password': request.POST.get('password', ''),
         })
 
         # if authenticated log the user in.
         if f.is_valid():
 
-            auth_login(request,f.get_user())
+            auth_login(request, f.get_user())
             # this ** should ** return true
             return request.user.is_authenticated()
 
@@ -221,8 +219,8 @@ class LoginHandler(BaseHandler):
             ret = rc.FORBIDDEN
             ret.write(": I don't know you.")
             return ret
-            
-    
+
+
 class SearchHandler(FaceHandler):
     """
     Search faces with a list of keywords. 1 char words disregarded, partial results are accepted for the rest.
@@ -247,14 +245,14 @@ class SearchHandler(FaceHandler):
             faces = self.model.search(tags)
 
         if request.order == "random":
-           random.shuffle(faces)
+            random.shuffle(faces)
         return faces[0:request.limit]
 
 
 class TagsHandler(BaseHandler):
     allowed_method = ('GET', )
     model = tagging.models.Tag
-    
+
     def read(self, request):
         term = request.GET.get("term")
         mode = request.GET.get("mode")
@@ -269,10 +267,11 @@ class TagsHandler(BaseHandler):
             tags = models.Face.tags.filter(name__contains=term)
         elif mode == "models":
             return models.Face.tags.all()
-        else: 
+        else:
             tags = models.Face.tags.all()
 
         return [str(tag) for tag in tags]
+
 
 class FeedbackHandler(BaseHandler):
     """
@@ -280,7 +279,7 @@ class FeedbackHandler(BaseHandler):
     """
     allowed_method = ('GET', 'POST', 'PUT')
     model = models.Feedback
-    fields = ('id', 'contact', 'image', 'text', 'datetime','processed')
+    fields = ('id', 'contact', 'image', 'text', 'datetime', 'processed')
 
     @staticmethod
     def image(instance):
@@ -295,7 +294,7 @@ class FeedbackHandler(BaseHandler):
         For easy access to feedback
         """
         if uid:
-            return get_object_or_404(self.model, pk = uid)
+            return get_object_or_404(self.model, pk=uid)
         else:
             return self.model.objects.all().order_by('datetime')
 
@@ -313,25 +312,25 @@ class FeedbackHandler(BaseHandler):
             return ret
         fb = self.model(text=feedback, datetime=datetime.utcnow(), contact=contact)
         fb.save()
-        return {"success":"Thanks for your feedback!"}
+        return {"success": "Thanks for your feedback!"}
 
     def update(self, request, uid=None):
         """
         Authenticated
         Marks feedback read/unread by given id.
         """
-        feedback = get_object_or_404(self.model, pk = uid)
+        feedback = get_object_or_404(self.model, pk=uid)
         try:
-           feedback.processed = bool(request.POST["processed"])
+            feedback.processed = bool(request.POST["processed"])
         except:
-           feedback.processed = not feedback.processed
+            feedback.processed = not feedback.processed
         feedback.save()
         return feedback
 
 
 class DetectHandler(BaseHandler):
     allowed_method = ('GET', )
-    
+
     def read(self, request):
         filename = request.GET.get("filename")
         if filename:
@@ -341,7 +340,7 @@ class DetectHandler(BaseHandler):
             ret = rc.BAD_REQUEST
             ret.write(": no 'filename' was received")
             return ret
-        return {"source":source, "tags": tags, }
+        return {"source": source, "tags": tags}
 
 
 class ReportHandler(BaseHandler):
@@ -371,11 +370,10 @@ class ReportHandler(BaseHandler):
             return ret
 
         flag = models.Flag(
-                face=face,
-                user_agent=user_agent, 
-                reason=report
-                )
+            face=face,
+            user_agent=user_agent,
+            reason=report
+        )
         flag.save()
 
         return flag
-

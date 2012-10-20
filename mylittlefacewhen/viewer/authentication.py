@@ -1,8 +1,7 @@
-try:    import simplejson as json
-except: import json
-
 from django.core.serializers.json import DateTimeAwareJSONEncoder
 from django.http import HttpResponse
+from django.utils import simplejson as json
+
 
 class Required(object):
     """
@@ -33,17 +32,22 @@ class Required(object):
         This will usually be a `HttpResponse` object with
         some kind of challenge headers and 401 code on it.
         """
-        resp = { 'error': 'Authentication needed', 'msgs': self.errors }
-        return HttpResponse(json.dumps(
-                resp, cls=DateTimeAwareJSONEncoder,
-                ensure_ascii=False, indent=4),
-            status=401,mimetype="application/json")
+
+        response = json.dumps(
+            {'error': 'Authentication needed', 'msgs': self.errors},
+            cls=DateTimeAwareJSONEncoder,
+            ensure_ascii=False,
+            indent=4)
+
+        return HttpResponse(response, status=401, mimetype="application/json")
+
 
 class AnonMethodAllowed(Required):
     """
     Allow GET for anonymous, authenticated otherwise.
     """
     allowed = []
+
     def set_allowed(self, allowed):
         self.allowed = allowed
         return self
@@ -61,4 +65,3 @@ class AnonMethodAllowed(Required):
         # is authenticated
         if self.request.user.is_authenticated():
             return True
-

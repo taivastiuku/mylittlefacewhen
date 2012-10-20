@@ -1,25 +1,27 @@
 from datetime import datetime, timedelta
-import random
-import re
 
+from django.http import HttpResponse
 from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.utils.cache import add_never_cache_headers
 from django.utils.html import strip_spaces_between_tags
 
-PONIES = ("rarity", "fluttershy", "minimalis", "twilight_sparkle", "derpy_hooves")
+PONIES = ("rarity",)
+
 
 class ContentTypeMiddleware(object):
     def process_request(self, request):
-        if request.method in ('PUT') and request.META['CONTENT_TYPE'].count(";") > 0:
-            request.META['CONTENT_TYPE'] = [c.strip() for c in request.META['CONTENT_TYPE'].split(";") ][0]
+        if request.method in ['PUT'] and request.META['CONTENT_TYPE'].count(";") > 0:
+            request.META['CONTENT_TYPE'] = [c.strip() for c in request.META['CONTENT_TYPE'].split(";")][0]
         return None
 
 # Opera supported .webp from ver 11.10
 
+
 class RedirectIE9(object):
     """
-    Internet Explorer doesnt support pushstate history. This breaks links for IE created
-    from other browsers and we need to redirect IE to hashed url.
+    Internet Explorer doesnt support pushstate history. This breaks links
+    opened by IE, pasted by other browsers and we need to redirect IE to
+    hashed url.
     """
     def process_request(self, request):
         if request.META.get("HTTP_USER_AGENT", "").find("MSIE 9.0") != -1 and request.path != "/" and not request.path.startswith("/api/"):
@@ -44,14 +46,17 @@ class RedirectDomain(object):
         host = request.META.get("HTTP_HOST")
         if not host:
             return None
-        if host not in ("vbox1:8000", "mylittlefacewhen.com", "0.0.0.0:8000", "pyramidi:8000", "192.168.56.3:8000", "lime:8000"):
-            return HttpResponsePermanentRedirect("http://mylittlefacewhen.com" + request.path)
+        if host not in ("mylittlefacewhen.com", "lime:8000", "lime:8001"):
+            url = "http://mylittlefacewhen.com" + request.path
+            return HttpResponsePermanentRedirect(url)
+
 
 class SpacelessHTML(object):
     def process_response(self, request, response):
         if 'text/html' in response['Content-Type']:
             response.content = strip_spaces_between_tags(response.content)
         return response
+
 
 class Style(object):
     def process_request(self, request):
@@ -63,7 +68,6 @@ class Style(object):
                 pass
         else:
             pony = request.COOKIES.get("best_pony")
-
 
         if pony not in PONIES:
             #request.best_pony = random.choice(PONIES)
@@ -81,7 +85,7 @@ class Style(object):
             except:
                 return response
             response.set_cookie("best_pony", value=best_pony, expires=expires, httponly=True)
-        return response;
+        return response
 
 
 class NoCache(object):

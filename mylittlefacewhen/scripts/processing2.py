@@ -14,17 +14,14 @@ except:
     import Image
 
 logininfo = {
-    "username":secrets.API_ACCESS["username"],
-    "password":secrets.API_ACCESS["password"],
-    }
-server = "https://mylittlefacewhen.com/api"
+    "username": secrets.API_ACCESS["username"],
+    "password": secrets.API_ACCESS["password"]}
 
+server = "https://mylittlefacewhen.com/api"
 
 DEBUG = False
 if DEBUG:
     server = server = "http://0.0.0.0:8000/api"
-
-
 
 THUMB_SIZE = (0, 100,)
 PNGOUT_PATH = "/home/inopia/pngout-static"
@@ -35,8 +32,6 @@ login_request = session.post(server + "/login/", data=logininfo, verify=False)
 print login_request
 if login_request.status_code != 200:
     sys.exit("login failed: %s" % login_request.read()[0:100])
-
-
 
 temp_dir = "/tmp/processing/"
 nq_dir = temp_dir + "pngnq/"
@@ -59,12 +54,13 @@ def get_thumb_size(thumb_size, image_size):
         out = thumb_size
     return out
 
+
 def process_jpeg(url):
     if DEBUG:
         url = url.replace("mlfw.info", "0.0.0.0:8000")
     urlretrieve(url, temp_dir + "process.jpg")
-    os.system("jpegoptim --strip-all "+temp_dir+"process.jpg")
-    
+    os.system("jpegoptim --strip-all " + temp_dir + "process.jpg")
+
     with open(temp_dir + "process.jpg") as out_jpeg:
         out = base64.b64encode(out_jpeg.read())
     return out
@@ -79,14 +75,13 @@ def process_webp(url):
     i = Image.open(temp_dir + "process." + ext)
     if i.mode != "RGB":
         i = i.convert("RGB")
-    
-     
 
     i.thumbnail(get_thumb_size(THUMB_SIZE, i.size), Image.ANTIALIAS)
     i.save(temp_dir + "process.webp", "WEBP", quality=40)
     with open(temp_dir + "process.webp", "r") as webp:
         out = base64.b64encode(webp.read())
     return out
+
 
 def process_png(url, nq=False):
     if DEBUG:
@@ -113,19 +108,20 @@ def process_png(url, nq=False):
 
     with open(out_dir + "out.png", "r") as out_png:
         out = base64.b64encode(out_png.read())
-    
+
     return out
+
 
 def process_gif(url):
     if DEBUG:
-        rl = url.replace("mlfw.info", "0.0.0.0:8000")
+        url = url.replace("mlfw.info", "0.0.0.0:8000")
     urlretrieve(url, temp_dir + "process.gif")
-    
+
     i = Image.open(temp_dir + "process.gif")
 
     resize = get_thumb_size(THUMB_SIZE, i.size)
 
-    os.system("""convert %s -coalesce %s""" % ((temp_dir + "process.gif"), (temp_dir + "coalesce.gif") ) )
+    os.system("""convert %s -coalesce %s""" % ((temp_dir + "process.gif"), (temp_dir + "coalesce.gif")))
     os.system("convert %s -resize %dx%d %s" % ((temp_dir + "coalesce.gif"), resize[0], resize[1], (temp_dir + "thumb.gif")))
     with open(temp_dir + "thumb.gif", "r") as thumb_gif:
         out = base64.b64encode(thumb_gif.read())
@@ -138,7 +134,7 @@ unprocesseds = json.loads(json_request.content)
 #unprocesseds = [unprocesseds]
 
 for face in unprocesseds:
-    out = {"processed":True}
+    out = {"processed": True}
     print face.get("id")
 
     to_process = {}
@@ -153,13 +149,13 @@ for face in unprocesseds:
 
     if face["image"].lower().endswith("png"):
         to_process["image"] = face["image"]
-        for item in ("small","medium","large","huge"):
+        for item in ("small", "medium", "large", "huge"):
             if face["resizes"].get(item):
                 if face["resizes"][item].endswith("png"):
                     out["rszformat"] = "png"
                     to_process[item] = face["resizes"][item]
     if not to_process:
-       continue
+        continue
 
     try:
         for key, value in to_process.items():
@@ -172,12 +168,11 @@ for face in unprocesseds:
                 out[key] = process_png(value, nq=True)
             elif key == "jpeg":
                 out["image"] = process_jpeg(value)
-            elif key in ("image","small","medium","large","huge"):
+            elif key in ("image", "small", "medium", "large", "huge"):
                 out[key] = process_png(value, nq=False)
     except:
         print "ERROR"
         continue
-
 
     if out.get("image"):
         out["name"] = face["image"].rpartition("/")[2]

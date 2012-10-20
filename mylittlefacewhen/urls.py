@@ -5,32 +5,34 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from piston.resource import Resource
 
-from viewer.resources import *
+from viewer import resources
 from viewer import authentication
 from viewer import feeds
 
 from viewer.api import v2
+from viewer.api import v3
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
 #these are for api mapping and api access control for the old piston-api (v1)
-faces_handler = Resource(FacesHandler, authentication = authentication.AnonMethodAllowed().set_allowed(["GET", "POST", "PUT"]))
-search_handler = Resource(SearchHandler)
-tags_handler = Resource(TagsHandler)
-feedback_handler = Resource(FeedbackHandler, authentication = authentication.AnonMethodAllowed().set_allowed(["POST"]))
-login_handler = Resource(LoginHandler)
-detect_handler = Resource(DetectHandler)
-report_handler = Resource(ReportHandler, authentication =authentication.AnonMethodAllowed().set_allowed(["POST",]))
+faces_handler = Resource(resources.FacesHandler, authentication=authentication.AnonMethodAllowed().set_allowed(["GET", "POST", "PUT"]))
+search_handler = Resource(resources.SearchHandler)
+tags_handler = Resource(resources.TagsHandler)
+feedback_handler = Resource(resources.FeedbackHandler, authentication=authentication.AnonMethodAllowed().set_allowed(["POST"]))
+login_handler = Resource(resources.LoginHandler)
+detect_handler = Resource(resources.DetectHandler)
+report_handler = Resource(resources.ReportHandler, authentication=authentication.AnonMethodAllowed().set_allowed(["POST"]))
 
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     #PAGE
     (r'^$', "viewer.views.main"),
     (r'^search/$', "viewer.views.search"),
     (r'^s/$', "viewer.views.search"),
-#    (r'^(f|face)/(?P<face_id>\d+)/qr/$', "viewer.views.qr"),
+    # (r'^(f|face)/(?P<face_id>\d+)/qr/$', "viewer.views.qr"),
     (r'^f/(?P<face_id>\d+)/?', "viewer.views.single"),
     (r'^face/(?P<face_id>\d+)/?', "viewer.views.single"),
     (r'^randoms/?$', "viewer.views.randoms"),
@@ -38,20 +40,20 @@ urlpatterns = patterns('',
     (r'^random/?$', "viewer.views.rand"),
     (r'^face/?$', "viewer.views.rand"),
     (r'^f/?$', "viewer.views.rand"),
-#    (r'^salute/(?P<salute_id>\d+)/$', "viewer.views.salute"),
-#    (r'^salute/$', "viewer.views.salute"),
+    # (r'^salute/(?P<salute_id>\d+)/$', "viewer.views.salute"),
+    # (r'^salute/$', "viewer.views.salute"),
     (r'^develop/?$', "viewer.views.develop"),
     (r'^develop/api', "viewer.views.api"),
     (r'^feedback/?$', "viewer.views.feedback"),
     (r'^submit/?$', "viewer.views.submit"),
     (r'^tags/?$', "viewer.views.tags"),
-    (r'^unreviewed/?$', "viewer.views.main", {"listing":"unreviewed"}),
-#    (r'^toplist/$', "viewer.views.main", {"listing":"toplist"}),
-#    (r'^toplist/(?P<page>\d+)/$', "viewer.views.main", {"listing":"toplist"}),
+    (r'^unreviewed/?$', "viewer.views.main", {"listing": "unreviewed"}),
+    # (r'^toplist/$', "viewer.views.main", {"listing":"toplist"}),
+    # (r'^toplist/(?P<page>\d+)/$', "viewer.views.main",{"listing":"toplist"}),
     (r'^changelog/?$', "viewer.views.changelog"),
 
-#    (r'^errors/500/$', "viewer.views.error"),
-#    (r'^errors/404/$', "viewer.views.notfound"),
+    # (r'^errors/500/$', "viewer.views.error"),
+    # (r'^errors/404/$', "viewer.views.notfound"),
 
     #admin
     (r'^duplicates/$', "viewer.views.md5Duplicates"),
@@ -80,13 +82,14 @@ urlpatterns = patterns('',
     url(r'^api/', include(v2.API.urls)),
 
     #RESIZOR
-#    url(r'^api/resizor/$', resizor),
+    # url(r'^api/resizor/$', resizor),
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )
 if settings.DEBUG:
-    urlpatterns += patterns('',
+    urlpatterns += patterns(
+        '',
         url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
             'document_root': settings.MEDIA_ROOT,
         }),

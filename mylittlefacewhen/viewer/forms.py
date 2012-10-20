@@ -22,7 +22,11 @@ class FeedbackForm(forms.Form):
     """
     contact = forms.CharField(label="Contact", required=False, max_length=256)
     #file = forms.ImageField(label="File", required=False)
-    text = forms.CharField(label="Feedback*", required=True, widget=forms.Textarea)
+    text = forms.CharField(
+        label="Feedback*",
+        required=True,
+        widget=forms.Textarea
+    )
     useragent = forms.CharField(widget=forms.HiddenInput(), required=False)
 
 
@@ -31,10 +35,11 @@ class PublicUpdateFace(forms.Form):
     tags = forms.CharField(max_length=1024, required=False)
 
     def clean(self):
-        if not self.cleaned_data.get("source") and not self.cleaned_data.get("tags"):
+        data = self.cleaned.data
+        if not data.get("source") and not data.get("tags"):
             raise forms.ValidationError("No data supplied")
 
-        return self.cleaned_data
+        return data
 
     def clean_tags(self):
         tags = self.cleaned_data["tags"]
@@ -44,6 +49,7 @@ class PublicUpdateFace(forms.Form):
         if not tags.find("http://") == -1:
             raise forms.ValidationError("No links allowed in tags")
         return tags
+
 
 class UpdateFace(forms.Form):
     """
@@ -59,10 +65,10 @@ class UpdateFace(forms.Form):
     tags = forms.CharField(max_length=1024, required=False)
     processed = forms.BooleanField(required=False)
 
-    small  = forms.CharField(max_length=6400000, required=False)
+    small = forms.CharField(max_length=6400000, required=False)
     medium = forms.CharField(max_length=6400000, required=False)
-    large  = forms.CharField(max_length=6400000, required=False)
-    huge   = forms.CharField(max_length=6400000, required=False)
+    large = forms.CharField(max_length=6400000, required=False)
+    huge = forms.CharField(max_length=6400000, required=False)
 
     rszformat = forms.CharField(max_length=4, required=False)
     source = forms.CharField(max_length=200, required=False)
@@ -74,12 +80,13 @@ class UpdateFace(forms.Form):
         try:
             rszformat = cleaned_data.pop("rszformat").lower()
             if rszformat not in ("jpg", "png"):
-                raise forms.ValidationError("invalid rszformat, only png or jpg accepted")
+                raise forms.ValidationError("format is other than png or jpg")
         except:
             rszformat = None
             for item in ("small", "medium", "large", "huge"):
                 if cleaned_data.get(item):
-                    raise forms.ValidationError("no rszformat provided (resize format: png/jpg)")
+                    msg = "no rszformat provided (resize format: png/jpg)"
+                    raise forms.ValidationError(msg)
 
         for item in ("small", "medium", "large", "huge"):
             if cleaned_data.get(item):
@@ -88,9 +95,10 @@ class UpdateFace(forms.Form):
                     mime = "jpeg"
                 name = "mlfw%d_%s.%s" % (uid, item, rszformat)
                 cleaned_data[item] = SimpleUploadedFile(
-                        name,
-                        base64.b64decode(cleaned_data[item]),
-                        content_type="image/%s" % mime)
+                    name,
+                    base64.b64decode(cleaned_data[item]),
+                    content_type="image/%s" % mime
+                )
         try:
             name = self.cleaned_data.pop("name")
             image = self.cleaned_data.pop("image")
@@ -108,22 +116,22 @@ class UpdateFace(forms.Form):
                 if mime == "jpg":
                     mime = "jpeg"
                 cleaned_data[item] = SimpleUploadedFile(
-                        "mlfw" + str(uid) + "." + item,
-                        base64.b64decode(cleaned_data[item]),
-                        content_type="image/%s" % mime)
-
-
-
+                    "mlfw" + str(uid) + "." + item,
+                    base64.b64decode(cleaned_data[item]),
+                    content_type="image/%s" % mime
+                )
 
         if name and image:
             mime = name.rpartition(".")[2]
             if mime == "jpg":
                 mime = "jpeg"
             cleaned_data["image"] = SimpleUploadedFile(
-                    name,
-                    base64.b64decode(image),
-                    content_type="image/%s" % mime)
+                name,
+                base64.b64decode(image),
+                content_type="image/%s" % mime
+            )
         return cleaned_data
+
 
 class CreateFace(forms.Form):
     name = forms.CharField(max_length=240)
@@ -138,7 +146,7 @@ class CreateFace(forms.Form):
             #data:image/png;base64,3ranfadf...
             image = cleaned_data.pop("image_data")
             part = image.partition(":")[2].partition(";")
-            mime = part[0]
+            #mime = part[0]
             part = image.partition(",")
             image = base64.b64decode(part[2])
         except:
@@ -147,11 +155,13 @@ class CreateFace(forms.Form):
         ext = name.rpartition(".")[2].lower()
         if ext == "jpg":
             ext = "jpeg"
-        cleaned_data["image"] = SimpleUploadedFile(name, image, content_type="image/%s" % ext)
+        cleaned_data["image"] = SimpleUploadedFile(
+            name,
+            image,
+            content_type="image/%s" % ext
+        )
         cleaned_data["accepted"] = False
         return cleaned_data
-
-
 
 
 class Settings(forms.Form):
@@ -159,23 +169,28 @@ class Settings(forms.Form):
     Users can set some settings with this form.
     """
     PONIES = (
-#            ("derpy_hooves", "Derpy Hooves"),
-#            ("fluttershy", "Fluttershy"),
-            ("rarity", "Rarity"),
-#            ("twilight_sparkle", "Twilight Sparkle"),
-#            ("minimalis", "Minimalis"),
-            )
+        # ("derpy_hooves", "Derpy Hooves"),
+        # ("fluttershy", "Fluttershy"),
+        ("rarity", "Rarity"),
+        # ("twilight_sparkle", "Twilight Sparkle"),
+        # ("minimalis", "Minimalis"),
+    )
 
-    #no_webp = forms.BooleanField(label="Disable webp thumbnails", required=False)
+    # no_webp = forms.BooleanField(label="Disable webp", required=False)
     best_pony = forms.ChoiceField(label="Best pony:", choices=PONIES)
+
 
 class SubmitForm(forms.Form):
     """
     Submit images.
     """
-    image = forms.ImageField(label="Image*", widget=forms.FileInput(attrs={"multiple":"multiple"}))
+    image = forms.ImageField(
+        label="Image*",
+        widget=forms.FileInput(attrs={"multiple": "multiple"})
+    )
     tags = forms.CharField(label="Tags", required=False)
     source = forms.CharField(label="Source", required=False)
+
 
 class Vote(forms.Form):
     vote = forms.CharField(required=True)
@@ -184,4 +199,3 @@ class Vote(forms.Form):
         if self.cleaned_data["vode"] not in ("up", "down"):
             raise forms.ValidationError("Invalid vote")
         return self.cleaned_data
-
