@@ -7,16 +7,20 @@ Fabric build script for deploying this bad boy into webfaction.
 It's not pretty but it works.
 
 """
-from fabric.api import * #oh my god... it's full of stars
-from fabric.contrib.files import exists
-import secrets
 
-from django.utils.html import strip_spaces_between_tags
-
+try:    import simplejson
+except: import json
+import os
 import re
 import time
-import os
-import json
+
+from django.utils.html import strip_spaces_between_tags
+from fabric.api import * #oh my god... it's full of stars
+from fabric.contrib.files import exists
+
+import secrets
+
+
 
 def _config():
     env.user = "inopia"

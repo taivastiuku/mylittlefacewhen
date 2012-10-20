@@ -1,6 +1,6 @@
-from django import forms
-#from viewer import models
 import base64
+
+from django import forms
 from django.core.files.uploadedfile import SimpleUploadedFile
 
 #mokeypatch

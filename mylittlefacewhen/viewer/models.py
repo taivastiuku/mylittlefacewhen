@@ -1,23 +1,20 @@
+from cStringIO import StringIO
+from datetime import datetime, timedelta
+import hashlib
+try:    import simplejson as json
+except: import json
 import os
 import random
 import re
-import hashlib
-#import base64
-from cStringIO import StringIO
-from datetime import datetime, timedelta
-
-try:    import simplejson as json
-except: import json
-try:    import Image
-except: from PIL import Image
-
-import requests
 
 from django.db import models
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.mail import send_mail
-
+try:    import Image
+except: from PIL import Image
+import requests
 import tagging
+
 from resizor.restful import process_image as resizor
 from viewer import forms
 

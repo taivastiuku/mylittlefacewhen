@@ -1,14 +1,13 @@
 from datetime import datetime
 
-#from django.http import HttpResponseRedirect
-from django.views.decorators.csrf import csrf_exempt
-from django.forms.models import model_to_dict
-from django.template import RequestContext, loader
-from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.forms.models import model_to_dict
+from django.shortcuts import render_to_response, get_object_or_404, redirect
+from django.template import RequestContext, loader
+from django.views.decorators.csrf import csrf_exempt
 
-from viewer.models import *
 from viewer import forms
+from viewer.models import *
 
 IMAGEURL = "http://denver.mylittlefacewhen.com"
 

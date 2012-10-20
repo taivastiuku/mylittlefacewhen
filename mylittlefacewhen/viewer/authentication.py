@@ -1,13 +1,14 @@
-from django.core.serializers.json import DateTimeAwareJSONEncoder
-from django.http import HttpResponse
 try:    import simplejson as json
 except: import json
+
+from django.core.serializers.json import DateTimeAwareJSONEncoder
+from django.http import HttpResponse
 
 class Required(object):
     """
     Django authentication for piston
 
-    This is reference implementation that requireds authentication for given 
+    This is reference implementation that requireds authentication for given
     resource always.
     """
     request = None

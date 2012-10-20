@@ -1,4 +1,5 @@
 from django.contrib.syndication.views import Feed
+
 from viewer import models
 
 class LatestAcceptedImages(Feed):

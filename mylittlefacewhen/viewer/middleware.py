@@ -1,10 +1,10 @@
-from django.utils.cache import add_never_cache_headers
-from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect
-from django.utils.html import strip_spaces_between_tags
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 import random
 import re
+
+from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect
+from django.utils.cache import add_never_cache_headers
+from django.utils.html import strip_spaces_between_tags
 
 PONIES = ("rarity", "fluttershy", "minimalis", "twilight_sparkle", "derpy_hooves")
 

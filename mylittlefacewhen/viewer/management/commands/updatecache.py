@@ -1,9 +1,10 @@
+from datetime import datetime, timedelta
+import os
+
 from django.core.management.base import BaseCommand
-from datetime import timedelta
-from datetime import datetime
+
 from viewer.models import *
 
-import os
 
 class Command(BaseCommand):
     args = "no args plz"
