@@ -1,44 +1,45 @@
+
 [
   {
     "pk": 1,
     "model": "viewer.advert",
     "fields": {
-      "htmlad": "<a href=\"http://www.amazon.com/gp/offer-listing/B0043WAPJM/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=am2&camp=1789&creative=9325&creativeASIN=B0043WAPJM\">Celestia toy? Why not Pinklestia?</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=am2&o=1&a=B0043WAPJM\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+      "htmlad": "<a href=\"http://poniponi.com/\">Poniponi comic reader, remembers what you have read!</a>"
     }
   },
   {
     "pk": 2,
     "model": "viewer.advert",
     "fields": {
-      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B0063FGF14/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B0063FGF14\">Get ponies on DVD!</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B0063FGF14\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+      "htmlad": "<a href=\"http://poniponi.com/\">Poniponi comic reader, try it with your phone!</a>"
     }
   },
   {
     "pk": 3,
     "model": "viewer.advert",
     "fields": {
-      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B006CD0F68/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B006CD0F68\">Cutie Mark Crusaders and Cheerilee figure set!</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B006CD0F68\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+      "htmlad": "<a href=\"http://poniponi.com/\">Poniponi comic reader, continue from last comic you read!</a>"
     }
   },
   {
     "pk": 4,
     "model": "viewer.advert",
     "fields": {
-      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B00636H2BU/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B00636H2BU\">Rainbow Dash always dresses in style!</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B00636H2BU\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+      "htmlad": "<a href=\"http://www.amazon.com/gp/offer-listing/B0043WAPJM/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=am2&camp=1789&creative=9325&creativeASIN=B0043WAPJM\">Celestia toy? Why not Pinklestia?</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=am2&o=1&a=B0043WAPJM\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
     }
   },
   {
     "pk": 5,
     "model": "viewer.advert",
     "fields": {
-      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B0043WDZ0S/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B0043WDZ0S\">Get the only REAL fashion pony, Rarity.</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B0043WDZ0S\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+      "htmlad": "<a href=\"/feedback/\">Why don't you give some feedback?</a>"
     }
   },
   {
     "pk": 6,
     "model": "viewer.advert",
     "fields": {
-      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B00859GJZS/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B00859GJZS\">Princess Cadance Figure, not Chrysalis I promise</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B00859GJZS\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+      "htmlad": "<a href=\"http://www.codecademy.com/\">Do yourself a favor and learn some basic programming. It's free!</a>"
     }
   },
   {
@@ -59,7 +60,56 @@
     "pk": 9,
     "model": "viewer.advert",
     "fields": {
-      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B0089QJ954/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B0089QJ954\">Silly Lyra, you're not Hearsing... or human</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B0089QJ954\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B0089QJ954/ref=as_li_qf_sp_asin_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B0089QJ954&linkCode=as2&tag=myli0718-20\">canon Lyra is canon</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B0089QJ954\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 10,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B0063FGF14/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B0063FGF14\">Get ponies on DVD!</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B0063FGF14\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 11,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B006CD0F68/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B006CD0F68\">Cutie Mark Crusaders and Cheerilee figure set!</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B006CD0F68\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 12,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B00636H2BU/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B00636H2BU\">Rainbow Dash always dresses in style! Fashion RD.</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B00636H2BU\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 13,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B00859GJZS/ref=as_li_tf_tl?ie=UTF8&tag=myli0718-20&linkCode=as2&camp=1789&creative=9325&creativeASIN=B00859GJZS\">Princess Cadance Figure, not Chrysalis I promise</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B00859GJZS\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 14,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B006M74IDU/ref=as_li_qf_sp_asin_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B006M74IDU&linkCode=as2&tag=myli0718-20\">Not true French haute couture but fashionable for Fluttershy</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B006M74IDU\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 15,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B00803LRTC/ref=as_li_qf_sp_asin_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B00803LRTC&linkCode=as2&tag=myli0718-20\">Royal Pony Wedding DVD</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B00803LRTC\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
+    }
+  },
+  {
+    "pk": 16,
+    "model": "viewer.advert",
+    "fields": {
+      "htmlad": "<a href=\"http://www.amazon.com/gp/product/B0089QJLZW/ref=as_li_qf_sp_asin_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B0089QJLZW&linkCode=as2&tag=myli0718-20\">THE GREAT AND POWERFUL TRIXIE DEMANDS YOUR ATTENTION</a><img src=\"http://www.assoc-amazon.com/e/ir?t=myli0718-20&l=as2&o=1&a=B0089QJLZW\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" style=\"border:none !important; margin:0px !important;\" />"
     }
   }
 ]

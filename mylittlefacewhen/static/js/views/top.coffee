@@ -2,7 +2,7 @@ window.TopView = Backbone.View.extend
   el: $("#top")
   initialize: ->
     @template = tpl.get("top")
-#    @collection = new AdvertCollection()
+    @collection = new AdvertCollection()
     KeyboardJS.bind.key 's', null, (event) => $("#searchbar").focus()
 
   events:
@@ -21,18 +21,18 @@ window.TopView = Backbone.View.extend
 
   closeAd: (event) ->
     event.preventDefault()
-    $("#mainos").hide("fast")
+    $("#mainos").slideUp("fast")
     $.cookie('noads', true, {expires: 8, path: '/'})
     return undefined
 
   updateAd: ->
-#    unless $.cookie('noads') or $(window).width() < 700
-#      @collection.fetch
-#        success: =>
-#          $ad = $("#mainos")
-#          $ad.find("span").html @collection.models[0].get("htmlad")
-#          $ad.show("fast")
-#
+    unless $.cookie('noads') or $(window).width() < 700
+      @collection.fetch
+        success: =>
+          $ad = $("#mainos")
+          $ad.find("span").html @collection.models[0].get("htmlad")
+          $ad.slideDown("fast")
+
     return undefined
 
 

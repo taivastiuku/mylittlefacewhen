@@ -6,6 +6,7 @@ window.TopView = Backbone.View.extend({
   initialize: function() {
     var _this = this;
     this.template = tpl.get("top");
+    this.collection = new AdvertCollection();
     return KeyboardJS.bind.key('s', null, function(event) {
       return $("#searchbar").focus();
     });
@@ -26,7 +27,7 @@ window.TopView = Backbone.View.extend({
   },
   closeAd: function(event) {
     event.preventDefault();
-    $("#mainos").hide("fast");
+    $("#mainos").slideUp("fast");
     $.cookie('noads', true, {
       expires: 8,
       path: '/'
@@ -34,6 +35,17 @@ window.TopView = Backbone.View.extend({
     return void 0;
   },
   updateAd: function() {
+    var _this = this;
+    if (!($.cookie('noads') || $(window).width() < 700)) {
+      this.collection.fetch({
+        success: function() {
+          var $ad;
+          $ad = $("#mainos");
+          $ad.find("span").html(_this.collection.models[0].get("htmlad"));
+          return $ad.slideDown("fast");
+        }
+      });
+    }
     return void 0;
   },
   search: function(event) {
