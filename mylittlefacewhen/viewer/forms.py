@@ -35,7 +35,7 @@ class PublicUpdateFace(forms.Form):
     tags = forms.CharField(max_length=1024, required=False)
 
     def clean(self):
-        data = self.cleaned.data
+        data = self.cleaned_data
         if not data.get("source") and not data.get("tags"):
             raise forms.ValidationError("No data supplied")
 
