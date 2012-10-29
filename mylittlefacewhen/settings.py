@@ -142,6 +142,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     #'viewer.middleware.ContentTypeMiddleware',
     'viewer.middleware.NoCache',
+    'viewer.middleware.AllowPieforkMiddleware',
     #'viewer.middleware.DetectWebp',
     #'viewer.middleware.DetectMobile',
     #'viewer.middleware.Style',

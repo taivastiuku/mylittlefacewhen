@@ -29,7 +29,7 @@ SIZENAMES = ("thumb", "small", "medium", "large", "huge")
 
 PONIES = ("celestia", "molestia", "luna", "pinkie pie", "twilight sparkle", "applejack", "rarity", "fluttershy", "rainbow dash", "lyra", "bon bon", "bon bon", "rose", "sweetie belle", "spike", "scootaloo", "applebloom", "cheerilee", "big macintosh", "berry punch", "discord", "nightmare moon", "chrysalis", "cadance", "shining armor", "colgate", "silver spoon", "diamond tiara", "vinyl scratch", "derpy hooves", "hoity toity", "gummy", "snips", "snails", "spiderman", "granny smith", "opalescence", "angel", "doctor whooves", "trixie", "gilda", "skeletor")
 
-ADMINMAILS = ["taivastiuku@mylittlefacewhen.com", "leonard.dulitz@bronies-germany.de"]
+ADMINMAILS = ["moderators@mylittlefacewhen.com"]
 
 
 def _detectSource(filename):

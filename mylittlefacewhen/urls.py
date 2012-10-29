@@ -78,8 +78,9 @@ urlpatterns = patterns(
     url(r'^api/detect/$', detect_handler),
     url(r'^api/report/$', report_handler),
 
-    #API v2
+    # Tastypie APIs
     url(r'^api/', include(v2.API.urls)),
+    url(r'^api/', include(v3.API.urls)),
 
     #RESIZOR
     # url(r'^api/resizor/$', resizor),

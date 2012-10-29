@@ -94,3 +94,14 @@ class NoCache(object):
         return response
 
 
+class AllowOriginMiddleware(object):
+    def process_request(self, request):
+        if request.method == 'OPTIONS':
+            return HttpResponse()
+
+    def process_response(self, request, response):
+        if  request.META.get('HTTP_ORIGIN'):
+            response['Access-Control-Allow-Origin'] = "http://piefork.com/"
+            response['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS, DELETE, PUT, PATCH'
+            response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
+        return response
