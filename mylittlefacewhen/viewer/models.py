@@ -85,33 +85,117 @@ class Face(models.Model):
     All the reaction faces and their thumbnails.
     """
 #    objects = RandManager()
-    image = models.ImageField(upload_to="f/img/", default="", max_length=256)
-    webp = models.ImageField(upload_to="f/thumb/", default="")
-    jpg = models.ImageField(upload_to="f/thumb/", default="")
-    gif = models.ImageField(upload_to="f/thumb/", default="")
-    png = models.ImageField(upload_to="f/thumb/", default="")
+    image = models.ImageField(
+        upload_to="f/img/",
+        default="",
+        max_length=256,
+        help_text="Image uploaded in base64 format. The core of this service.")
 
-    width = models.IntegerField(default=0)
-    height = models.IntegerField(default=0)
+    # THUMBNAILS
+    webp = models.ImageField(
+        upload_to="f/thumb/",
+        default="",
+        blank=True,
+        help_text="WEBP formatted thumbnail, max height: 100px")
 
-    small = models.ImageField(upload_to="f/rsz/", default="")
-    medium = models.ImageField(upload_to="f/rsz/", default="")
-    large = models.ImageField(upload_to="f/rsz/", default="")
-    huge = models.ImageField(upload_to="f/rsz/", default="")
+    jpg = models.ImageField(
+        upload_to="f/thumb/",
+        default="",
+        blank=True,
+        help_text="JPG formatted thumbnail, max height: 100px")
 
-    source = models.URLField(verify_exists=False, blank=True, default="")
-    md5 = models.CharField(max_length=32, default="")
+    gif = models.ImageField(
+        upload_to="f/thumb/",
+        default="",
+        blank=True,
+        help_text="animated GIF thumbnail, max height: 100px")
 
-    duplicate_of = models.ForeignKey('self', null=True, default=None)
-    removed = models.BooleanField(default=False)
-    comment = models.CharField(max_length=512, default="")
+    png = models.ImageField(
+        upload_to="f/thumb/",
+        default="",
+        blank=True,
+        help_text="transparent PNG thumbnail, max height: 100px")
 
-    added = models.DateTimeField('date added')
+    # RESIZES
+    small = models.ImageField(
+        upload_to="f/rsz/",
+        default="",
+        blank=True,
+        help_text="Resize of image fitted into 320x320 box")
 
-    accepted = models.BooleanField(default=False)
-    processed = models.BooleanField(default=False)
+    medium = models.ImageField(
+        upload_to="f/rsz/",
+        default="",
+        blank=True,
+        help_text="Resize of image fitted into 640x640 box")
 
-    views = models.IntegerField(default=0)
+    large = models.ImageField(
+        upload_to="f/rsz/",
+        default="",
+        blank=True,
+        help_text="Resize of image fitted into 1000x1000 box")
+
+    huge = models.ImageField(
+        upload_to="f/rsz/",
+        default="",
+        blank=True,
+        help_text="Resize of image fitted into 1920x1920 box")
+
+    # META-DATA
+    width = models.IntegerField(
+        default=0,
+        help_text="Width of image")
+
+    height = models.IntegerField(
+        default=0,
+        help_text="Height of image")
+
+    source = models.URLField(
+        verify_exists=False,
+        blank=True,
+        default="",
+        help_text="Source for image")
+
+    md5 = models.CharField(
+        max_length=32,
+        default="",
+        help_text="md5 hash of image for detecting duplicates.")
+
+    duplicate_of = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        default=None,
+        help_text="Current image is duplicate, redirect to duplicate_of Face")
+
+    removed = models.BooleanField(
+        default=False,
+        help_text="Image is 'removed' and should not be shown")
+
+    comment = models.CharField(
+        max_length=512,
+        default="",
+        help_text="Reason for deletion etc.")
+
+    added = models.DateTimeField(
+        'date added',
+        help_text="Date added")
+
+    accepted = models.BooleanField(
+        default=False,
+        help_text="Face has been accepted by moderator.")
+
+    processed = models.BooleanField(
+        default=False,
+        help_text="Thumbnails and resizes have been generated and compressed")
+
+    views = models.IntegerField(
+        default=0,
+        help_text="Views during last 7 days.")
+
+    hotness = models.FloatField(
+        default=0,
+        help_text="Represents newness and popularity of face.")
 
     @staticmethod
     def submit(image, tags="", source="", accepted=False):
@@ -344,7 +428,11 @@ class Face(models.Model):
                         except:
                             pass
                         setattr(self, item, "")
-                    getattr(self, item).save(cleaned_data[item].name, cleaned_data[item], save=False)
+                    getattr(self, item).save(
+                        cleaned_data[item].name,
+                        cleaned_data[item],
+                        save=False)
+
             for item in ["tags", "source", "processed"]:
                 if cleaned_data.get(item):
                     setattr(self, item, cleaned_data[item])
@@ -468,9 +556,17 @@ class Flag(models.Model):
     """
     User can report duplicates by flagging them.
     """
-    face = models.ForeignKey(Face)
-    user_agent = models.CharField(max_length=512, null=True)
-    reason = models.TextField()
+    face = models.ForeignKey(
+        Face,
+        help_text="Face related to this report.")
+
+    user_agent = models.CharField(
+        max_length=512,
+        null=True,
+        help_text="User agent of reporter.")
+
+    reason = models.TextField(
+        help_text="Reason for report.")
 
     def save(self, *args, **kwargs):
         s = "Face:\thttp://mlfw.info/f/%s/\nReason:\t%s\nUseragent:\t%s\n" % \
@@ -490,7 +586,8 @@ class Flag(models.Model):
 
 
 class Advert(models.Model):
-    htmlad = models.CharField(max_length=1024)
+    htmlad = models.CharField(
+        max_length=1024, help_text="Advertisement text, may contain html.")
 
     @staticmethod
     def random():
@@ -502,6 +599,8 @@ class Advert(models.Model):
 class Salute(models.Model):
     """
     Rainbow Salute images
+
+    DEPRECATED
     """
     filename = models.CharField(max_length=32)
     thumbnail = models.CharField(max_length=32)
@@ -510,11 +609,31 @@ class Salute(models.Model):
 
 
 class ChangeLog(models.Model):
-    datetime = models.DateTimeField("datetime when added", auto_now=True)
-    face = models.ForeignKey(Face)
-    prev = models.OneToOneField("self", null=True, related_name="next")
-    source = models.URLField(verify_exists=False, blank=True, default="")
-    flag = models.ForeignKey(Flag, null=True)
+    datetime = models.DateTimeField(
+        "datetime when added",
+        auto_now=True,
+        help_text="Datetime of change")
+
+    face = models.ForeignKey(
+        Face,
+        help_text="Face related to change")
+
+    prev = models.OneToOneField(
+        "self",
+        null=True,
+        related_name="next",
+        help_text="Previous change related to current face")
+
+    source = models.URLField(
+        verify_exists=False,
+        blank=True,
+        default="",
+        help_text="New source for face")
+
+    flag = models.ForeignKey(
+        Flag,
+        null=True,
+        help_text="Face was flagged")
 
     @staticmethod
     def new_edit(face):
@@ -630,13 +749,32 @@ tagging.register(ChangeLog)
 
 
 class Feedback(models.Model):
+    contact = models.CharField(
+        max_length=256,
+        default="",
+        help_text="Contact info of feedback giver")
 
-    contact = models.CharField(max_length=256, default="")
-    image = models.ImageField(max_length=256, upload_to="upload/")
-    text = models.TextField()
-    datetime = models.DateTimeField("datetime when added", auto_now_add=True)
-    useragent = models.CharField(max_length=512, default="")
-    processed = models.BooleanField(default=False)
+    image = models.ImageField(
+        max_length=256,
+        upload_to="upload/",
+        help_text="DEPRECATED")
+
+    text = models.TextField(
+        help_text="The feedback goes here. What is on your mind?")
+
+    datetime = models.DateTimeField(
+        "datetime when added",
+        auto_now_add=True,
+        help_text="When the feedback was received.")
+
+    useragent = models.CharField(
+        max_length=512,
+        default="",
+        help_text="Useragent of feedback giver. Useful for bug reports.")
+
+    processed = models.BooleanField(
+        default=False,
+        help_text="DEPRECATED")
 
     def save(self, *args, **kwargs):
         if (self.text):
@@ -657,6 +795,8 @@ class AccessLog(models.Model):
     """
     This is used for caluclating popularity. Google Analytics doesn't see
     hotlinked traffic but Apache does.
+
+    DEPRECATED
     """
     ip = models.CharField(max_length=64)
     accessed = models.DateTimeField("access time")
@@ -670,6 +810,8 @@ class TagPopularity(models.Model):
     """
     Precalculated table for determining which tags are the most popular.
     How many views do pictures with given tag have.
+
+    DEPRECATED
     """
     tag = models.ForeignKey(tagging.models.Tag)
     popularity = models.IntegerField(default=0)
