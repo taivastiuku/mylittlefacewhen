@@ -174,6 +174,7 @@ class Face(models.Model):
 
     comment = models.CharField(
         max_length=512,
+        blank=True,
         default="",
         help_text="Reason for deletion etc.")
 
