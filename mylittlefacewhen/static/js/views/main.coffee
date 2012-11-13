@@ -3,7 +3,7 @@ window.MainView = Backbone.View.extend
   el: "#content"
   initialize: ->
     @title = "Pony Reaction Pictures - MyLittleFaceWhen"
-    @description = "Lots of well-tagged pony reaction images."
+    @description = "Express yourself with ponies."
     @template = tpl.get('main')
     @offset = 0 if not @offset
     @loading = false
@@ -43,7 +43,7 @@ window.MainView = Backbone.View.extend
       collection.fetch
         data:
           offset: @offset
-          order_by:"-id"
+          order_by: @options.order_by
           accepted: true
           removed: false
         success: (data) =>
@@ -89,7 +89,7 @@ window.UnreviewedView = Backbone.View.extend
 
   initialize: ->
     @title = "Pony Reaction Pictures - MyLittleFaceWhen"
-    @description = "Lots of well-tagged pony reaction images."
+    @description = "Express yourself with ponies."
     @template = tpl.get('main')
 
   render: ->

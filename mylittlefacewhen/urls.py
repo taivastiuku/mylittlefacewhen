@@ -30,6 +30,10 @@ urlpatterns = patterns(
     '',
     #PAGE
     (r'^$', "viewer.views.main"),
+    (r'^new/?$', "viewer.views.main", {"listing": "new"}),
+    (r'^hot/?$', "viewer.views.main", {"listing": "hot"}),
+    (r'^popular/?$', "viewer.views.main", {"listing": "popular"}),
+    (r'^unreviewed/?$', "viewer.views.main", {"listing": "unreviewed"}),
     (r'^search/$', "viewer.views.search"),
     (r'^s/$', "viewer.views.search"),
     # (r'^(f|face)/(?P<face_id>\d+)/qr/$', "viewer.views.qr"),
@@ -47,7 +51,6 @@ urlpatterns = patterns(
     (r'^feedback/?$', "viewer.views.feedback"),
     (r'^submit/?$', "viewer.views.submit"),
     (r'^tags/?$', "viewer.views.tags"),
-    (r'^unreviewed/?$', "viewer.views.main", {"listing": "unreviewed"}),
     # (r'^toplist/$', "viewer.views.main", {"listing":"toplist"}),
     # (r'^toplist/(?P<page>\d+)/$', "viewer.views.main",{"listing":"toplist"}),
     (r'^changelog/?$', "viewer.views.changelog"),

@@ -35,8 +35,8 @@ class FaceResource(ModelResource):
             "accepted": ["exact"],
             "removed": ["exact"]}
 
-        ordering = ["id"]
-        excludes = ["views", "gif", "png", "jpg", "webp", "small", "medium", "large", "huge"]
+        ordering = ["id", "views", "hotness"]
+        excludes = ["gif", "png", "jpg", "webp", "small", "medium", "large", "huge"]
         authorization = auths.AnonMethodAllowed().set_allowed(["GET", "POST", "PUT"])
 
     def get_object_list(self, request):
@@ -73,7 +73,9 @@ class FaceResource(ModelResource):
                 return obj_list
             else:
                 i = random.randint(0, faces_len - 1 - limit)
-                orders = ["id", "-id", "source", "-source", "width", "-width", "height", "-height"]
+                orders = ["id", "-id", "source", "-source", "md5", "-md5",
+                          "width", "-width", "height", "-height",
+                          "hotness", "-hotness", "views", "-views"]
                 return obj_list.order_by(random.choice(orders))[i:i + limit + 1]
 
         return super(FaceResource, self).apply_sorting(obj_list, options)

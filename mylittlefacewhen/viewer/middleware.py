@@ -94,7 +94,7 @@ class NoCache(object):
         return response
 
 
-class AllowOriginMiddleware(object):
+class AllowPieforkMiddleware(object):
     def process_request(self, request):
         if request.method == 'OPTIONS':
             return HttpResponse()

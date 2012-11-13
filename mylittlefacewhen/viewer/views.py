@@ -16,7 +16,7 @@ STATIC_PREFIX = "/static/"
 DEFAULT_META = {
     "static_prefix": STATIC_PREFIX,
     "title": "Pony Reaction Pictures",
-    "description": "Lots of well-tagged pony reaction images, add yours!",
+    "description": "Express yourself with ponies",
     "default_image": STATIC_PREFIX + "cheerilee-square-300.png"}
 
 

@@ -73,7 +73,11 @@ AppRouter = Backbone.Router.extend({
     return this.fastest.service || this.imageServices[0];
   },
   routes: {
-    "": "main",
+    "": "new",
+    "hot": "hot",
+    "new": "new",
+    "popular": "popular",
+    "unreviewed": "unreviewed",
     "develop": "develop",
     "develop/api": "apidoc",
     "develop/api/:version": "apidoc",
@@ -86,15 +90,36 @@ AppRouter = Backbone.Router.extend({
     "randoms": "randoms",
     "search/*query": "search",
     "submit": "submit",
-    "tags": "tags",
-    "unreviewed": "unreviewed"
+    "tags": "tags"
   },
-  main: function() {
+  hot: function() {
+    return this.main("-hotness");
+  },
+  "new": function() {
+    return this.main("-id");
+  },
+  popular: function() {
+    return this.main("-views");
+  },
+  main: function(ordering) {
     var _this = this;
     return this.before(function() {
-      _this.select("#m_new");
-      return new MainView({
-        collection: _this.faceList
+      var params;
+      _this.select("#m_posts");
+      params = {
+        collection: _this.faceList,
+        order_by: ordering
+      };
+      return new MainView(params).render();
+    });
+  },
+  unreviewed: function() {
+    var _this = this;
+    return this.before(function() {
+      _this.select("none");
+      _this.randFaceList = new FaceCollection();
+      return new UnreviewedView({
+        collection: _this.randFaceList
       }).render();
     });
   },
@@ -211,16 +236,6 @@ AppRouter = Backbone.Router.extend({
       return _this.pageload(new TagsView({
         collection: _this.tagList
       }));
-    });
-  },
-  unreviewed: function() {
-    var _this = this;
-    return this.before(function() {
-      _this.select("none");
-      _this.randFaceList = new FaceCollection();
-      return new UnreviewedView({
-        collection: _this.randFaceList
-      }).render();
     });
   },
   pageload: function(page) {

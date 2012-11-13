@@ -80,7 +80,11 @@ AppRouter = Backbone.Router.extend
     return @fastest.service or @imageServices[0]
 
   routes:
-    "": "main"
+    "": "new"
+    "hot": "hot"
+    "new": "new"
+    "popular": "popular"
+    "unreviewed": "unreviewed"
     "develop": "develop"
     "develop/api": "apidoc"
     "develop/api/:version": "apidoc"
@@ -94,13 +98,28 @@ AppRouter = Backbone.Router.extend
     "search/*query": "search"
     "submit": "submit"
     "tags": "tags"
-    "unreviewed": "unreviewed"
 
 
-  main: ->
+  hot: -> @main("-hotness")
+
+  new: -> @main("-id")
+
+  popular: -> @main("-views")
+
+
+  main: (ordering) ->
     @before =>
-      @select("#m_new")
-      return new MainView(collection:@faceList).render()
+      @select("#m_posts")
+      params =
+        collection: @faceList
+        order_by: ordering
+      return new MainView(params).render()
+
+  unreviewed: ->
+    @before =>
+      @select("none")
+      @randFaceList = new FaceCollection()
+      return new UnreviewedView(collection:@randFaceList).render()
 
   apidoc: (version) ->
     @before =>
@@ -172,11 +191,6 @@ AppRouter = Backbone.Router.extend
       @select("#m_tags")
       return @pageload new TagsView(collection:@tagList)
 
-  unreviewed: ->
-    @before =>
-      @select("none")
-      @randFaceList = new FaceCollection()
-      return new UnreviewedView(collection:@randFaceList).render()
 
   pageload: (page) ->
     # Don't redraw the page if it's rendered by the server

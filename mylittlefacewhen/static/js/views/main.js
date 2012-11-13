@@ -5,7 +5,7 @@ window.MainView = Backbone.View.extend({
   initialize: function() {
     var _this = this;
     this.title = "Pony Reaction Pictures - MyLittleFaceWhen";
-    this.description = "Lots of well-tagged pony reaction images.";
+    this.description = "Express yourself with ponies.";
     this.template = tpl.get('main');
     if (!this.offset) {
       this.offset = 0;
@@ -61,7 +61,7 @@ window.MainView = Backbone.View.extend({
       return collection.fetch({
         data: {
           offset: this.offset,
-          order_by: "-id",
+          order_by: this.options.order_by,
           accepted: true,
           removed: false
         },
@@ -115,7 +115,7 @@ window.UnreviewedView = Backbone.View.extend({
   el: "#content",
   initialize: function() {
     this.title = "Pony Reaction Pictures - MyLittleFaceWhen";
-    this.description = "Lots of well-tagged pony reaction images.";
+    this.description = "Express yourself with ponies.";
     return this.template = tpl.get('main');
   },
   render: function() {
