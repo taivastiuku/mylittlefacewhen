@@ -3,39 +3,45 @@
 window.Face = Backbone.Model.extend({
   urlRoot: "/api/v2/face/",
   getImage: function(forced_width) {
-    var browser_width, image;
-    image = void 0;
+    var browser_width, resizes;
     browser_width = $(window).width();
     if (forced_width) {
       browser_width = Math.min(browser_width, forced_width);
     }
-    if (browser_width > this.get("width")) {
-      image = this.get("image");
-    } else if (browser_width > 1050 && this.get("resizes").huge) {
-      image = this.get("resizes").huge;
-    } else if (browser_width > 700 && this.get("resizes").large) {
-      image = this.get("resizes").large;
-    } else if (browser_width > 400 && this.get("resizes").medium) {
-      image = this.get("resizes").medium;
-    } else if (this.get("resizes").small) {
-      image = this.get("resizes").small;
-    } else {
-      image = this.get("image");
+    resizes = this.get("resizes") || {};
+    if (browser_width > this.get("width") && this.get("image")) {
+      return this.get("image");
     }
-    return image;
+    if (browser_width > 1050 && resizes.huge) {
+      return resizes.huge;
+    }
+    if (browser_width > 700 && resizes.large) {
+      return resizes.large;
+    }
+    if (browser_width > 400 && resizes.medium) {
+      return resizes.medium;
+    }
+    if (resizes.small) {
+      return resizes.small;
+    }
+    return this.get("image") || null;
   },
   getThumb: function(webp, gif) {
-    var thumb;
-    if (this.get("thumbnails").gif && gif) {
-      thumb = this.get("thumbnails").gif;
-    } else if (this.get("thumbnails").png) {
-      thumb = this.get("thumbnails").png;
-    } else if (this.get("thumbnails").webp && webp) {
-      thumb = this.get("thumbnails").webp;
-    } else if (this.get("thumbnails").jpg) {
-      thumb = this.get("thumbnails").jpg;
+    var thumbs;
+    thumbs = this.get("thumbnails") || {};
+    if (thumbs.gif && gif) {
+      return thumbs.gif;
     }
-    return thumb;
+    if (thumbs.png) {
+      return thumbs.png;
+    }
+    if (thumbs.webp && webp) {
+      return thumbs.webp;
+    }
+    if (thumbs.jpg) {
+      return thumbs.jpg;
+    }
+    return null;
   }
 });
 

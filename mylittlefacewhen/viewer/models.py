@@ -198,6 +198,9 @@ class Face(models.Model):
         default=0,
         help_text="Represents newness and popularity of face.")
 
+    IMAGEFIELDS = ("webp", "gif", "jpg", "png",
+                   "huge", "large", "medium", "small", "image")
+
     @staticmethod
     def submit(image, tags="", source="", accepted=False):
 
@@ -410,6 +413,7 @@ class Face(models.Model):
             tags = form.cleaned_data.get("tags")
             if tags:
                 self.tags = tags
+            self.source = form.cleaned_data.get("source")
             ChangeLog.new_edit(self)
             self.save()
         else:
@@ -420,7 +424,7 @@ class Face(models.Model):
         form = forms.UpdateFace(data)
         if form.is_valid():
             cleaned_data = form.cleaned_data
-            for item in ["webp", "gif", "jpg", "png", "huge", "large", "medium", "small", "image"]:
+            for item in self.IMAGEFIELDS:
                 if cleaned_data.get(item):
                     if getattr(self, item):
                         try:
@@ -448,7 +452,7 @@ class Face(models.Model):
     def remove(self, reason):
         if reason == "":
             reason = "No reason for removal was given."
-        for item in ("webp", "gif", "jpg", "png", "huge", "large", "medium", "small", "image"):
+        for item in self.IMAGEFIELDS:
             if getattr(self, item):
                 try:
                     os.remove(getattr(self, item).path)
@@ -487,6 +491,7 @@ class Face(models.Model):
                 self.is_duplicate_of(faces[0])
 
     def md5sum(self):
+        # http://stackoverflow.com/questions/1131220/
         md5 = hashlib.md5()
         try:
             with open(self.image.path, 'rb') as f:

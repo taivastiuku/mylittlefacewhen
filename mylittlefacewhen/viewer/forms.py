@@ -30,8 +30,14 @@ class FeedbackForm(forms.Form):
     useragent = forms.CharField(widget=forms.HiddenInput(), required=False)
 
 
+class Flag(forms.Form):
+    face = forms.CharField(required=False)
+    reason = forms.CharField()
+    user_agent = forms.CharField(required=False)
+
+
 class PublicUpdateFace(forms.Form):
-    source = forms.CharField(max_length=200, required=False)
+    source = forms.CharField(max_length=256, required=False)
     tags = forms.CharField(max_length=1024, required=False)
 
     def clean(self):
@@ -45,7 +51,7 @@ class PublicUpdateFace(forms.Form):
         tags = self.cleaned_data["tags"]
         if tags == "":
             return ""
-        tags = tags.strip().strip(",") + ","
+        tags = tags.strip(" ,") + ","
         if not tags.find("http://") == -1:
             raise forms.ValidationError("No links allowed in tags")
         return tags
@@ -71,7 +77,7 @@ class UpdateFace(forms.Form):
     huge = forms.CharField(max_length=6400000, required=False)
 
     rszformat = forms.CharField(max_length=4, required=False)
-    source = forms.CharField(max_length=200, required=False)
+    source = forms.CharField(max_length=256, required=False)
 
     def clean(self):
         cleaned_data = self.cleaned_data
