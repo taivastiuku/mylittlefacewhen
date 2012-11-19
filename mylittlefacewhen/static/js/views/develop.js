@@ -4,7 +4,7 @@ window.APIDocView = Backbone.View.extend({
   el: "#content",
   initialize: function() {
     if (this.options.version === void 0) {
-      this.options.version = "v2";
+      this.options.version = "v3";
     }
     this.title = "API" + this.options.version + " Documentation - MyLittleFaceWhen";
     this.description = "Information about API for mylittlefacewhen. It can be used to fetch data from the service and for maintanence by administrator.";

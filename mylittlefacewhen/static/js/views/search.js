@@ -26,10 +26,9 @@ window.SearchView = Backbone.View.extend({
     this.$el.html(Mustache.render(this.template, to_template));
     loader = this.$el.children("#loader");
     loader.show();
-    tags = JSON.stringify(tags.split(","));
     this.model.fetch({
       data: {
-        search: tags,
+        tags__all: tags,
         limit: 1000,
         order_by: "-id"
       },

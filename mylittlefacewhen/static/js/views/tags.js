@@ -47,7 +47,7 @@ window.TagsView = Backbone.View.extend({
       face = new FaceCollection();
       return face.fetch({
         data: {
-          search: JSON.stringify([tag]),
+          tags__all: tag,
           order_by: "random",
           removed: false,
           accepted: true,

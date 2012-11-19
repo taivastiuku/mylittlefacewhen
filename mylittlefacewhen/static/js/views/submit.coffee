@@ -36,9 +36,7 @@ window.SubmitView = Backbone.View.extend
   handleFiles: (files) ->
     updates = []
     for file in files when file.type.match("image.*")
-      item =
-        "image":file
-      updates.push(item)
+      updates.push(file)
 
     thumbs = $(@el).find("#upload_list ul")
     _.each updates, (update) ->
@@ -47,10 +45,10 @@ window.SubmitView = Backbone.View.extend
       reader.onload =
         do (update) ->
           (event) ->
-            item = new SubmitItemView().render(update.image, event.target.result)
+            item = new SubmitItemView().render(update, event.target.result)
             $("#upload_list ul").append(item.el)
 
-      reader.readAsDataURL update.image
+      reader.readAsDataURL update
 
     $("#upload").show()
 
@@ -72,15 +70,22 @@ window.SubmitView = Backbone.View.extend
         tags += ", screenshot"
       source = $(item).find(".source").val()
 
-      img = $(item).find("img")
+      $img = $(item).find("img")
 
-      face = new Face
-        name: img.attr("title")
-        image_data: img.attr("src")
+      data =
+        image:
+          filename: $img.attr("title")
+          mime: $img.attr("data-type")
+          base64: $img.attr("src").split(/base64,/).slice(1).join()
         tags: tags
         source: source
 
-      face.save undefined,
+      $.ajax
+        data: JSON.stringify(data)
+        type: "POST"
+        dataType: "json"
+        url: "/api/v3/face/"
+        contentType: "application/json; charset=utf-8"
         success: ->
           $(item).remove()
           if $("#upload_list ul").children().length == 0
@@ -107,7 +112,7 @@ window.SubmitItemView = Backbone.View.extend
 
   render: (image, imageURL) ->
     $(@el).html Mustache.render(@template,{image:image, imageURL:imageURL})
-    $.get "/api/v2/detect/?filename=" + image.name,
+    $.get "/api/v3/detect/?filename=" + image.name,
       (data) =>
         $(@el).find(".tags").val(data.tags)
         $(@el).find(".source").val(data.source)

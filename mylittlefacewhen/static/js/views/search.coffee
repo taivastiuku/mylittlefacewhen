@@ -24,11 +24,9 @@ window.SearchView = Backbone.View.extend
     loader = @$el.children("#loader")
     loader.show()
 
-    tags = JSON.stringify(tags.split(","))
-
     @model.fetch
       data:
-        search: tags
+        tags__all: tags
         limit: 1000
         order_by: "-id"
       success: (data) =>

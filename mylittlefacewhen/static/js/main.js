@@ -127,7 +127,7 @@ AppRouter = Backbone.Router.extend({
     var _this = this;
     return this.before(function() {
       if (version === void 0) {
-        version = "v2";
+        version = "v3";
       }
       _this.select("#m_api");
       return _this.pageload(new APIDocView({
@@ -261,7 +261,7 @@ AppRouter = Backbone.Router.extend({
   }
 });
 
-tpl.loadTemplates(["main", "thumbnail", "top", "single", "tag", "randoms", "randomsImage", "apidoc-v1", "apidoc-v2", "changelog", "develop", "feedback", "submit", "submitItem", "search", "tags", "tagsItem", "meta"], function() {
+tpl.loadTemplates(["main", "thumbnail", "top", "single", "tag", "randoms", "randomsImage", "apidoc-v1", "apidoc-v2", "apidoc-v3", "changelog", "develop", "feedback", "submit", "submitItem", "search", "tags", "tagsItem", "meta"], function() {
   var action, route, routes;
   routes = AppRouter.prototype.routes;
   for (route in routes) {

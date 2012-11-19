@@ -55,7 +55,6 @@ window.TagsView = Backbone.View.extend
 
     return @
 
-
   renderIt: ->
     data = @collection.toJSON()
     $(@el).html Mustache.render(@template, models: data)
@@ -67,7 +66,7 @@ window.TagsView = Backbone.View.extend
       face = new FaceCollection()
       face.fetch
         data:
-          search: JSON.stringify [tag]
+          tags__all: tag
           order_by: "random"
           removed: false
           accepted: true

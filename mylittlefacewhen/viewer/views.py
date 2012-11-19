@@ -127,7 +127,7 @@ def single(request, face_id):
         fields=["source", "accepted", "id", "width", "height"])
 
     if f.get("source"):
-        f["source"] = [f["source"]]
+        f["source"] = [{"source":f["source"]}]
 
     f["tags"] = [{"name":tag.name} for tag in face.tags]
 
@@ -200,7 +200,7 @@ def api(request):
     meta["title"] = "API documentation"
     meta["description"] = "Most of the site can be created using only this API"
     to_template = {
-        "content": "apidoc-v2.mustache",
+        "content": "apidoc-v3.mustache",
         "content_data": {},
         "metadata": meta}
 

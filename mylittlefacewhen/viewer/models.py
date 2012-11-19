@@ -411,11 +411,18 @@ class Face(models.Model):
         form = forms.PublicUpdateFace(data)
         if form.is_valid():
             tags = form.cleaned_data.get("tags")
+            source = form.cleaned_data.get("source")
+            print form.cleaned_data
             if tags:
                 self.tags = tags
-            self.source = form.cleaned_data.get("source")
+
+            if source:
+                self.source = source
+
             ChangeLog.new_edit(self)
             self.save()
+            print self.source
+            print self.tags
         else:
             print "not valid"
         return self

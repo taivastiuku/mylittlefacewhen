@@ -1,5 +1,5 @@
 window.Face = Backbone.Model.extend
-  urlRoot: "/api/v2/face/"
+  urlRoot: "/api/v3/face/"
 
   getImage: (forced_width) ->
     browser_width = $(window).width()
@@ -23,21 +23,21 @@ window.Face = Backbone.Model.extend
 
 window.FaceCollection = Backbone.Collection.extend
   model: Face
-  url: "/api/v2/face/"
+  url: "/api/v3/face/"
 
 window.Feedback = Backbone.Model.extend
-  urlRoot:"/api/v2/feedback/"
+  urlRoot:"/api/v3/feedback/"
 
 window.Tag = Backbone.Model.extend
-  urlRoot: "/api/v2/tag/"
+  urlRoot: "/api/v3/tag/"
 
 window.TagCollection = Backbone.Collection.extend
   model: Tag
-  url: "/api/v2/tag/"
+  url: "/api/v3/tag/"
 
 window.Advert = Backbone.Model.extend
-  urlRoot: "/api/v2/ad/"
+  urlRoot: "/api/v3/ad/"
 
 window.AdvertCollection = Backbone.Collection.extend
   model: Tag
-  url: "/api/v2/ad/"
+  url: "/api/v3/ad/"

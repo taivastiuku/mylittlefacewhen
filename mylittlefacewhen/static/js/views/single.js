@@ -137,18 +137,22 @@ window.SingleView = Backbone.View.extend({
     return app.random();
   },
   report: function(event) {
-    var reason;
+    var data, reason;
     event.preventDefault();
     reason = $(".window textarea").val().replace(/\n/g, "\\n");
     if (!reason) {
       return;
     }
+    data = JSON.stringify({
+      reason: reason,
+      face: this.model.get("id")
+    });
     this.undelegateEvents();
     return $.ajax({
       type: "POST",
-      url: "/api/v2/flag/",
+      url: "/api/v3/flag/",
       contentType: "application/json; charset=utf-8",
-      data: '{"reason":"' + reason + '"}',
+      data: data,
       processData: false,
       success: function() {
         return app.navigate("/f/1221/", true);
@@ -162,24 +166,15 @@ window.SingleView = Backbone.View.extend({
     });
   },
   saveInfo: function(event) {
-    var save, source, submit_tags, tag, tags, _i, _len,
+    var save,
       _this = this;
     event.preventDefault();
     $("#loader").show();
     this.$el.find("#info-edit").hide();
-    source = event.currentTarget[1].value;
-    tags = event.currentTarget[0].value.split(",");
-    submit_tags = [];
-    for (_i = 0, _len = tags.length; _i < _len; _i++) {
-      tag = tags[_i];
-      submit_tags.push({
-        name: $.trim(tag)
-      });
-    }
     save = function() {
       return _this.model.save({
-        tags: submit_tags,
-        source: source
+        tags: event.currentTarget[0].value,
+        source: event.currentTarget[1].value
       }, {
         wait: true
       });

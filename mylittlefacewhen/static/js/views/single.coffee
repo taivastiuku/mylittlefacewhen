@@ -36,10 +36,8 @@ window.SingleView = Backbone.View.extend
       image = @model.getImage()
       thumb = @model.getThumb(false, true)
 
-      if face.source
-        face.source = [{source:face.source}]
-      else
-        face.source = []
+      # Mustchaes sure are awesome :{{{D
+      if face.source then face.source = [{source:face.source}] else face.source = []
 
       resizes = []
       for size in ["huge", "large", "medium", "small"]
@@ -110,13 +108,16 @@ window.SingleView = Backbone.View.extend
     event.preventDefault()
     reason = $(".window textarea").val().replace(/\n/g, "\\n")
     return unless reason
+    data = JSON.stringify
+      reason: reason
+      face: @model.get("id")
 
     @undelegateEvents()
     $.ajax
       type:"POST"
-      url:"/api/v2/flag/"
+      url: "/api/v3/flag/"
       contentType: "application/json; charset=utf-8"
-      data: '{"reason":"' + reason + '"}'
+      data: data
       processData: false
       success: ->
         app.navigate("/f/1221/", true)
@@ -130,17 +131,11 @@ window.SingleView = Backbone.View.extend
     event.preventDefault()
     $("#loader").show()
     @$el.find("#info-edit").hide()
-    source = event.currentTarget[1].value
-    tags = event.currentTarget[0].value.split(",")
-    submit_tags = []
-    for tag in tags
-      submit_tags.push name: $.trim(tag)
-
 
     save = =>
       @model.save
-        tags: submit_tags
-        source: source
+        tags: event.currentTarget[0].value
+        source: event.currentTarget[1].value
       , wait: true
 
     if @model.isNew()
@@ -181,5 +176,3 @@ window.SingleView = Backbone.View.extend
       success: (data) =>
         return undefined unless col.length > 0
         app.navigate("f/#{col.models[0].get("id")}/", trigger:true)
-
-

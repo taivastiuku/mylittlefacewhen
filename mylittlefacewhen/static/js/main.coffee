@@ -123,7 +123,7 @@ AppRouter = Backbone.Router.extend
 
   apidoc: (version) ->
     @before =>
-      version = "v2" if version == undefined
+      version = "v3" if version == undefined
       @select("#m_api")
       return @pageload new APIDocView(version: version)
 
@@ -215,7 +215,7 @@ AppRouter = Backbone.Router.extend
 
 # Templates that are loaded during development mode.
 # Release version has all of these already loaded in app.js
-tpl.loadTemplates [ "main", "thumbnail", "top", "single", "tag", "randoms", "randomsImage", "apidoc-v1", "apidoc-v2", "changelog", "develop", "feedback", "submit", "submitItem", "search", "tags", "tagsItem", "meta"], ->
+tpl.loadTemplates [ "main", "thumbnail", "top", "single", "tag", "randoms", "randomsImage", "apidoc-v1", "apidoc-v2", "apidoc-v3", "changelog", "develop", "feedback", "submit", "submitItem", "search", "tags", "tagsItem", "meta"], ->
   # Allow routes with or without trailing slash, just like in Django
   routes = AppRouter::routes
   for route, action of routes

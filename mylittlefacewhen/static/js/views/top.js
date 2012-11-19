@@ -70,7 +70,7 @@ window.TopView = Backbone.View.extend({
           name__contains: ac_extractLast(request.term),
           limit: 30
         };
-        return $.getJSON("/api/v2/tag/", params, function(data, textStatus, jdXHR) {
+        return $.getJSON("/api/v3/tag/", params, function(data, textStatus, jdXHR) {
           var d;
           d = [];
           _.each(data.objects, function(tag) {

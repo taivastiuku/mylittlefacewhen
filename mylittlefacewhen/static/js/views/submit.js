@@ -38,17 +38,13 @@ window.SubmitView = Backbone.View.extend({
     return this.handleFiles(event.dataTransfer.files);
   },
   handleFiles: function(files) {
-    var file, item, thumbs, updates, _i, _len;
+    var file, thumbs, updates, _i, _len;
     updates = [];
     for (_i = 0, _len = files.length; _i < _len; _i++) {
       file = files[_i];
-      if (!(file.type.match("image.*"))) {
-        continue;
+      if (file.type.match("image.*")) {
+        updates.push(file);
       }
-      item = {
-        "image": file
-      };
-      updates.push(item);
     }
     thumbs = $(this.el).find("#upload_list ul");
     _.each(updates, function(update) {
@@ -56,11 +52,12 @@ window.SubmitView = Backbone.View.extend({
       reader = new FileReader();
       reader.onload = (function(update) {
         return function(event) {
-          item = new SubmitItemView().render(update.image, event.target.result);
+          var item;
+          item = new SubmitItemView().render(update, event.target.result);
           return $("#upload_list ul").append(item.el);
         };
       })(update);
-      return reader.readAsDataURL(update.image);
+      return reader.readAsDataURL(update);
     });
     return $("#upload").show();
   },
@@ -71,7 +68,7 @@ window.SubmitView = Backbone.View.extend({
     $(upload_button).find("span").html("uploading");
     $("#loader").show();
     return _.each($("#upload_list li"), function(item) {
-      var face, img, source, tags;
+      var $img, data, source, tags;
       tags = $(item).find(".tags").val();
       if ($(item).find("input[name=transparent]")[0].checked) {
         tags += ", transparent";
@@ -83,14 +80,22 @@ window.SubmitView = Backbone.View.extend({
         tags += ", screenshot";
       }
       source = $(item).find(".source").val();
-      img = $(item).find("img");
-      face = new Face({
-        name: img.attr("title"),
-        image_data: img.attr("src"),
+      $img = $(item).find("img");
+      data = {
+        image: {
+          filename: $img.attr("title"),
+          mime: $img.attr("data-type"),
+          base64: $img.attr("src").split(/base64,/).slice(1).join()
+        },
         tags: tags,
         source: source
-      });
-      return face.save(void 0, {
+      };
+      return $.ajax({
+        data: JSON.stringify(data),
+        type: "POST",
+        dataType: "json",
+        url: "/api/v3/face/",
+        contentType: "application/json; charset=utf-8",
         success: function() {
           $(item).remove();
           if ($("#upload_list ul").children().length === 0) {
@@ -122,7 +127,7 @@ window.SubmitItemView = Backbone.View.extend({
       image: image,
       imageURL: imageURL
     }));
-    $.get("/api/v2/detect/?filename=" + image.name, function(data) {
+    $.get("/api/v3/detect/?filename=" + image.name, function(data) {
       $(_this.el).find(".tags").val(data.tags);
       return $(_this.el).find(".source").val(data.source);
     });

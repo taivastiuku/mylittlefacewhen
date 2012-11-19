@@ -1,4 +1,5 @@
 import base64
+import json
 
 from django import forms
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -165,6 +166,37 @@ class CreateFace(forms.Form):
             name,
             image,
             content_type="image/%s" % ext
+        )
+        cleaned_data["accepted"] = False
+        return cleaned_data
+
+
+class NewCreateFace(forms.Form):
+    image = forms.CharField(max_length=10000000)
+    tags = forms.CharField(max_length=256, required=False)
+    source = forms.CharField(max_length=256, required=False)
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+
+        try:
+            #image should be like:
+            #data:image/png;base64,3ranfadf...
+            imagedataraw = cleaned_data.pop("image")
+            try:
+                imagedata = json.loads(imagedataraw)
+            except:
+                imagedata = json.loads(imagedataraw.replace("'", '"'))
+            print imagedata.keys()
+            mime = imagedata["mime"]
+            filename = imagedata["filename"]
+            image = base64.b64decode(imagedata["base64"])
+        except:
+            raise forms.ValidationError("No valid image data supplied")
+        cleaned_data["image"] = SimpleUploadedFile(
+            filename,
+            image,
+            content_type=mime
         )
         cleaned_data["accepted"] = False
         return cleaned_data

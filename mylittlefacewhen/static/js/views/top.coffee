@@ -55,7 +55,7 @@ window.TopView = Backbone.View.extend
           name__contains: ac_extractLast(request.term)
           limit: 30
 
-        $.getJSON "/api/v2/tag/", params, (data, textStatus, jdXHR) ->
+        $.getJSON "/api/v3/tag/", params, (data, textStatus, jdXHR) ->
           d = []
           _.each data.objects, (tag) ->
             d.push tag.name
