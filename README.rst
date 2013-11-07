@@ -21,8 +21,9 @@ ATTN! I may have made some modifications to django-piston to make it work.
 
 Frontend
 --------
-CoffeeScript - http://coffeescript.org/
-sass - http://sass-lang.com/
+- backbone.js - http://backbonejs.org/
+- CoffeeScript - http://coffeescript.org/
+- sass - http://sass-lang.com/
 
 
 ========
