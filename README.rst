@@ -8,6 +8,22 @@ Developed for fun and learning.
 
 Used to power http://mylittlefacewhen.com/
 
+Technologies
+============
+List of most important packages that are used.
+
+- django
+- django-tastypie
+- pystache
+- PIL
+
+- backbone.js
+- mustache.js
+- jQuery
+- CoffeeScript
+- sass
+
+
 Requirements
 ============
 
@@ -21,7 +37,7 @@ ATTN! I may have made some modifications to django-piston to make it work.
 
 Frontend
 --------
-- backbone.js - http://backbonejs.org/
+
 - CoffeeScript - http://coffeescript.org/
 - sass - http://sass-lang.com/
 
