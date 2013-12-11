@@ -2,6 +2,7 @@ from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.forms.models import model_to_dict
+from django.http import Http404
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
@@ -114,6 +115,8 @@ def single(request, face_id):
     face = get_object_or_404(models.Face, id=face_id)
     if face.duplicate_of:
         return redirect("/f/%d/" % face.duplicate_of.id, permanent=True)
+    if face.removed is True:
+        raise Http404
 
     image = face.get_image("large")
     face.setThumb(webp=False, gif=True)
@@ -216,25 +219,6 @@ def rand(request):
     """
     face = models.Face.random()
     return redirect("/f/%d/" % face.id)
-
-#def salute(request, salute_id=None):
-#    """
-#    Lists all saluteimages
-#    """
-#    if salute_id:
-#        salute = get_object_or_404(Salute, id=salute_id)
-#    else:
-#        salute = _getSalute(request)
-#
-#    to_template = {
-#        "salute" : salute,
-#        "salutes" : Salute.objects.all(),
-#    }
-#
-#    return render_to_response(
-#        "viewer/salute.html",
-#        to_template,
-#        context_instance=RequestContext(request))
 
 
 @login_required
@@ -352,68 +336,6 @@ def changelog(request):
 
     return render_to_response(
         "backbone.html",
-        to_template,
-        context_instance=RequestContext(request))
-
-
-@login_required
-def acceptImages(request):
-    faces = models.Face.objects.filter(accepted=False).order_by("-id")
-    for face in faces:
-        face.setThumbWithRequest(request)
-
-    to_template = {"faces": faces}
-
-    return render_to_response(
-        "acceptimages.html",
-        to_template,
-        context_instance=RequestContext(request))
-
-
-@login_required
-def viewFlags(request):
-    flags = models.Flag.objects.all()
-
-    for flag in flags:
-        flag.face.setThumbWithRequest(request)
-
-    to_template = {"flags": flags}
-
-    return render_to_response(
-        "flags.html",
-        to_template,
-        context_instance=RequestContext(request))
-
-
-@login_required
-def md5Duplicates(request):
-    duplicateSets = []
-    duplicateIds = []
-    for face in models.Face.objects.all():
-        if not face.md5:
-            continue
-        faces = models.Face.objects.filter(md5=face.md5)
-        if len(faces) > 1:
-            cont = False
-            for f in faces:
-                if f.id in duplicateIds:
-                    cont = True
-                    break
-                duplicateIds.append(f.id)
-            if cont:
-                continue
-
-            out = []
-            for f in faces:
-                f.setThumb(webp=False, gif=True)
-                out.append(f)
-
-            duplicateSets.append(out)
-
-    to_template = {"dupeslist": duplicateSets}
-
-    return render_to_response(
-        "duplicates.html",
         to_template,
         context_instance=RequestContext(request))
 

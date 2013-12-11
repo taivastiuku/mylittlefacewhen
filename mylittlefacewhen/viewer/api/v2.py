@@ -27,16 +27,15 @@ class FaceResource(ModelResource):
         null=True)
 
     class Meta:
-        queryset = models.Face.objects.all()
+        queryset = models.Face.objects.filter(removed=False)
         max_limit = 1000
         allowed_methods = ('get', 'post', 'put', 'delete', )
         filtering = {
             "id": ["lte", "lt", "gte", "gt"],
-            "accepted": ["exact"],
-            "removed": ["exact"]}
+            "accepted": ["exact"]}
 
         ordering = ["id", "views", "hotness"]
-        excludes = ["gif", "png", "jpg", "webp", "small", "medium", "large", "huge"]
+        excludes = ["gif", "png", "jpg", "webp", "small", "medium", "large", "huge", "removed"]
         authorization = auths.AnonMethodAllowed().set_allowed(["GET", "POST", "PUT"])
 
     def get_object_list(self, request):

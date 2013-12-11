@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from django.conf.urls.defaults import patterns, include, url
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf.urls.static import static
 
 from piston.resource import Resource
 
@@ -58,12 +58,6 @@ urlpatterns = patterns(
     # (r'^errors/500/$', "viewer.views.error"),
     # (r'^errors/404/$', "viewer.views.notfound"),
 
-    #admin
-    (r'^duplicates/$', "viewer.views.md5Duplicates"),
-    (r'^changes/$', "viewer.views.changes"),
-    (r'^changes/(?P<page>\d+)/$', "viewer.views.changes"),
-    (r'^acceptimages/$', "viewer.views.acceptImages"),
-
     #RSS
     (r'^feed/$', feeds.LatestAcceptedImages()),
 
@@ -92,14 +86,7 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
 )
 if settings.DEBUG:
-    urlpatterns += patterns(
-        '',
-        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.MEDIA_ROOT,
-        }),
-   )
-
-urlpatterns += staticfiles_urlpatterns()
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = "viewer.views.notfound"
 handler500 = "viewer.views.error"

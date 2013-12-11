@@ -6,6 +6,7 @@ import random
 import re
 
 from django.db import models
+from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.mail import send_mail
 from django.utils import simplejson as json
@@ -27,7 +28,10 @@ PONYCHAN = "http://pinkie.ponychan.net/chan/files/src/"
 SIZES = ((0, 100), (320, 320), (640, 640), (1000, 1000), (1920, 1920))
 SIZENAMES = ("thumb", "small", "medium", "large", "huge")
 
-PONIES = ("celestia", "molestia", "luna", "pinkie pie", "twilight sparkle", "applejack", "rarity", "fluttershy", "rainbow dash", "lyra", "bon bon", "bon bon", "rose", "sweetie belle", "spike", "scootaloo", "applebloom", "cheerilee", "big macintosh", "berry punch", "discord", "nightmare moon", "chrysalis", "cadance", "shining armor", "colgate", "silver spoon", "diamond tiara", "vinyl scratch", "derpy hooves", "hoity toity", "gummy", "snips", "snails", "spiderman", "granny smith", "opalescence", "angel", "doctor whooves", "trixie", "gilda", "skeletor")
+PONIES = {"celestia", "molestia", "luna", "pinkie pie", "twilight sparkle", "applejack", "rarity", "fluttershy", "rainbow dash", "lyra", "bon bon", "bon bon", "rose", "sweetie belle", "spike", "scootaloo", "applebloom", "cheerilee", "big macintosh", "berry punch", "discord", "nightmare moon", "chrysalis", "cadance", "shining armor", "colgate", "silver spoon", "diamond tiara", "vinyl scratch", "derpy hooves", "hoity toity", "gummy", "snips", "snails", "spiderman", "granny smith", "opalescence", "angel", "doctor whooves", "trixie", "gilda", "skeletor", "octavia", "lauren faust", "daring do"}
+
+CMC = {"scootaloo", "applebloom", "sweetie belle"}
+MANE6 = {"twilight sparkle", "pinkie pie", "rainbow dash", "fluttershy", "rarity", "applejack"}
 
 ADMINMAILS = ["moderators@mylittlefacewhen.com"]
 
@@ -512,8 +516,8 @@ class Face(models.Model):
         """
         Artist, title and description
         """
-        tags = ""
-        ponies = ""
+        tags = set()
+        ponies = set()
         longest = ""
         artist = None
 
@@ -529,21 +533,20 @@ class Face(models.Model):
                 artist = tag.partition(":")[2].strip()
 
             elif tag in PONIES:
-                ponies += tag + ", "
-            elif not longest:
+                ponies.add(tag)
+            elif not longest and tag not in ["untagged", "transparent", "screenshot", "animated", "fanart"]:
                 longest = tag
             else:
-                tags += "'%s', " % tag
+                tags.add(tag)
 
-        if tags.count(",") > 1:
-            tags = rreplace(tags[:-2], ",", " and")
-        else:
-            tags = tags[:-2]
+        for ponyset, setname in [(CMC, "cutie mark crusaders"), (MANE6, "mane 6")]:
+            if ponies.issuperset(ponyset):
+                for item in ponyset:
+                    ponies.remove(item)
+                ponies.add(setname)
 
-        if ponies.count(",") > 1:
-            ponies = rreplace(ponies[:-2].title(), ",", " and")
-        else:
-            ponies = ponies[:-2].title()
+        tags = rreplace(", ".join(tags), ",", " and")
+        ponies = rreplace(", ".join(ponies).title(), ",", " and")
 
         if ponies:  # and longest:
             title = ponies + ": " + longest
@@ -557,10 +560,36 @@ class Face(models.Model):
 
         return (artist, title, description)
 
+    @property
+    def artist(self):
+        if not hasattr(self, "_metadata"):
+            self._metadata = self.getMeta()
+        return self._metadata[0]
+
+    @property
+    def title(self):
+        if not hasattr(self, "_metadata"):
+            self._metadata = self.getMeta()
+        return self._metadata[1]
+
+    @property
+    def description(self):
+        if not hasattr(self, "_metadata"):
+            self._metadata = self.getMeta()
+        return self._metadata[2]
+
+    @property
+    def thumbnail(self):
+        if not hasattr(self, "thumb"):
+            self.setThumb(gif=True)
+        return self.thumb
+
+    @property
+    def taglist(self):
+        return ", ".join([tag.name for tag in self.tags])
+
     def __unicode__(self):
-        s = str(self.id) + " - "
-        artist, title, description = self.getMeta()
-        return s + title
+        return str(self.id) + " - " + self.title
 
 tagging.register(Face)
 
@@ -609,18 +638,6 @@ class Advert(models.Model):
         return objs[random.randint(0, count - 1)]
 
 
-class Salute(models.Model):
-    """
-    Rainbow Salute images
-
-    DEPRECATED
-    """
-    filename = models.CharField(max_length=32)
-    thumbnail = models.CharField(max_length=32)
-    country = models.CharField(max_length=32)
-    language_code = models.CharField(max_length=8)
-
-
 class ChangeLog(models.Model):
     datetime = models.DateTimeField(
         "datetime when added",
@@ -631,12 +648,6 @@ class ChangeLog(models.Model):
         Face,
         help_text="Face related to change")
 
-    prev = models.OneToOneField(
-        "self",
-        null=True,
-        related_name="next",
-        help_text="Previous change related to current face")
-
     source = models.URLField(
         verify_exists=False,
         blank=True,
@@ -646,7 +657,8 @@ class ChangeLog(models.Model):
     flag = models.ForeignKey(
         Flag,
         null=True,
-        help_text="Face was flagged")
+        help_text="Face was flagged",
+        on_delete=models.SET_NULL)
 
     @staticmethod
     def new_edit(face):
@@ -670,7 +682,7 @@ class ChangeLog(models.Model):
                     #print "return"
                     return
 
-        changelog = ChangeLog(face=face, prev=prev, source=face.source)
+        changelog = ChangeLog(face=face, source=face.source)
         changelog.save()
         tags = ""
         for tag in face.tags:
@@ -678,8 +690,40 @@ class ChangeLog(models.Model):
         changelog.tags = tags
         return changelog
 
+    @property
     def age(self):
         return str(datetime.utcnow() - self.datetime).rpartition(":")[0]
+
+    @property
+    def same_tags(self):
+        return ", ".join([tag.name for tag in self.same()])
+
+    @property
+    def removed_tags(self):
+        return ", ".join([tag.name for tag in self.removed()])
+
+    @property
+    def added_tags(self):
+        return ", ".join([tag.name for tag in self.added()])
+
+    @property
+    def source_change(self):
+        if self.prev:
+            if self.source != self.prev.source:
+                return self.prev.source + " -> " + self.source
+            else:
+                return ""
+        else:
+            return self.source
+
+    @property
+    def prev(self):
+        if not hasattr(self, "_prev"):
+            try:
+                self._prev = self.face.changelog_set.filter(datetime__lt=self.datetime).order_by("-datetime")[0]
+            except:
+                self._prev = None
+        return self._prev
 
     def same(self):
         """
@@ -687,7 +731,7 @@ class ChangeLog(models.Model):
         """
         out = []
 
-        if self.prev:
+        if self.prev is not None:
             for tag in self.tags:
                 if tag in self.prev.tags:
                     out.append(tag)
@@ -720,24 +764,25 @@ class ChangeLog(models.Model):
         return out
 
     def undo(self):
-        try:
-            self.next.public_undo()
-        except:
-            pass
-
-        if self.source:
-            if self.prev:
-                self.face.source = self.prev.source
-            else:
-                self.face.source = ""
-
-        if not self.prev:
-            return
+        if self.prev:
+            self.face.source = self.prev.source
+            self.face.save()
         else:
-            tags = ""
-        for tag in self.prev.tags:
-            tags += tag.name + ","
-        self.face.tags = tags
+            self.face.tags = ""
+            self.delete()
+            return
+
+        tags = set([tag.name for tag in self.face.tags])
+        for tag in self.removed():
+            tags.add(tag.name)
+
+        for tag in self.added():
+            try:
+                tags.remove(tag.name)
+            except:
+                pass
+
+        self.face.tags = ", ".join(tags)
         self.delete()
         return True
 
@@ -804,30 +849,5 @@ class Feedback(models.Model):
         return self.contact + " - " + self.text
 
 
-class AccessLog(models.Model):
-    """
-    This is used for caluclating popularity. Google Analytics doesn't see
-    hotlinked traffic but Apache does.
-
-    DEPRECATED
-    """
-    ip = models.CharField(max_length=64)
-    accessed = models.DateTimeField("access time")
-    method = models.CharField(max_length=8)
-    resource = models.CharField(max_length=512)
-    referrer = models.CharField(max_length=1024)
-    useragent = models.CharField(max_length=512)
 
 
-class TagPopularity(models.Model):
-    """
-    Precalculated table for determining which tags are the most popular.
-    How many views do pictures with given tag have.
-
-    DEPRECATED
-    """
-    tag = models.ForeignKey(tagging.models.Tag)
-    popularity = models.IntegerField(default=0)
-
-    def __unicode__(self):
-        return self.tag.name

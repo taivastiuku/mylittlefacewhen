@@ -76,7 +76,7 @@ class FaceResource(PieforkModelResource):
         help_text="Resized versions of this face")
 
     class Meta:
-        queryset = models.Face.objects.all()
+        queryset = models.Face.objects.filter(removed=False)
         max_limit = 1000
         list_allowed_methods = ['get', 'post']
         detail_allowed_methods = ['get', 'put', 'delete']
@@ -84,16 +84,15 @@ class FaceResource(PieforkModelResource):
         filtering = {
             "id": ["gt", "gte", "lt", "lte"],
             "accepted": ["exact"],
-            "removed": ["exact"],
             "views": ["gt", "gte", "lt", "lte"],
             "hotness": ["gt", "gte", "lt", "lte"],
             "tags": ["all", "any"]}
 
         ordering = ["id", "random", "views", "hotness"]
         excludes = ["gif", "png", "jpg", "webp",
-                    "small", "medium", "large", "huge"]
+                    "small", "medium", "large", "huge", "removed"]
         readonlys = ["views", "md5", "accepted", "comment", "added",
-                     "height", "width", "hotness", "processed", "removed"]
+                     "height", "width", "hotness", "processed"]
         authorization = auths.AnonMethodAllowed().set_allowed(
             ["GET", "POST", "PUT", "PATCH"])
         validation = FaceValidation()
@@ -101,6 +100,12 @@ class FaceResource(PieforkModelResource):
 the service. Allows uploading base64 formatted images and modification of \
 old ones. \n\
 Tags should be separated by comma eg, 'yes, rainbow dash' """
+
+#    def get_list(self, request, **kwargs):
+#        trixie = request.GET.copy()
+#        trixie["tags__all"] = trixie.get("tags__all", "") + ",trixie,"
+#        request.GET = trixie
+#        return super(FaceResource, self).get_list(request, **kwargs)
 
     def build_filters(self, filters=None):
         #TODO Can these be made into real filters?
@@ -125,7 +130,6 @@ Tags should be separated by comma eg, 'yes, rainbow dash' """
         return objects
 
     def apply_sorting(self, obj_list, options=None):
-        print obj_list
         global FACES_LEN
         if options.get("order_by") in ["random", "-random"]:
             # Pseudorandom ordering because mysql random is inefficent
@@ -191,8 +195,6 @@ Tags should be separated by comma eg, 'yes, rainbow dash' """
         if bundle.errors and not skip_errors:
             self.error_response(bundle.errors, request)
 
-        print bundle.data
-
         bundle.obj.public_update(bundle.data)
 #        if bundle.data["source"]:
 #            bundle.obj.source = bundle.data["source"]
@@ -245,11 +247,10 @@ class FeedbackResource(PieforkModelResource):
         description = """Send feedback to the developers through this."""
 
     def build_bundle(self, obj=None, data=None, request=None):
-        bund = super(FeedbackResource, self).build_bundle(obj, data, request)
+        bundle = super(FeedbackResource, self).build_bundle(obj, data, request)
         if request:
-            useragent = request.META.get("HTTP_USER_AGENT")
-            bund.data["useragent"] = useragent
-        return bund
+            bundle.data["useragent"] = request.META.get("HTTP_USER_AGENT")
+        return bundle
 
     def full_hydrate(self, bundle):
         # To circumvent readonly status on useragent
