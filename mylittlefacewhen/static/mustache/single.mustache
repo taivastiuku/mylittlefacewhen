@@ -5,7 +5,7 @@
   <div class="shrinkwrap-out text-center">
     <div class="shrinkwrap-in">
       <div id="singlewrap">
-        <a id="single" href="/random/"><img itemprop="contentURL" class="single" src="{{ image_service }}{{ image }}" alt="{{ alt }}" /></a>
+        <a id="single" href="/random/"><img itemprop="contentURL" class="single" src="{{ image_service }}{{ image }}" alt="{{ face.title }}" title="{{ face.title }}" /></a>
         <br />
         <div id="controls">
           <div tabindex=0 class="faded" id="flag" title="Report duplicate or other problem"></div>
@@ -22,11 +22,11 @@
         {{# face.tags }}{{# name }}<a class="tag" href="/search/?tag={{ name }}">{{ name }}</a>{{/ name }}{{/ face.tags}}
       </span><br>
       <b>Source: </b><br>
-      {{# artist }}
-      <span id="source">{{# face.source }}<a href="{{ source }}" rel="author">{{ artist }}</a>{{/ face.source }}{{^ face.source }}<span>unknown</span>{{/ face.source }}</span><br>
-      {{/ artist }}{{^ artist }}
-      <span id="source">{{# face.source }}<a href="{{ source }}">{{ source }}</a>{{/ face.source }}{{^ face.source }}<span>unknown</span>{{/ face.source }}</span><br>
-      {{/ artist }}
+      {{# face.artist }}
+      <span id="source">{{# face.source }}<a href="{{ face.source }}" rel="artist">{{ face.artist }}</a>{{/ face.source }}{{^ face.source }}<span>unknown</span>{{/ face.source }}</span><br>
+      {{/ face.artist }}{{^ face.artist }}
+      <span id="source">{{# face.source }}<a href="{{ face.source }}">{{ face.source }}</a>{{/ face.source }}{{^ face.source }}<span>unknown</span>{{/ face.source }}</span><br>
+      {{/ face.artist }}
       <div id="button"><button id="editbutton">Edit</button></div>
     </div>
     <div class="editable" id="info-edit">
@@ -37,20 +37,50 @@
         <hr>
         <b>Source: </b><em class="small">URL or other reference</em>
         <br>
-        <input name="source" value="{{# face.source }}{{ source }}{{/ face.source }}" size="30" />
+        <input name="source" value="{{# face.source }}{{ face.source }}{{/ face.source }}" size="30" />
         <br>
         <input type="submit" value="Submit" />
       </form>
     </div>
+
     <div id="loader"><img src="{{ static_prefix }}dash.gif" alt="loading" /></div>
-  </div>
-  <hr />
-  <div class="text-center sizes">
-    <span class="b">Sizes:</span><br />
-    <a class="resize" href="{{ image_service }}{{ face.image }}">original</a>
-    {{# face.resizes }}<a class="resize" href="{{ image_service }}{{ image }}">{{ size }}</a> 
-    {{/ face.resizes }}
-    <a itemprop="thumbnailUrl" class="resize" href="{{ image_service }}{{ thumb }}">thumb</a>
+    <hr>
+    <div class="text-center sizes">
+      <span class="b">Sizes:</span><br />
+      <a class="resize" href="{{ image_service }}{{ face.image }}">original</a>
+      {{# face.resizes }}<a class="resize" href="{{ image_service }}{{ image }}">{{ size }}</a> 
+      {{/ face.resizes }}
+      <a itemprop="thumbnailUrl" class="resize" href="{{ image_service }}{{ thumb }}">thumb</a>
+    </div>
+    <h2>Comments</h2>
+    <div id="comments">
+      <form>
+        <table>
+          <tr>
+            <td class="comment-username"><label>name</label></td>
+            <td class="comment-text"><label>comment</label></td>
+          </tr>
+          <tr>
+            <td class="comment-username">
+              <input name="username" value="Poninymous" required>
+              <input type="hidden" name="face" value="/api/v3/face/{{ face.id }}/">
+            </td>
+            <td class="comment-text"><input name="text" type="text" required maxlength="255"><input type="submit"></td>
+          </tr>
+          {{# face.comments }}
+          <tr>
+            <td class="comment-username" style="color: #{{color}}">{{ username }}</td>
+            <td class="comment-text">{{ text }}</td>
+          </tr>
+          {{/ face.comments }}{{^ face.comments }}
+          <tr>
+            <td></td>
+            <td class="comment-text">No comments</td>
+          </tr>
+          {{/ face.comments }}
+        </table>
+      </form>
+    </div>
   </div>
 </div>
 <div id="boxes">

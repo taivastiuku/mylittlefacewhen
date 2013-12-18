@@ -9,20 +9,20 @@
         <link rel="stylesheet" href="{% get_static_prefix %}css/rainbow_dash_always_dresses_in.css" type="text/css">
         <!--        <link rel="stylesheet" href="{% get_static_prefix %}css/{{ request.best_pony }}.css" type="text/css">-->
         <link rel="stylesheet" href="{% get_static_prefix %}css/rarity.css" type="text/css">
-	<link rel="canonical" href="http://mylittlefacewhen.com{% firstof path request.path '/' %}">
+        <link rel="canonical" href="http://mylittlefacewhen.com{% firstof path request.path '/' %}">
         <title>MyLittleFaceWhen - {% block title %}Pony Reaction Pictures{% endblock %}</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <link rel="alternate" type="application/rss+xml" title="MyLittleFaceWhen.com latest images" href="http://MyLittleFaceWhen.com/feed/">
         <meta name="HandheldFriendly" content="true">
         <meta name="viewport" content="width=device-width, height=device-height">        
-	<meta name="description" content="{% block description %}Lots of well-taggged pony reaction images.{% endblock %}">
-	<meta property="og:title" content="MyLittleFaceWhen.com">
-	<meta property="og:type" content="website">
+        <meta name="description" content="{% block description %}Lots of well-taggged pony reaction images.{% endblock %}">
+        <meta property="og:title" content="MyLittleFaceWhen.com">
+        <meta property="og:type" content="website">
         <meta property="og:url" content="http://mylittlefacewhen.com{{request.path}}">
-	<meta property="og:image" content="{% block default_image %}http://mylittlefacewhen.com/static/cheerilee-square-300.png{% endblock %}">
+        <meta property="og:image" content="{% block default_image %}http://mylittlefacewhen.com/static/cheerilee-square-300.png{% endblock %}">
         <meta property="og:site_name" content="MyLittleFaceWhen.com">
         <meta property="cd:layout" content="banner">
-        <script src="{% get_static_prefix %}lib/jquery-1.7.1.min.js"></script>
+        <script src="{% get_static_prefix %}lib/jquery-1.10.2.min.js"></script>
         {% block head %}
         {% endblock %}
 	<!-- Google analytics -->

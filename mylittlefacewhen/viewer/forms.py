@@ -177,12 +177,10 @@ class NewCreateFace(forms.Form):
     source = forms.CharField(max_length=256, required=False)
 
     def clean(self):
-        cleaned_data = self.cleaned_data
-
         try:
             #image should be like:
             #data:image/png;base64,3ranfadf...
-            imagedataraw = cleaned_data.pop("image")
+            imagedataraw = self.cleaned_data.pop("image")
             try:
                 imagedata = json.loads(imagedataraw)
             except:
@@ -193,13 +191,14 @@ class NewCreateFace(forms.Form):
             image = base64.b64decode(imagedata["base64"])
         except:
             raise forms.ValidationError("No valid image data supplied")
-        cleaned_data["image"] = SimpleUploadedFile(
+        self.cleaned_data["image"] = SimpleUploadedFile(
             filename,
             image,
             content_type=mime
         )
-        cleaned_data["accepted"] = False
-        return cleaned_data
+        self.cleaned_data["accepted"] = False
+        print self.cleaned_data
+        return self.cleaned_data
 
 
 class Settings(forms.Form):

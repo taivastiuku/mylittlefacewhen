@@ -1,16 +1,18 @@
 window.SingleView = Backbone.View.extend
   el: "#content"
-  initialize: ->
+  initialize: (options) ->
     @template = tpl.get('single')
     @model.on "change", => @render()
-    @model.fetch() if @model.isNew() and not @options.firstLoad
+    @model.fetch() if @model.isNew() and not options.firstLoad
     $(window).scrollTop(0)
-    KeyboardJS.bind.key 'r', (event) => @random(event)
-    KeyboardJS.bind.key 'left', (event) => @previous(event)
-    KeyboardJS.bind.key 'right', (event) => @next(event)
-    KeyboardJS.bind.key 'h', (event) => @previous(event)
-    KeyboardJS.bind.key 'l', (event) => @next(event)
-    KeyboardJS.bind.key 'esc', (event) => @cancel(event)
+    KeyboardJS.on 'r', (event) => @random(event)
+    KeyboardJS.on 'left', (event) => @previous(event)
+    KeyboardJS.on 'right', (event) => @next(event)
+    KeyboardJS.on 'h', (event) => @previous(event)
+    KeyboardJS.on 'l', (event) => @next(event)
+    KeyboardJS.on 'esc', (event) => @cancel(event)
+
+    @updateUsername()
 
   events:
     "click .tag": "navigateAnchor"
@@ -21,12 +23,22 @@ window.SingleView = Backbone.View.extend
     "click #mask" : "cancel"
     "click #single": "random"
     "click .window .report": "report"
-    "submit form": "saveInfo"
+    "submit #info-edit form": "saveInfo"
     "click #flag": "showWindow"
+    "keydown input": "disableShortcuts"
+    "keyup input": "disableShortcuts"
+    "keydown textarea": "disableShortcuts"
+    "keyup textarea": "disableShortcuts"
+    "submit #comments form": "comment"
 
   beforeClose: ->
     @model.off("change")
-    KeyboardJS.unbind.key 'r, left, right, h, l, esc'
+    KeyboardJS.clear 'r'
+    KeyboardJS.clear 'left'
+    KeyboardJS.clear 'right'
+    KeyboardJS.clear 'h'
+    KeyboardJS.clear 'l'
+    KeyboardJS.clear 'esc'
 
   render: ->
     unless @model.isNew() #Still loading data from initialize
@@ -36,18 +48,15 @@ window.SingleView = Backbone.View.extend
       image = @model.getImage()
       thumb = @model.getThumb(false, true)
 
-      # Mustchaes sure are awesome :{{{D
-      if face.source then face.source = [{source:face.source}] else face.source = []
-
       resizes = []
       for size in ["huge", "large", "medium", "small"]
         resizes.push({size:size, image:face.resizes[size]}) if face.resizes[size]
       face.resizes = resizes
 
       @updateMeta(face)
+      @updateUsername()
 
       to_template =
-        artist: face.artist
         face: face
         image: image
         static_prefix: static_prefix
@@ -108,9 +117,10 @@ window.SingleView = Backbone.View.extend
     event.preventDefault()
     reason = $(".window textarea").val().replace(/\n/g, "\\n")
     return unless reason
+    console.log(@model)
     data = JSON.stringify
       reason: reason
-      face: @model.get("id")
+      face: "/api/v3/face/#{@model.get("id")}/"
 
     @undelegateEvents()
     $.ajax
@@ -176,3 +186,25 @@ window.SingleView = Backbone.View.extend
       success: (data) =>
         return undefined unless col.length > 0
         app.navigate("f/#{col.models[0].get("id")}/", trigger:true)
+
+  disableShortcuts: (event) ->
+    event.stopPropagation()
+
+  comment: (event) ->
+    event.preventDefault()
+    data = {}
+    _.each $(event.target).serializeArray(), (input) ->
+      data[input.name] = input.value
+
+    localStorage.setItem("username", data["username"])
+
+    comment = new Comment(data)
+    comment.save null,
+      success: (model, response, options) =>
+        window.location.reload()
+    console.log(data)
+
+  updateUsername: ->
+    username = localStorage.getItem("username")
+    if username
+      @$el.find("#comments input[name=username]").val(username)

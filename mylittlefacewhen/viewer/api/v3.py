@@ -1,3 +1,4 @@
+import json
 import random
 import re
 
@@ -13,6 +14,7 @@ from tagging.models import Tag
 from viewer import models
 from viewer.api import auths
 from viewer.api.validation import FaceValidation
+from viewer.helpers import get_client_ip
 
 API = Api(api_name="v3")
 APIURL = "/api/v3/"
@@ -55,24 +57,40 @@ class FaceResource(PieforkModelResource):
         help_text="List of tags, input separated by comma",
         default='')
 
+    comments = fields.ListField(
+        attribute='comments',
+        null=True,
+        readonly=True,
+        help_text="List of comments")
+
     artist = fields.CharField(
+        attribute='artist',
+        null=True,
         readonly=True,
         help_text="Name of artist of image if known")
 
     title = fields.CharField(
+        attribute='title',
+        null=True,
         readonly=True,
         help_text="Generated title for this face.")
 
     description = fields.CharField(
+        attribute='description',
+        null=True,
         readonly=True,
         help_text="Generated description for this image.")
 
-    thumbnails = fields.ListField(
+    thumbnails = fields.DictField(
+        attribute="thumbnails",
         readonly=True,
+        null=True,
         help_text="List of thumbnails related to this face")
 
-    resizes = fields.ListField(
+    resizes = fields.DictField(
+        attribute="resizes",
         readonly=True,
+        null=True,
         help_text="Resized versions of this face")
 
     class Meta:
@@ -157,28 +175,6 @@ Tags should be separated by comma eg, 'yes, rainbow dash' """
 
         return super(FaceResource, self).apply_sorting(obj_list, options)
 
-    def dehydrate(self, bundle):
-        thumbnails = {}
-        for format in ("png", "jpg", "webp", "gif"):
-            if getattr(bundle.obj, format, False):
-                thumbnails[format] = MEDIA + str(getattr(bundle.obj, format))
-
-        resizes = {}
-        for size in ("small", "medium", "large", "huge"):
-            if getattr(bundle.obj, size, False):
-                resizes[size] = MEDIA + str(getattr(bundle.obj, size))
-
-        artist, title, description = bundle.obj.getMeta()
-
-        bundle.data.update({
-            "thumbnails": thumbnails,
-            "resizes": resizes,
-            "artist": artist,
-            "title": title,
-            "description": description})
-
-        return bundle
-
     def build_bundle(self, obj=None, data=None, request=None):
         bundle = super(FaceResource, self).build_bundle(obj, data, request)
         if request and bundle.data.get("tags"):
@@ -188,9 +184,9 @@ Tags should be separated by comma eg, 'yes, rainbow dash' """
 
     def obj_update(self, bundle, request=None, skip_errors=False, **kwargs):
         lookup_kwargs = self.lookup_kwargs_with_identifiers(bundle, kwargs)
-        bundle.obj = self.obj_get(bundle.request, **lookup_kwargs)
+        bundle.obj = self.obj_get(bundle, **lookup_kwargs)
 
-        self.is_valid(bundle, request)
+        self.is_valid(bundle)
 
         if bundle.errors and not skip_errors:
             self.error_response(bundle.errors, request)
@@ -207,14 +203,51 @@ Tags should be separated by comma eg, 'yes, rainbow dash' """
         return bundle
 
     def obj_create(self, bundle, request=None, **kwargs):
-        self.is_valid(bundle, request)
-        if bundle.errors:
-            self.error_response(bundle.errors, request)
+        # behavour change from 0.9 to 0.11, this is the haxfix
+        bundle.data["image"] = json.dumps(bundle.data["image"])
 
+        self.is_valid(bundle)
+        if bundle.errors:
+            self.error_response(request, bundle.errors)
+            raise
         bundle.obj = models.Face.submit(**bundle.data)
         return bundle
 
 API.register(FaceResource())
+
+
+class UserCommentResource(PieforkModelResource):
+    face = fields.ToOneField(
+        'viewer.api.v3.FaceResource',
+        'face',
+        default="",
+        help_text="id of Face related to this comment")
+
+    class Meta:
+        queryset = models.UserComment.objects.filter(visible=True)
+        include_resource_uri = False
+        always_return_data = True
+        list_allowed_methods = ['post']
+        detail_allowed_methods = []
+        ordering = ["id"]
+        fields = ["username", "text", "time", "color"]
+        readonlys = ["time"]
+        description = """User comment on a face"""
+        authorization = auths.AnonMethodAllowed().set_allowed(["POST"])
+
+    def build_bundle(self, obj=None, data=None, request=None):
+        bundle = super(UserCommentResource, self).build_bundle(obj, data, request)
+        if request:
+            bundle.data["client"] = get_client_ip(request)
+        return bundle
+
+    def full_hydrate(self, bundle):
+        # To circumvent readonly status on client
+        bundle = super(UserCommentResource, self).full_hydrate(bundle)
+        bundle.obj.client = bundle.data["client"]
+        return bundle
+
+API.register(UserCommentResource())
 
 
 class TagResource(PieforkModelResource):
@@ -271,6 +304,9 @@ class DetectResource(PieforkResource):
         detail_allowed_methods = []
         description = """Try to detect source and tags from filename."""
 
+    def get_object_list(self, *args, **kwargs):
+        return []
+
     def get_list(self, request=None, **kwargs):
         filename = request.GET.get("filename")
         if filename:
@@ -305,15 +341,14 @@ poor quality, duplicate or other reason."""
 
         bundle = super(FlagResource, self).build_bundle(obj, data, request)
 
-        if type(data.get("face")) is dict:
-            raise BadRequest("Suspicious operation")
-        else:
-            try:
-                id = int(bundle.data["face"])
-                bundle.data["face"] = APIURL + "face/%d/" % id
-            except:
-                pass
-
+#        if type(data.get("face")) is dict:
+#            raise BadRequest("Suspicious operation")
+#        else:
+#            try:
+#                id = int(bundle.data["face"])
+#                bundle.data["face"] = APIURL + "face/%d/" % id
+#            except:
+#                pass
         if request:
             useragent = request.META.get("HTTP_USER_AGENT")
             bundle.data["user_agent"] = useragent

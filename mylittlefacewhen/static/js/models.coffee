@@ -41,3 +41,6 @@ window.Advert = Backbone.Model.extend
 window.AdvertCollection = Backbone.Collection.extend
   model: Tag
   url: "/api/v3/ad/"
+
+window.Comment = Backbone.Model.extend
+  urlRoot: "/api/v3/usercomment/"

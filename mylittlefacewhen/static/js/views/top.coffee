@@ -3,7 +3,7 @@ window.TopView = Backbone.View.extend
   initialize: ->
     @template = tpl.get("top")
     @collection = new AdvertCollection()
-    KeyboardJS.bind.key 's', null, (event) => $("#searchbar").focus()
+    KeyboardJS.on 's', null, (event) => $("#searchbar").focus()
 
   events:
     "focus #topmenu a":"focused"
@@ -16,7 +16,8 @@ window.TopView = Backbone.View.extend
   render: ->
     $(@el).html @template #Mustache.render(@template, {})
     @autocomplete $("#searchbar")
-    @updateAd()
+    # Ads disabled for now
+    #@updateAd()
     return @
 
   closeAd: (event) ->
@@ -26,16 +27,15 @@ window.TopView = Backbone.View.extend
     return undefined
 
   updateAd: ->
-    unless $.cookie('noads') or $(window).width() < 700
-      @collection.fetch
-        success: =>
-          $ad = $("#mainos")
-          $ad.find("span").html @collection.models[0].get("htmlad")
-          $ad.slideDown("fast")
+    return
+#    unless $.cookie('noads') or $(window).width() < 700
+#      @collection.fetch
+#        success: =>
+#          $ad = $("#mainos")
+#          $ad.find("span").html @collection.models[0].get("htmlad")
+#          $ad.slideDown("fast")
 
     return undefined
-
-
 
   search: (event) ->
     event.preventDefault()
@@ -87,9 +87,3 @@ ac_split = (val) ->
 
 ac_extractLast = (term) ->
   ac_split(term).pop()
-
-
-
-
-
-

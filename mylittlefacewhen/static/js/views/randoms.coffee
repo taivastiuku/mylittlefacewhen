@@ -11,7 +11,8 @@ window.RandomsView = Backbone.View.extend
     $(window).on "scroll.randoms", (event) => @loadMore() if atBottom(500)
 
   beforeClose: ->
-    $(window).off ".randoms"
+    $(window).off "resize.randoms"
+    $(window).off "scroll.randoms"
 
   render: ->
     @updateMeta(@title, @description)

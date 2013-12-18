@@ -1,10 +1,10 @@
 tpl =
   # Hash of preloaded templates for the app
   templates: {}
-  
+
   # Recursively pre-load all the templates for the app in debug mode
   # or do nothing if in production mode.
-  
+
   loadTemplates: (names, callback) ->
     unless debug
       callback()

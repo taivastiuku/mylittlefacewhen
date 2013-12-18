@@ -1,11 +1,11 @@
 window.APIDocView = Backbone.View.extend
   # API documentation page
   el: "#content"
-  initialize: ->
-    @options.version = "v3" if @options.version == undefined
-    @title = "API#{@options.version} Documentation - MyLittleFaceWhen"
+  initialize: (options) ->
+    @version = if options.vesion == undefined then "v3" else options.version
+    @title = "API#{@version} Documentation - MyLittleFaceWhen"
     @description = "Information about API for mylittlefacewhen. It can be used to fetch data from the service and for maintanence by administrator."
-    @template = tpl.get("apidoc-" + @options.version)
+    @template = tpl.get("apidoc-" + @version)
 
   events: ->
     "click .navigate": "navigateAnchor"

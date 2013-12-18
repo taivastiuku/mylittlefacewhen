@@ -8,9 +8,32 @@ class AnonMethodAllowed(Authorization):
         self.allowed = allowed
         return self
 
-    def is_authorized(self, request, object=None):
-        if request.method in self.allowed:
-            return True
-        if request.user.is_authenticated():
-            return True
-        return False
+    def read_list(self, object_list, bundle):
+        if "GET" in self.allowed or bundle.request.user.is_superuser:
+            return object_list
+        else:
+            return []
+
+    def read_detail(self, object_list, bundle):
+        return "GET" in self.allowed or bundle.request.user.is_superuser
+
+    def create_detail(self, object_list, bundle):
+        return "POST" in self.allowed or bundle.request.user.is_superuser
+
+    def update_list(self, object_list, bundle):
+        if "PUT" in self.allowed or bundle.request.user.is_superuser:
+            return object_list
+        else:
+            return []
+
+    def update_detail(self, object_list, bundle):
+        return "PUT" in self.allowed or bundle.request.user.is_superuser
+
+    def delete_list(self, object_list, bundle):
+        if "DELETE" in self.allowed or bundle.request.user.is_superuser:
+            return object_list
+        else:
+            return []
+
+    def delete_detail(self, object_list, bundle):
+        return "DELETE" in self.allowed or bundle.request.user.is_superuser

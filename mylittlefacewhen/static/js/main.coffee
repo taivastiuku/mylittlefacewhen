@@ -194,8 +194,7 @@ AppRouter = Backbone.Router.extend
 
   pageload: (page) ->
     # Don't redraw the page if it's rendered by the server
-    # (except for IE9)
-    if @firstLoad and not $.browser.msie
+    if @firstLoad
       return page
     else
       return page.render()
@@ -224,9 +223,5 @@ tpl.loadTemplates [ "main", "thumbnail", "top", "single", "tag", "randoms", "ran
 
   app = new AppRouter()
 
-  if $.browser.msie and $.browser.version == "9.0"
-    # Internet Explorer lte9 doesn't support pushState history
-    Backbone.history.start()
-  else
-    Backbone.history.start {pushState: true}
+  Backbone.history.start {pushState: true}
 

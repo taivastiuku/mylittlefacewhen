@@ -18,13 +18,13 @@ from fabric.api import cd, local, get, run, put, env
 import secrets
 
 LIBS = (
-    "jquery-1.8.0.min.js",
-    "underscore-min.js",
-    "backbone-min.js",
+    "jquery-1.10.2.min.js",
+    "underscore.js",
+    "backbone.js",
     "backbone-tastypie.js",
-    "jquery.lazyload.min.js",
+    "jquery.lazyload.js",
     "jquery.cookie.min.js",
-    "jquery-ui-1.8.22.custom.min.js",
+    "jquery-ui-1.10.3.custom.min.js",
     "mustache.min.js",
     "keyboard.js")
 

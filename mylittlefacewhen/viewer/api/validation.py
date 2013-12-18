@@ -28,11 +28,12 @@ class FaceValidation(Validation):
         return kwargs
 
     def is_valid(self, bundle, request):
+        print "is_valid"
         if request.method == 'POST':
             form = self.create_form(**self.form_args(bundle, self.create_form))
         else:
             form = self.update_form(**self.form_args(bundle, self.update_form))
-
+        print "form valid", form.is_valid()
         if form.is_valid():
             bundle.data = form.cleaned_data
             return {}

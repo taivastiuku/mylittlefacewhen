@@ -22,8 +22,8 @@ class Command(BaseCommand):
             "/static/css/normalize.css",
             "/static/css/rainbow_dash_always_dresses_in.css",
             "/static/css/rarity.css",
-            "/static/css/jquery-ui-1.8.18.custom.css",
-            "/static/app.js"]
+            "/static/css/jquery-ui-1.10.3.custom.css",
+            "/static/app.js?1"]
 
 #        pages = [
 #            "/submit/",

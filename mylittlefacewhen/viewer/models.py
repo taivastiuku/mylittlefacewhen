@@ -6,14 +6,13 @@ import random
 import re
 
 from django.db import models
-from django.contrib.auth.models import User
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.mail import send_mail
 from django.utils import simplejson as json
 try:
     import Image
 except:
-    from PIL import Image
+    from PIL import Image  # NOQA
 import requests
 import tagging
 
@@ -28,7 +27,16 @@ PONYCHAN = "http://pinkie.ponychan.net/chan/files/src/"
 SIZES = ((0, 100), (320, 320), (640, 640), (1000, 1000), (1920, 1920))
 SIZENAMES = ("thumb", "small", "medium", "large", "huge")
 
-PONIES = {"celestia", "molestia", "luna", "pinkie pie", "twilight sparkle", "applejack", "rarity", "fluttershy", "rainbow dash", "lyra", "bon bon", "bon bon", "rose", "sweetie belle", "spike", "scootaloo", "applebloom", "cheerilee", "big macintosh", "berry punch", "discord", "nightmare moon", "chrysalis", "cadance", "shining armor", "colgate", "silver spoon", "diamond tiara", "vinyl scratch", "derpy hooves", "hoity toity", "gummy", "snips", "snails", "spiderman", "granny smith", "opalescence", "angel", "doctor whooves", "trixie", "gilda", "skeletor", "octavia", "lauren faust", "daring do"}
+PONIES = {
+    "celestia", "molestia", "luna", "pinkie pie", "twilight sparkle", "applejack", "rarity", "fluttershy",
+    "rainbow dash", "lyra", "bon bon", "bon bon", "rose", "sweetie belle", "spike", "scootaloo", "applebloom",
+    "cheerilee", "big macintosh", "berry punch", "discord", "nightmare moon", "chrysalis", "cadance",
+    "shining armor", "colgate", "silver spoon", "diamond tiara", "vinyl scratch", "derpy hooves", "hoity toity",
+    "gummy", "snips", "snails", "spiderman", "granny smith", "opalescence", "angel", "doctor whooves", "trixie",
+    "gilda", "skeletor", "octavia", "lauren faust", "daring do", "guard pony", "ursa minor", "lightning dust"}
+
+#TODO all episodes
+#TODO tags should cointain info about the character without sets like these
 
 CMC = {"scootaloo", "applebloom", "sweetie belle"}
 MANE6 = {"twilight sparkle", "pinkie pie", "rainbow dash", "fluttershy", "rarity", "applejack"}
@@ -155,7 +163,7 @@ class Face(models.Model):
         help_text="Height of image")
 
     source = models.URLField(
-        verify_exists=False,
+        # verify_exists=False,
         blank=True,
         default="",
         help_text="Source for image")
@@ -272,6 +280,14 @@ class Face(models.Model):
             return [objs[random.randint(0, count - 1)] for i in xrange(number)]
         else:
             return objs[random.randint(0, count - 1)]
+
+    @property
+    def comments(self):
+        out = []
+        for item in self.usercomment_set.filter(visible="visible").order_by("-time"):
+            out.append({"username": item.username, "text": item.safe_text, "color": item.color})
+
+        return out
 
     def generateImages(self, format=None):
         # self.image.open()
@@ -501,6 +517,13 @@ class Face(models.Model):
             if len(faces) > 1:
                 self.is_duplicate_of(faces[0])
 
+    def update_comments(self):
+        older_comments = self.usercomment_set.filter(visible="visible").order_by("-time")
+        if older_comments.count() > 10:
+            oldest_to_show = older_comments[9].id
+            to_hide = self.usercomment_set.filter(id__lt=oldest_to_show, visible="visible")
+            to_hide.update(visible="hidden")
+
     def md5sum(self):
         # http://stackoverflow.com/questions/1131220/
         md5 = hashlib.md5()
@@ -536,6 +559,7 @@ class Face(models.Model):
                 ponies.add(tag)
             elif not longest and tag not in ["untagged", "transparent", "screenshot", "animated", "fanart"]:
                 longest = tag
+                tags.add(tag)
             else:
                 tags.add(tag)
 
@@ -545,18 +569,16 @@ class Face(models.Model):
                     ponies.remove(item)
                 ponies.add(setname)
 
-        tags = rreplace(", ".join(tags), ",", " and")
+        tags = "'%s'" % rreplace("', '".join(tags), ",", " and")
         ponies = rreplace(", ".join(ponies).title(), ",", " and")
+        if not ponies:
+            ponies = "Pony reaction"
 
-        if ponies:  # and longest:
-            title = ponies + ": " + longest
-            description = ponies + " reacting with '" + longest + "', " + tags
-            if artist:
-                title += " by " + artist
-                description += " by " + artist
-        else:
-            title = "Pony Reaction Image " + str(self.id)
-            description = ponies + ", " + tags + longest
+        title = ponies + ": " + longest
+        description = ponies + " reacting with " + tags
+        if artist:
+            title += " by " + artist
+            description += " by " + artist
 
         return (artist, title, description)
 
@@ -587,6 +609,25 @@ class Face(models.Model):
     @property
     def taglist(self):
         return ", ".join([tag.name for tag in self.tags])
+
+    @property
+    def thumbnails(self):
+        thumbnails = {}
+        for format in ("png", "jpg", "webp", "gif"):
+            img = getattr(self, format)
+            if img:
+                thumbnails[format] = img.url
+        return thumbnails
+
+    @property
+    def resizes(self):
+        resizes = {}
+        for size in ("small", "medium", "large", "huge"):
+            resize = getattr(self, size)
+            if resize:
+                resizes[size] = resize.url
+
+        return resizes
 
     def __unicode__(self):
         return str(self.id) + " - " + self.title
@@ -649,7 +690,7 @@ class ChangeLog(models.Model):
         help_text="Face related to change")
 
     source = models.URLField(
-        verify_exists=False,
+        # verify_exists=False,
         blank=True,
         default="",
         help_text="New source for face")
@@ -849,5 +890,80 @@ class Feedback(models.Model):
         return self.contact + " - " + self.text
 
 
+class UserComment(models.Model):
+    VISIBILITY = (
+        ("moderated", "Moderated"),
+        ("hidden", "Hidden"),
+        ("visible", "Visible"))
 
+    face = models.ForeignKey(
+        Face,
+        help_text="Face that is being commented")
 
+    username = models.CharField(
+        max_length=16,
+        default="Poninymous",
+        help_text="Username of anon user")
+
+    text = models.CharField(
+        max_length=255,
+        default="",
+        help_text="Comment itself")
+
+    client = models.IPAddressField(
+        help_text="IP of the commenter")
+
+    visible = models.CharField(
+        max_length=16,
+        choices=VISIBILITY,
+        default="visible",
+        help_text="If comment is visible, moderated or hidden")
+
+    color = models.CharField(
+        max_length=6,
+        help_text="IP/Face specific color")
+
+    time = models.DateTimeField(
+        auto_now_add=True,
+        help_text="Time of writing")
+
+    @property
+    def safe_text(self):
+        text = self.text.split(" ")
+        out = []
+        for word in text:
+            if len(word) > 30:
+                parts = []
+                l = 10
+                for j in range(0, len(word) / l):
+                    parts.append(word[j * l: (j + 1) * l])
+                word = u"\u200B".join(parts)
+            out.append(word)
+        return u" ".join(out)
+
+    def save(self, *args, **kwargs):
+        """Only 10 newest comments are shown."""
+        previous_comments = UserComment.objects.filter(face=self.face, client=self.client)
+
+        if previous_comments:
+            self.color = previous_comments[0].color
+        elif not self.color:
+            def get_color():
+                colors = []
+                for _ in range(0, 3):
+                    if not random.randint(0, 2):
+                        colors.append("cc")
+                    else:
+                        colors.append(str(hex(random.randint(0x00, 0x99))[2:]).zfill(2))
+                colors = "".join(colors)
+                print colors, colors == "ffffff"
+                if colors == "aaaaaa":
+                    return get_color()
+                else:
+                    return colors
+
+            self.color = get_color()
+
+        self.face.update_comments()
+
+        return super(UserComment, self).save(*args, **kwargs)

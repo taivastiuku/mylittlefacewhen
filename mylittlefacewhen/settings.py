@@ -8,6 +8,8 @@ PISTON_DISPLAY_ERRORS = DEBUG
 INTERNAL_IPS = ("192.168.56.1"
                 "192.168.56.10")
 
+ALLOWED_HOSTS = ["mlfw.info", "mylittlefacewhen.com"]
+
 if DEBUG:
     import mimetypes
     mimetypes.add_type("text/cache-manifest", ".appcache", True)

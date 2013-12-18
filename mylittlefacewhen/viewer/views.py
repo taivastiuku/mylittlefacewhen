@@ -1,7 +1,6 @@
 from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
-from django.forms.models import model_to_dict
 from django.http import Http404
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
@@ -125,34 +124,25 @@ def single(request, face_id):
     else:
         imageurl = "http://" + request.get_host()
 
-    f = model_to_dict(
-        face,
-        fields=["source", "accepted", "id", "width", "height"])
+    attrs = ("source", "accepted", "id", "width", "height", "comments",
+             "artist", "title", "description")
 
-    if f.get("source"):
-        f["source"] = [{"source":f["source"]}]
+    f = {attr: getattr(face, attr) for attr in attrs}
 
     f["tags"] = [{"name":tag.name} for tag in face.tags]
-
     f["image"] = face.image.url
-
-    f["resizes"] = []
-    for itm in ("huge", "large", "medium", "small"):
-        if getattr(face, itm):
-            f["resizes"].append(
-                {"image": getattr(face, itm).url, "size": itm})
+    f["resizes"] = [{"size":size, "image": image} for size, image in face.resizes.items()]
 
     artist, title, description = face.getMeta()
 
     to_content = {
-        "artist": artist,
         "face": f,
         # Avoid error when no thumb has been generated:
         "thumb": getattr(face.thumb, "url", None),
         "image": image,
         "static_prefix": STATIC_PREFIX,
         "image_service": imageurl,
-        "alt": description}
+        "alt": f["description"]}
 
     to_template = {
         "content": "single.mustache",

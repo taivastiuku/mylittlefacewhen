@@ -1,12 +1,13 @@
 window.MainView = Backbone.View.extend
   # The main views that list newest images
   el: "#content"
-  initialize: ->
+  initialize: (options) ->
     @title = "Pony Reaction Pictures - MyLittleFaceWhen"
     @description = "Express yourself with ponies."
     @template = tpl.get('main')
     @offset = 0 if not @offset
     @loading = false
+    @order_by = options.order_by
     $(window).on "resize.main", (event) => @loadMore() if atBottom(300)
     $(window).on "scroll.main", (event) => @loadMore() if atBottom(300)
 
@@ -43,7 +44,7 @@ window.MainView = Backbone.View.extend
       collection.fetch
         data:
           offset: @offset
-          order_by: @options.order_by
+          order_by: @order_by
           accepted: true
           removed: false
         success: (data) =>
@@ -51,10 +52,7 @@ window.MainView = Backbone.View.extend
             $("#thumbs").append new Thumbnail(model:model).render().el
 
           imgs = $('.lazy')
-          if $.browser.webkit # Only webkit is fast enough for this
-            imgs.removeClass('lazy').lazyload effect: "fadeIn"
-          else
-            imgs.removeClass('lazy').lazyload()
+          imgs.removeClass('lazy').lazyload()
 
           $("#loader").hide()
           @collection.add collection.models
@@ -114,10 +112,7 @@ window.UnreviewedView = Backbone.View.extend
           $("#thumbs").append new Thumbnail(model:model).render().el
 
         imgs = $('.lazy')
-        if $.browser.webkit
-          imgs.removeClass('lazy').lazyload effect: "fadeIn"
-        else
-          imgs.removeClass('lazy').lazyload()
+        imgs.removeClass('lazy').lazyload()
 
         $("#loader").hide()
     return @

@@ -76,10 +76,7 @@ window.TagsView = Backbone.View.extend
           tagsItem.children("div").append thumb.el.firstChild
 
           imgs = $('.lazy')
-          if $.browser.webkit
-            imgs.removeClass('lazy').lazyload effect: "fadeIn"
-          else
-            imgs.removeClass('lazy').lazyload()
+          imgs.removeClass('lazy').lazyload()
 
 window.TagView = Backbone.View.extend
   tagName: "span"

@@ -40,10 +40,7 @@ window.SearchView = Backbone.View.extend
             $(thumbs).append new Thumbnail(model:model).render().el
 
           imgs = $('.lazy')
-          if $.browser.webkit
-            imgs.removeClass('lazy').lazyload effect: "fadeIn"
-          else
-            imgs.removeClass('lazy').lazyload()
+          imgs.removeClass('lazy').lazyload()
         loader.hide()
 
       error: =>
