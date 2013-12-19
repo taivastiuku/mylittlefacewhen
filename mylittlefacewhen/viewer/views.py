@@ -8,6 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from viewer import forms
 from viewer import models
+from viewer.helpers import UPDATED
 
 IMAGEURL = "http://denver.mylittlefacewhen.com"
 
@@ -64,6 +65,7 @@ def randoms(request):
     to_template = {
         "content": "randoms.mustache",
         "content_data": {"static_prefix": STATIC_PREFIX},
+        "updated": UPDATED,
         "metadata": meta}
 
     return render_to_response(
@@ -99,6 +101,7 @@ def search(request):
         "content_data": {
             "static_prefix": STATIC_PREFIX,
             "query": query},
+        "updated": UPDATED,
         "metadata": meta}
 
     return render_to_response(
@@ -147,6 +150,7 @@ def single(request, face_id):
     to_template = {
         "content": "single.mustache",
         "content_data": to_content,
+        "updated": UPDATED,
         "metadata": {
             "title": title,
             "description": description,
@@ -176,6 +180,7 @@ def develop(request):
     to_template = {
         "content": "develop.mustache",
         "content_data": {},
+        "updated": UPDATED,
         "metadata": meta}
 
     return render_to_response(
@@ -195,6 +200,7 @@ def api(request):
     to_template = {
         "content": "apidoc-v3.mustache",
         "content_data": {},
+        "updated": UPDATED,
         "metadata": meta}
 
     return render_to_response(
@@ -269,6 +275,7 @@ def feedback(request):
     to_template = {
         "content": "feedback.mustache",
         "content_data": {"message": message},
+        "updated": UPDATED,
         "metadata": meta}
 
     return render_to_response(
@@ -285,6 +292,7 @@ def submit(request):
     to_template = {
         "content": "submit.mustache",
         "content_data": {"static_prefix": STATIC_PREFIX},
+        "updated": UPDATED,
         "metadata": meta}
 
     return render_to_response(
@@ -306,6 +314,7 @@ def tags(request):
         "content": "tags.mustache",
         "content_data": {
             "models": [{"name":tag.name} for tag in models.Face.tags.all()]},
+        "updated": UPDATED,
         "metadata": meta}
 
     return render_to_response(
@@ -322,6 +331,7 @@ def changelog(request):
     to_template = {
         "content": "changelog.mustache",
         "content_data": {},
+        "updated": UPDATED,
         "metadata": meta}
 
     return render_to_response(

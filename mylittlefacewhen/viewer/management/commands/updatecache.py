@@ -2,6 +2,8 @@ from datetime import datetime
 
 from django.core.management.base import BaseCommand
 
+from viewer.helpers import UPDATED
+
 
 class Command(BaseCommand):
     args = "no args plz"
@@ -23,7 +25,10 @@ class Command(BaseCommand):
             "/static/css/rainbow_dash_always_dresses_in.css",
             "/static/css/rarity.css",
             "/static/css/jquery-ui-1.10.3.custom.css",
-            "/static/app.js?1"]
+            "/static/app.js"]
+
+        for index in xrange(0, len(files)):
+            files[index] = files[index] + "?" + str(UPDATED)
 
 #        pages = [
 #            "/submit/",
