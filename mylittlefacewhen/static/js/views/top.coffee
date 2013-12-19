@@ -45,6 +45,11 @@ window.TopView = Backbone.View.extend
   search: (event) ->
     event.preventDefault()
     tags = $("#searchbar").val()
+    if window.location.pathname.indexOf("/search/") == 0
+        # this is not optimal since it breaks 'back' by adding unneeded history entry
+        # it is still needed because backbone doesnt seem to understand url parameters
+        # TODO fix it better
+        app.navigate("/search", {trigger:false})
     app.navigate("/search/?tag=#{tags}", {trigger:true})
 
   focused: (event) ->

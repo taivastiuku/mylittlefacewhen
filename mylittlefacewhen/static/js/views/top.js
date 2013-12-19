@@ -46,6 +46,11 @@ window.TopView = Backbone.View.extend({
     var tags;
     event.preventDefault();
     tags = $("#searchbar").val();
+    if (window.location.pathname.indexOf("/search/") === 0) {
+      app.navigate("/search", {
+        trigger: false
+      });
+    }
     return app.navigate("/search/?tag=" + tags, {
       trigger: true
     });
