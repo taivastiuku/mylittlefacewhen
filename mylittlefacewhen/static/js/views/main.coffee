@@ -48,20 +48,21 @@ window.MainView = Backbone.View.extend
           accepted: true
           removed: false
         success: (data) =>
-          collection.each (model) ->
-            $("#thumbs").append new Thumbnail(model:model).render().el
+          if app.currentPage == @
+              collection.each (model) ->
+                $("#thumbs").append new Thumbnail(model:model).render().el
 
-          imgs = $('.lazy')
-          imgs.removeClass('lazy').lazyload()
+              imgs = $('.lazy')
+              imgs.removeClass('lazy').lazyload()
 
-          $("#loader").hide()
-          @collection.add collection.models
-          @offset += 20
-          @loading = false
-          if data.length > 0
-            @loadMore() if atBottom(300)
-          else
-            $("#loadMore").hide()
+              $("#loader").hide()
+              @collection.add collection.models
+              @offset += 20
+              @loading = false
+              if data.length > 0
+                @loadMore() if atBottom(300)
+              else
+                $("#loadMore").hide()
         error: ->
           $("#loader").hide()
           loading = false
@@ -70,7 +71,9 @@ window.MainView = Backbone.View.extend
   beforeClose: ->
     # Clean up a few event handlers and save current state and position of
     # the page
-    $(window).off ".main"
+    $(window).off "resize.main"
+    $(window).off "scroll.main"
+
     _.each $(".fixedWidth"), (img) ->
        $(img).removeClass("fixedWidth").attr("src", img.getAttribute("data-original"))
 

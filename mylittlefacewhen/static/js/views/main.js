@@ -67,23 +67,25 @@ window.MainView = Backbone.View.extend({
         },
         success: function(data) {
           var imgs;
-          collection.each(function(model) {
-            return $("#thumbs").append(new Thumbnail({
-              model: model
-            }).render().el);
-          });
-          imgs = $('.lazy');
-          imgs.removeClass('lazy').lazyload();
-          $("#loader").hide();
-          _this.collection.add(collection.models);
-          _this.offset += 20;
-          _this.loading = false;
-          if (data.length > 0) {
-            if (atBottom(300)) {
-              return _this.loadMore();
+          if (app.currentPage === _this) {
+            collection.each(function(model) {
+              return $("#thumbs").append(new Thumbnail({
+                model: model
+              }).render().el);
+            });
+            imgs = $('.lazy');
+            imgs.removeClass('lazy').lazyload();
+            $("#loader").hide();
+            _this.collection.add(collection.models);
+            _this.offset += 20;
+            _this.loading = false;
+            if (data.length > 0) {
+              if (atBottom(300)) {
+                return _this.loadMore();
+              }
+            } else {
+              return $("#loadMore").hide();
             }
-          } else {
-            return $("#loadMore").hide();
           }
         },
         error: function() {
@@ -95,7 +97,8 @@ window.MainView = Backbone.View.extend({
     }
   },
   beforeClose: function() {
-    $(window).off(".main");
+    $(window).off("resize.main");
+    $(window).off("scroll.main");
     _.each($(".fixedWidth"), function(img) {
       return $(img).removeClass("fixedWidth").attr("src", img.getAttribute("data-original"));
     });
