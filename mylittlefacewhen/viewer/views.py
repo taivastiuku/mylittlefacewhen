@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
@@ -215,36 +214,6 @@ def rand(request):
     """
     face = models.Face.random()
     return redirect("/f/%d/" % face.id)
-
-
-@login_required
-def changes(request, page=1):
-    page = int(page)
-    start = 30 * (page - 1)
-    end = 30 * + page
-    changelog_id = request.POST.get("id")
-    undo = None
-    if changelog_id:
-        ret = models.ChangeLog.objects.filter(id=changelog_id)
-        if ret:
-            undo = ret[0].undo()
-    faces = []
-    logs = models.ChangeLog.objects.all().order_by("-datetime")[start:end]
-    for log in logs:
-        face = log.face
-        face.setThumbWithRequest(request)
-        faces.append(face)
-
-    z = zip(logs, faces)
-
-    to_template = {
-        "zip": z,
-        "undo": undo}
-
-    return render_to_response(
-        "changes.html",
-        to_template,
-        context_instance=RequestContext(request))
 
 
 @csrf_exempt
