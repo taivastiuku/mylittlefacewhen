@@ -12,6 +12,8 @@ window.SubmitView = Backbone.View.extend
     "click #upload" : "upload"
     "click #instructions button" : "toggleInstructions"
     "click #to-unreviewed a" : "navigateAnchor"
+    "keydown input": "disableShortcuts"
+    "keyup input": "disableShortcuts"
 
   render: ->
     @updateMeta()
@@ -100,6 +102,8 @@ window.SubmitView = Backbone.View.extend
   toggleInstructions: (event) ->
     $("#instructions div").toggle()
 
+  disableShortcuts: (event) ->
+    event.stopPropagation()
 
 window.SubmitItemView = Backbone.View.extend
   tagName: "li"

@@ -12,6 +12,8 @@ window.TopView = Backbone.View.extend
     "click #topmenu a": "navigateAnchor"
     "click #logo a": "navigateAnchor"
     "click #close-ad": "closeAd"
+    "keydown input": "disableShortcuts"
+    "keyup input": "disableShortcuts"
 
   render: ->
     $(@el).html @template #Mustache.render(@template, {})
@@ -36,6 +38,9 @@ window.TopView = Backbone.View.extend
 #          $ad.slideDown("fast")
 
     return undefined
+
+  disableShortcuts: (event) ->
+    event.stopPropagation()
 
   search: (event) ->
     event.preventDefault()

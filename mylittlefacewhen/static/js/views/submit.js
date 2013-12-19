@@ -12,7 +12,9 @@ window.SubmitView = Backbone.View.extend({
     "change #files": "handleChoose",
     "click #upload": "upload",
     "click #instructions button": "toggleInstructions",
-    "click #to-unreviewed a": "navigateAnchor"
+    "click #to-unreviewed a": "navigateAnchor",
+    "keydown input": "disableShortcuts",
+    "keyup input": "disableShortcuts"
   },
   render: function() {
     this.updateMeta();
@@ -109,6 +111,9 @@ window.SubmitView = Backbone.View.extend({
   },
   toggleInstructions: function(event) {
     return $("#instructions div").toggle();
+  },
+  disableShortcuts: function(event) {
+    return event.stopPropagation();
   }
 });
 

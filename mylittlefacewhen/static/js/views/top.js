@@ -17,7 +17,9 @@ window.TopView = Backbone.View.extend({
     "submit #search form": "search",
     "click #topmenu a": "navigateAnchor",
     "click #logo a": "navigateAnchor",
-    "click #close-ad": "closeAd"
+    "click #close-ad": "closeAd",
+    "keydown input": "disableShortcuts",
+    "keyup input": "disableShortcuts"
   },
   render: function() {
     $(this.el).html(this.template);
@@ -36,6 +38,9 @@ window.TopView = Backbone.View.extend({
   updateAd: function() {
     return;
     return void 0;
+  },
+  disableShortcuts: function(event) {
+    return event.stopPropagation();
   },
   search: function(event) {
     var tags;
