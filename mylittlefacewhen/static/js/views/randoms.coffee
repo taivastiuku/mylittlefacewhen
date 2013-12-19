@@ -43,7 +43,7 @@ window.RandomsView = Backbone.View.extend
           setTimeout( =>
             @loading = false
             if data.length > 0
-              @loadMore() if atBottom(500)
+              @loadMore() if atBottom(500) and app.currentPage == @
             else
               $("#loadMore").hide()
           , 1000)

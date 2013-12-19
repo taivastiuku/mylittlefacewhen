@@ -57,7 +57,7 @@ window.RandomsView = Backbone.View.extend({
           return setTimeout(function() {
             _this.loading = false;
             if (data.length > 0) {
-              if (atBottom(500)) {
+              if (atBottom(500) && app.currentPage === _this) {
                 return _this.loadMore();
               }
             } else {
