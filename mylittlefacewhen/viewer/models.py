@@ -539,7 +539,7 @@ class Face(models.Model):
         """
         Artist, title and description
         """
-        tags = set()
+        tags = []
         ponies = set()
         longest = ""
         artist = None
@@ -557,11 +557,11 @@ class Face(models.Model):
 
             elif tag in PONIES:
                 ponies.add(tag)
-            elif not longest and tag not in ["untagged", "transparent", "screenshot", "animated", "fanart"]:
+            elif not longest and tag not in {"untagged", "transparent", "screenshot", "animated", "fanart"}:
                 longest = tag
-                tags.add(tag)
+                tags.insert(0, longest)
             else:
-                tags.add(tag)
+                tags.append(tag)
 
         for ponyset, setname in [(CMC, "cutie mark crusaders"), (MANE6, "mane 6")]:
             if ponies.issuperset(ponyset):

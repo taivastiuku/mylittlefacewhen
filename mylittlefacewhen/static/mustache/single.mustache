@@ -5,12 +5,12 @@
   <div class="shrinkwrap-out text-center">
     <div class="shrinkwrap-in">
       <div id="singlewrap">
-        <a id="single" href="/random/"><img itemprop="contentURL" class="single" src="{{ image_service }}{{ image }}" alt="{{ face.title }}" title="{{ face.title }}" /></a>
+        <a id="single" href="/random/"><img itemprop="contentURL" class="single" src="{{ image_service }}{{ image }}" alt="{{ face.description }}" title="{{ face.description }}" /></a>
         <br />
         <div id="controls">
           <div tabindex=0 class="faded" id="flag" title="Report duplicate or other problem"></div>
         </div>
-        <div id="shortlink"><a class="text-center small text-top" href="http://mlfw.info/f/{{ face.id }}/">http://mlfw.info/f/{{ face.id }}/</a></div>
+        <div id="shortlink"><a class="text-center small text-top" href="http://mlfw.info/f/{{ face.id }}/">http://mlfw.info/f/{{ face.id }}/</a><br><span class="small text-top">{{face.title}}</div>
       </div>
     </div>
   </div>
