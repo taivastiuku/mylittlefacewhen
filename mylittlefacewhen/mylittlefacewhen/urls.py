@@ -3,10 +3,6 @@ from django.conf import settings
 from django.conf.urls.defaults import patterns, include, url
 from django.conf.urls.static import static
 
-from piston.resource import Resource
-
-from viewer import resources
-from viewer import authentication
 from viewer import feeds
 
 from viewer.api import v2
@@ -15,16 +11,6 @@ from viewer.api import v3
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
-
-#these are for api mapping and api access control for the old piston-api (v1)
-faces_handler = Resource(resources.FacesHandler, authentication=authentication.AnonMethodAllowed().set_allowed(["GET", "POST", "PUT"]))
-search_handler = Resource(resources.SearchHandler)
-tags_handler = Resource(resources.TagsHandler)
-feedback_handler = Resource(resources.FeedbackHandler, authentication=authentication.AnonMethodAllowed().set_allowed(["POST"]))
-login_handler = Resource(resources.LoginHandler)
-detect_handler = Resource(resources.DetectHandler)
-report_handler = Resource(resources.ReportHandler, authentication=authentication.AnonMethodAllowed().set_allowed(["POST"]))
-
 
 urlpatterns = patterns(
     '',
@@ -63,17 +49,6 @@ urlpatterns = patterns(
 
     #Django registration
     (r'^accounts/', include('registration.urls')),
-
-    #API v1 (deprecated)
-    url(r'^api/faces/?$', faces_handler),
-    url(r'^api/faces/(?P<uid>[^/]+)/?$', faces_handler),
-    url(r'^api/search/?', search_handler),
-    url(r'^api/tags/?', tags_handler),
-    url(r'^api/feedback/?$', feedback_handler),
-    url(r'^api/feedback/(?P<uid>[^/]+)/?$', feedback_handler),
-    url(r'^api/login/?$', login_handler),
-    url(r'^api/detect/$', detect_handler),
-    url(r'^api/report/$', report_handler),
 
     # Tastypie APIs
     url(r'^api/', include(v2.API.urls)),
