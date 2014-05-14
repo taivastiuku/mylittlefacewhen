@@ -23,7 +23,8 @@ Backbone.View::navigateAnchor = (event) ->
 
 AppRouter = Backbone.Router.extend
   initialize: ->
-    @bind 'all', @_trackPageview
+    # for some reason this tracks all pages twice
+    #@bind 'all', @_trackPageview
 
     #TODO Could these infused as one?
     @faceList = new FaceCollection() #loaded from main view
@@ -72,8 +73,9 @@ AppRouter = Backbone.Router.extend
 
   _trackPageview: ->
     # GoogleAnalytics
-    url = Backbone.history.getFragment()
-    _gaq.push(['_trackPageview', "/#{url}"])
+    try
+      url = Backbone.history.getFragment()
+      _gaq.push(['_trackPageview', "/#{url}"])
 
   getImageService: ->
     # Images may start loading before image service is decided.
@@ -205,6 +207,7 @@ AppRouter = Backbone.Router.extend
     $("#{item} div").addClass("selected")
 
   before: (callback) ->
+    @_trackPageview()  # use analytics
     # close old page before opening new one, this takes care of the event listeners.
     @currentPage.close() if @currentPage
     @currentPage = callback()
