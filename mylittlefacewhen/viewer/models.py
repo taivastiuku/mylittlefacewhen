@@ -33,7 +33,8 @@ PONIES = {
     "cheerilee", "big macintosh", "berry punch", "discord", "nightmare moon", "chrysalis", "cadance",
     "shining armor", "colgate", "silver spoon", "diamond tiara", "vinyl scratch", "derpy hooves", "hoity toity",
     "gummy", "snips", "snails", "spiderman", "granny smith", "opalescence", "angel", "doctor whooves", "trixie",
-    "gilda", "skeletor", "octavia", "lauren faust", "daring do", "guard pony", "ursa minor", "lightning dust"}
+    "gilda", "skeletor", "octavia", "lauren faust", "daring do", "guard pony", "ursa minor", "lightning dust",
+    "zecora"}
 
 #TODO all episodes
 #TODO tags should cointain info about the character without sets like these
@@ -248,21 +249,21 @@ class Face(models.Model):
         else:
             return []
 
-    @staticmethod
-    def search(tags):
-        #tags_exist = True
+#    @staticmethod
+#    def search(tags):
+#        #tags_exist = True
 
-        andlist = []
-        anylist = [Face.tags.filter(name__contains=tag) for tag in tags if (len(unicode(tag)) > 1)]
-        if not anylist:
-            return []
-        for l in anylist:
-            andlist.append(Face.tagged.with_any(l).filter(accepted=True))
-        a = set(andlist.pop(0))
-        for l in andlist:
-            a = a.intersection(set(l))
-
-        return list(a)
+#        andlist = []
+#        anylist = [Face.tags.filter(name__contains=tag) for tag in tags if (len(unicode(tag)) > 1)]
+#        if not anylist:
+#            return []
+#        for l in anylist:
+#            andlist.append(Face.tagged.with_any(l).filter(accepted=True))
+#        a = set(andlist.pop(0))
+#        for l in andlist:
+#            a = a.intersection(set(l))
+#
+#        return list(a)
 
     @staticmethod
     def random(tags=None, tag=None, number=None):
@@ -552,16 +553,21 @@ class Face(models.Model):
             return new.join(string.rsplit(old, maxNumber))
 
         for tag in tagslist:
+            if tag.startswith("princess "):
+                tag = tag[9:]
+
             if tag.startswith("artist:"):
                 artist = tag.partition(":")[2].strip()
 
             elif tag in PONIES:
                 ponies.add(tag)
-            elif not longest and tag not in {"untagged", "transparent", "screenshot", "animated", "fanart"}:
+            elif not longest and tag not in {"untagged", "transparent", "screenshot", "animated", "fanart", "caption"}:
                 longest = tag
                 tags.insert(0, longest)
             else:
                 tags.append(tag)
+
+        tags.append("my little pony")
 
         for ponyset, setname in [(CMC, "cutie mark crusaders"), (MANE6, "mane 6")]:
             if ponies.issuperset(ponyset):
@@ -942,6 +948,11 @@ class UserComment(models.Model):
         return u" ".join(out)
 
     def save(self, *args, **kwargs):
+
+        #TODO do validation in a form
+        if self.text.strip() == "" or self.username.strip() == "":
+            return False
+
         """Only 10 newest comments are shown."""
         previous_comments = UserComment.objects.filter(face=self.face, client=self.client)
 
