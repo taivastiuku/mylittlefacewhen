@@ -79,7 +79,8 @@ def search(request):
     """
     query = request.GET.get("tag", request.GET.get("tags", "")).strip(",")
     tags = [tag.strip() for tag in query.split(",")]
-    faces = models.Face.search(tags)
+    faces = models.Face.tagged.with_all(tags)
+#    faces = models.Face.search(tags)
 
     if len(faces) == 1:
         return redirect("/f/%d" % faces[0].id)
