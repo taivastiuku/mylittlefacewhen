@@ -13,9 +13,9 @@ def remove_face(modeladmin, request, queryset):
 
 
 class Face(admin.ModelAdmin):
-    list_display = ["id", "title", "thumb", "changes", "taglist", "accepted", "removed", "processed",
+    list_display = ["id", "title", "thumb", "changes", "taglist", "accepted", "removed",
                     "views", "hotness", "width", "height"]
-    list_filter = ["accepted", "processed", "removed"]
+    list_filter = ["accepted", "removed"]
     readonly_fields = [
         "image", "webp", "jpg", "gif", "png", "small", "medium", "large", "huge", "width", "height", "md5",
         "added", "views", "hotness"]
@@ -67,7 +67,7 @@ def undo_change(modeladmin, request, queryset):
 
 
 class ChangeLog(admin.ModelAdmin):
-    objects = models.ChangeLog.objects.filter(face__removed=False)
+    objects = models.ChangeLog.objects.filter(face__removed=False, face__accepted=True)
     list_display = ["id", "thumb", "admin_link", "age", "added_tags", "removed_tags", "same_tags", "source_change"]
 
 #    related_search_fields = {"face": ["id"]}
