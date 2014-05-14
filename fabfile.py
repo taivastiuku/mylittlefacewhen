@@ -255,8 +255,9 @@ def _install():
 
         with cd(appdir + "mylittlefacewhen/"):
             run("python2.7 manage.py migrate viewer")
-            run("find settings.py -type f -exec sed -i \
-                's/DEBUG = True/DEBUG = False/g' {} ';'")
+            with cd("mylittlefacewhen"):
+                run("find settings.py -type f -exec sed -i \
+                    's/DEBUG = True/DEBUG = False/g' {} ';'")
             with cd("templates"):
                 run("find ./ -type f -exec sed -i 's/<!--remove//g' {} ';'")
                 run("find ./ -type f -exec sed -i 's/remove-->//g' {} ';'")
