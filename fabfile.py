@@ -9,9 +9,9 @@ It's not pretty but it works.
 """
 
 import os
+import json
 
-from django.utils import simplejson as json
-from django.utils.html import strip_spaces_between_tags
+#from django.utils.html import strip_spaces_between_tags
 #from fabric.api import *  # oh my god... it's full of stars
 from fabric.api import cd, local, get, run, put, env
 
@@ -189,7 +189,8 @@ def _prepare_deploy():
             if template.endswith(".mustache"):
                 with open(templatedir + template, "r") as filu:
                     name = template.partition(".")[0]
-                    data = strip_spaces_between_tags(filu.read())
+                    data = filu.read()
+#                    data = strip_spaces_between_tags(filu.read())
                     templates[name] = data
 
         with open(env.staticdir + "app.js", "w") as out:

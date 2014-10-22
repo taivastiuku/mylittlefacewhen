@@ -1,6 +1,10 @@
 import random
 
-from django.utils import simplejson as json
+try:
+    import simplejson as json
+except ImportError:
+    import json
+
 from tastypie import fields
 from tastypie.api import Api
 from tastypie.exceptions import BadRequest

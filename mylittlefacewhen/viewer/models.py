@@ -8,7 +8,10 @@ import re
 from django.db import models
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.mail import send_mail
-from django.utils import simplejson as json
+try:
+    import simplejson as json
+except:
+    import json  # NOQA
 try:
     import Image
 except:

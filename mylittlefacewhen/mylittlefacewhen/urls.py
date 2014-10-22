@@ -1,6 +1,6 @@
 from django.conf import settings
 
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 
 from viewer import feeds
@@ -48,7 +48,7 @@ urlpatterns = patterns(
     (r'^feed/$', feeds.LatestAcceptedImages()),
 
     #Django registration
-    (r'^accounts/', include('registration.urls')),
+    #(r'^accounts/', include('registration.urls')),
 
     # Tastypie APIs
     url(r'^api/', include(v2.API.urls)),
@@ -60,8 +60,9 @@ urlpatterns = patterns(
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 )
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+#if settings.DEBUG:
+#    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 handler404 = "viewer.views.notfound"
 handler500 = "viewer.views.error"

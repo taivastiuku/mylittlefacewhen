@@ -1,187 +1,120 @@
-# encoding: utf-8
-import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 
-class Migration(SchemaMigration):
-
-    def forwards(self, orm):
-        
-        # Adding model 'Face'
-        db.create_table('viewer_face', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('original', self.gf('django.db.models.fields.CharField')(max_length=256)),
-            ('filename', self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('thumbname', self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('webp', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('added', self.gf('django.db.models.fields.DateTimeField')()),
-            ('retired', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('views', self.gf('django.db.models.fields.IntegerField')(default=0)),
-        ))
-        db.send_create_signal('viewer', ['Face'])
-
-        # Adding model 'Salute'
-        db.create_table('viewer_salute', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('filename', self.gf('django.db.models.fields.CharField')(max_length=32)),
-            ('thumbnail', self.gf('django.db.models.fields.CharField')(max_length=32)),
-            ('country', self.gf('django.db.models.fields.CharField')(max_length=32)),
-            ('language_code', self.gf('django.db.models.fields.CharField')(max_length=8)),
-        ))
-        db.send_create_signal('viewer', ['Salute'])
-
-        # Adding model 'Comment'
-        db.create_table('viewer_comment', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('text', self.gf('django.db.models.fields.CharField')(max_length=160)),
-            ('face', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['viewer.Face'])),
-            ('added', self.gf('django.db.models.fields.DateTimeField')()),
-        ))
-        db.send_create_signal('viewer', ['Comment'])
-
-        # Adding model 'Introduction'
-        db.create_table('viewer_introduction', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('data', self.gf('django.db.models.fields.CharField')(max_length=2048)),
-            ('imagenames', self.gf('django.db.models.fields.CharField')(max_length=256)),
-        ))
-        db.send_create_signal('viewer', ['Introduction'])
-
-        # Adding model 'TagLog'
-        db.create_table('viewer_taglog', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('datetime', self.gf('django.db.models.fields.DateTimeField')()),
-            ('face', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['viewer.Face'])),
-            ('prev', self.gf('django.db.models.fields.related.OneToOneField')(related_name='next', unique=True, null=True, to=orm['viewer.TagLog'])),
-        ))
-        db.send_create_signal('viewer', ['TagLog'])
-
-        # Adding model 'Feedback'
-        db.create_table('viewer_feedback', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=256)),
-            ('text', self.gf('django.db.models.fields.CharField')(max_length=256)),
-            ('datetime', self.gf('django.db.models.fields.DateTimeField')()),
-        ))
-        db.send_create_signal('viewer', ['Feedback'])
-
-        # Adding model 'APILog'
-        db.create_table('viewer_apilog', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('useragent', self.gf('django.db.models.fields.CharField')(max_length=256)),
-            ('path', self.gf('django.db.models.fields.CharField')(max_length=64)),
-            ('method', self.gf('django.db.models.fields.CharField')(max_length=8)),
-            ('get', self.gf('django.db.models.fields.CharField')(max_length=256)),
-            ('post', self.gf('django.db.models.fields.CharField')(max_length=256)),
-            ('datetime', self.gf('django.db.models.fields.DateTimeField')()),
-        ))
-        db.send_create_signal('viewer', ['APILog'])
-
-        # Adding model 'TagPopularity'
-        db.create_table('viewer_tagpopularity', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('tag', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['tagging.Tag'])),
-            ('popularity', self.gf('django.db.models.fields.IntegerField')(default=0)),
-        ))
-        db.send_create_signal('viewer', ['TagPopularity'])
+from django.db import models, migrations
+import django.db.models.deletion
 
 
-    def backwards(self, orm):
-        
-        # Deleting model 'Face'
-        db.delete_table('viewer_face')
+class Migration(migrations.Migration):
 
-        # Deleting model 'Salute'
-        db.delete_table('viewer_salute')
+    dependencies = [
+    ]
 
-        # Deleting model 'Comment'
-        db.delete_table('viewer_comment')
-
-        # Deleting model 'Introduction'
-        db.delete_table('viewer_introduction')
-
-        # Deleting model 'TagLog'
-        db.delete_table('viewer_taglog')
-
-        # Deleting model 'Feedback'
-        db.delete_table('viewer_feedback')
-
-        # Deleting model 'APILog'
-        db.delete_table('viewer_apilog')
-
-        # Deleting model 'TagPopularity'
-        db.delete_table('viewer_tagpopularity')
-
-
-    models = {
-        'tagging.tag': {
-            'Meta': {'ordering': "('name',)", 'object_name': 'Tag'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '50', 'db_index': 'True'})
-        },
-        'viewer.apilog': {
-            'Meta': {'object_name': 'APILog'},
-            'datetime': ('django.db.models.fields.DateTimeField', [], {}),
-            'get': ('django.db.models.fields.CharField', [], {'max_length': '256'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'method': ('django.db.models.fields.CharField', [], {'max_length': '8'}),
-            'path': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
-            'post': ('django.db.models.fields.CharField', [], {'max_length': '256'}),
-            'useragent': ('django.db.models.fields.CharField', [], {'max_length': '256'})
-        },
-        'viewer.comment': {
-            'Meta': {'object_name': 'Comment'},
-            'added': ('django.db.models.fields.DateTimeField', [], {}),
-            'face': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['viewer.Face']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'text': ('django.db.models.fields.CharField', [], {'max_length': '160'})
-        },
-        'viewer.face': {
-            'Meta': {'object_name': 'Face'},
-            'added': ('django.db.models.fields.DateTimeField', [], {}),
-            'filename': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'original': ('django.db.models.fields.CharField', [], {'max_length': '256'}),
-            'retired': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'thumbname': ('django.db.models.fields.CharField', [], {'max_length': '64'}),
-            'views': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'webp': ('django.db.models.fields.BooleanField', [], {'default': 'False'})
-        },
-        'viewer.feedback': {
-            'Meta': {'object_name': 'Feedback'},
-            'datetime': ('django.db.models.fields.DateTimeField', [], {}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '256'}),
-            'text': ('django.db.models.fields.CharField', [], {'max_length': '256'})
-        },
-        'viewer.introduction': {
-            'Meta': {'object_name': 'Introduction'},
-            'data': ('django.db.models.fields.CharField', [], {'max_length': '2048'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'imagenames': ('django.db.models.fields.CharField', [], {'max_length': '256'})
-        },
-        'viewer.salute': {
-            'Meta': {'object_name': 'Salute'},
-            'country': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
-            'filename': ('django.db.models.fields.CharField', [], {'max_length': '32'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'language_code': ('django.db.models.fields.CharField', [], {'max_length': '8'}),
-            'thumbnail': ('django.db.models.fields.CharField', [], {'max_length': '32'})
-        },
-        'viewer.taglog': {
-            'Meta': {'object_name': 'TagLog'},
-            'datetime': ('django.db.models.fields.DateTimeField', [], {}),
-            'face': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['viewer.Face']"}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'prev': ('django.db.models.fields.related.OneToOneField', [], {'related_name': "'next'", 'unique': 'True', 'null': 'True', 'to': "orm['viewer.TagLog']"})
-        },
-        'viewer.tagpopularity': {
-            'Meta': {'object_name': 'TagPopularity'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'popularity': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'tag': ('django.db.models.fields.related.ForeignKey', [], {'to': "orm['tagging.Tag']"})
-        }
-    }
-
-    complete_apps = ['viewer']
+    operations = [
+        migrations.CreateModel(
+            name='Advert',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('htmlad', models.CharField(help_text=b'Advertisement text, may contain html.', max_length=1024)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ChangeLog',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('datetime', models.DateTimeField(help_text=b'Datetime of change', verbose_name=b'datetime when added', auto_now=True)),
+                ('source', models.URLField(default=b'', help_text=b'New source for face', blank=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Face',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('image', models.ImageField(default=b'', help_text=b'Image uploaded in base64 format. The core of this service.', max_length=256, upload_to=b'f/img/')),
+                ('webp', models.ImageField(default=b'', help_text=b'WEBP formatted thumbnail, max height: 100px', upload_to=b'f/thumb/', blank=True)),
+                ('jpg', models.ImageField(default=b'', help_text=b'JPG formatted thumbnail, max height: 100px', upload_to=b'f/thumb/', blank=True)),
+                ('gif', models.ImageField(default=b'', help_text=b'animated GIF thumbnail, max height: 100px', upload_to=b'f/thumb/', blank=True)),
+                ('png', models.ImageField(default=b'', help_text=b'transparent PNG thumbnail, max height: 100px', upload_to=b'f/thumb/', blank=True)),
+                ('small', models.ImageField(default=b'', help_text=b'Resize of image fitted into 320x320 box', upload_to=b'f/rsz/', blank=True)),
+                ('medium', models.ImageField(default=b'', help_text=b'Resize of image fitted into 640x640 box', upload_to=b'f/rsz/', blank=True)),
+                ('large', models.ImageField(default=b'', help_text=b'Resize of image fitted into 1000x1000 box', upload_to=b'f/rsz/', blank=True)),
+                ('huge', models.ImageField(default=b'', help_text=b'Resize of image fitted into 1920x1920 box', upload_to=b'f/rsz/', blank=True)),
+                ('width', models.IntegerField(default=0, help_text=b'Width of image')),
+                ('height', models.IntegerField(default=0, help_text=b'Height of image')),
+                ('source', models.URLField(default=b'', help_text=b'Source for image', blank=True)),
+                ('md5', models.CharField(default=b'', help_text=b'md5 hash of image for detecting duplicates.', max_length=32)),
+                ('removed', models.BooleanField(default=False, help_text=b"Image is 'removed' and should not be shown")),
+                ('comment', models.CharField(default=b'', help_text=b'Reason for deletion etc.', max_length=512, blank=True)),
+                ('added', models.DateTimeField(help_text=b'Date added', verbose_name=b'date added')),
+                ('accepted', models.BooleanField(default=False, help_text=b'Face has been accepted by moderator.')),
+                ('processed', models.BooleanField(default=False, help_text=b'Thumbnails and resizes have been generated and compressed')),
+                ('views', models.IntegerField(default=0, help_text=b'Views during last 7 days.')),
+                ('hotness', models.FloatField(default=0, help_text=b'Represents newness and popularity of face.')),
+                ('duplicate_of', models.ForeignKey(default=None, blank=True, to='viewer.Face', help_text=b'Current image is duplicate, redirect to duplicate_of Face', null=True)),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Feedback',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('contact', models.CharField(default=b'', help_text=b'Contact info of feedback giver', max_length=256)),
+                ('image', models.ImageField(help_text=b'DEPRECATED', max_length=256, upload_to=b'upload/')),
+                ('text', models.TextField(help_text=b'The feedback goes here. What is on your mind?')),
+                ('datetime', models.DateTimeField(help_text=b'When the feedback was received.', verbose_name=b'datetime when added', auto_now_add=True)),
+                ('useragent', models.CharField(default=b'', help_text=b'Useragent of feedback giver. Useful for bug reports.', max_length=512)),
+                ('processed', models.BooleanField(default=False, help_text=b'DEPRECATED')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Flag',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('user_agent', models.CharField(help_text=b'User agent of reporter.', max_length=512, null=True)),
+                ('reason', models.TextField(help_text=b'Reason for report.')),
+                ('face', models.ForeignKey(help_text=b'Face related to this report.', to='viewer.Face')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='UserComment',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('username', models.CharField(default=b'Poninymous', help_text=b'Username of anon user', max_length=16)),
+                ('text', models.CharField(default=b'', help_text=b'Comment itself', max_length=255)),
+                ('client', models.IPAddressField(help_text=b'IP of the commenter')),
+                ('visible', models.CharField(default=b'visible', help_text=b'If comment is visible, moderated or hidden', max_length=16, choices=[(b'moderated', b'Moderated'), (b'hidden', b'Hidden'), (b'visible', b'Visible')])),
+                ('color', models.CharField(help_text=b'IP/Face specific color', max_length=6)),
+                ('time', models.DateTimeField(help_text=b'Time of writing', auto_now_add=True)),
+                ('face', models.ForeignKey(help_text=b'Face that is being commented', to='viewer.Face')),
+            ],
+            options={
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='changelog',
+            name='face',
+            field=models.ForeignKey(help_text=b'Face related to change', to='viewer.Face'),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='changelog',
+            name='flag',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.SET_NULL, to='viewer.Flag', help_text=b'Face was flagged', null=True),
+            preserve_default=True,
+        ),
+    ]

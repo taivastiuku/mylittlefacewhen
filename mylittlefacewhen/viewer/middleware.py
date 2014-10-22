@@ -46,7 +46,7 @@ class RedirectDomain(object):
         host = request.META.get("HTTP_HOST")
         if not host:
             return None
-        if host not in ("mylittlefacewhen.com", "lime:8000", "lime:8001"):
+        if host not in ("mylittlefacewhen.com", "tiuku.me:8888"):
             url = "http://mylittlefacewhen.com" + request.path
             return HttpResponsePermanentRedirect(url)
 
