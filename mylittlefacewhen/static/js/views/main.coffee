@@ -120,6 +120,7 @@ window.UnreviewedView = Backbone.View.extend
         $("#loader").hide()
     return @
 
+
 window.Thumbnail = Backbone.View.extend
   # Not sure if some of this functionality should be in the model.
   tagName: "span"

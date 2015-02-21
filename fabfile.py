@@ -18,11 +18,11 @@ from fabric.api import cd, local, get, run, put, env
 import secrets
 
 LIBS = (
-    "jquery-1.10.2.min.js",
-    "underscore.js",
+    "jquery-2.1.3.min.js",
+    "lodash.min.js",
     "backbone.js",
-    "backbone-tastypie.js",
-    "jquery.lazyload.js",
+    "backbone-tastypie.min.js",
+    "jquery.lazyload.min.js",
     "jquery.cookie.min.js",
     "jquery-ui-1.10.3.custom.min.js",
     "mustache.min.js",
@@ -196,6 +196,7 @@ def _prepare_deploy():
         with open(env.staticdir + "app.js", "w") as out:
             out.write(css + lib + views + app + "tpl.templates = " +
                       json.dumps(templates) + ";\n" + main)
+#TODO fix
         local(env.minifier + " " + env.staticdir + "app.js " +
               env.staticdir + "app.js")
 
@@ -255,7 +256,7 @@ def _install():
             run(cmd)
 
         with cd(appdir + "mylittlefacewhen/"):
-            run("python2.7 manage.py migrate viewer")
+#            run("python2.7 manage.py migrate viewer")
             with cd("mylittlefacewhen"):
                 run("find settings.py -type f -exec sed -i \
                     's/DEBUG = True/DEBUG = False/g' {} ';'")

@@ -1,25 +1,17 @@
 from datetime import datetime
 
+from django.conf import settings
 from django.http import Http404
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
 
-from viewer import forms
-from viewer import models
-from viewer.helpers import UPDATED
+from . import forms, models
+from .helpers import standard_r2r, get_meta
 
-IMAGEURL = "http://denver.mylittlefacewhen.com"
+IMAGEURL = "http://pinkie.mylittlefacewhen.com"
 
-STATIC_PREFIX = "/static/"
-
-DEFAULT_META = {
-    "static_prefix": STATIC_PREFIX,
-    "title": "Pony Reaction Pictures",
-    "description": "Express yourself with ponies",
-    "default_image": STATIC_PREFIX + "cheerilee-square-300.png"}
-
-
+@standard_r2r
 def main(request, listing="normal"):
     """
     Handles index and toplist listings.
@@ -28,51 +20,36 @@ def main(request, listing="normal"):
     user_agent = request.META.get("HTTP_USER_AGENT", "").lower()
     not_firefox = user_agent.find("firefox") == -1
 
-    if listing == "normal":
-        path = "/"
-    else:
-        path = "/" + listing + "/"
-
-    meta = DEFAULT_META.copy()
-    meta["path"] = request.path
+    path = "/" if listing == "normal" else "/" + listing + "/"
 
     to_template = {
         "listing": listing,
         "path": path,
-        "not_firefox": not_firefox,
+        "not_firefox": not_firefox or True,
         "content": "main.mustache",
-        "content_data": {"static_prefix": STATIC_PREFIX},
-        "metadata": DEFAULT_META}
+        "content_data": {"static_prefix": settings.STATIC_URL},
+        "metadata": get_meta(request)}
 
-    return render_to_response(
-        "backbone.html",
-        to_template,
-        context_instance=RequestContext(request))
+    return "backbone.html", to_template
 
 
+@standard_r2r
 def randoms(request):
     """
     list of random images
     """
-
-    meta = DEFAULT_META.copy()
-    meta["title"] = "Random ponies!"
-    meta["description"] = \
-        "Endless list of reacting ponies that just goes on and on and on... "
-    meta["path"] = request.path
-
     to_template = {
         "content": "randoms.mustache",
-        "content_data": {"static_prefix": STATIC_PREFIX},
-        "updated": UPDATED,
-        "metadata": meta}
+        "content_data": {"static_prefix": settings.STATIC_URL},
+        "metadata": get_meta(
+            request,
+            "Random ponies!",
+            "Endless list of reacting ponies that just goes on and on and on...")}
 
-    return render_to_response(
-        "backbone.html",
-        to_template,
-        context_instance=RequestContext(request))
+    return "backbone.html", to_template
 
 
+@standard_r2r
 def search(request):
     """
     List of all the reactions with given tag.
@@ -80,7 +57,6 @@ def search(request):
     query = request.GET.get("tag", request.GET.get("tags", "")).strip(",")
     tags = [tag.strip() for tag in query.split(",")]
     faces = models.Face.tagged.with_all(tags)
-#    faces = models.Face.search(tags)
 
     if len(faces) == 1:
         return redirect("/f/%d" % faces[0].id)
@@ -89,27 +65,20 @@ def search(request):
     else:
         query = query + ", "
 
-    meta = DEFAULT_META.copy()
-    meta["path"] = request.path
-    meta["title"] = "Search for "
-    for tag in tags:
-        meta["title"] += tag + ", "
-    meta["description"] = "You can search ponies with one or more tags"
-
     to_template = {
         "content": "search.mustache",
         "content_data": {
-            "static_prefix": STATIC_PREFIX,
+            "static_prefix": settings.STATIC_URL,
             "query": query},
-        "updated": UPDATED,
-        "metadata": meta}
+        "metadata": get_meta(
+            request,
+            "Search for " + ", ".join(tags),
+            "You can search ponies with one or more tags.")}
 
-    return render_to_response(
-        "backbone.html",
-        to_template,
-        context_instance=RequestContext(request))
+    return "backbone.html", to_template
 
 
+@standard_r2r
 def single(request, face_id):
     """
     Single face with given id.
@@ -132,9 +101,10 @@ def single(request, face_id):
 
     f = {attr: getattr(face, attr) for attr in attrs}
 
-    f["tags"] = [{"name":tag.name} for tag in face.tags]
-    f["image"] = face.image.url
-    f["resizes"] = [{"size":size, "image": image} for size, image in face.resizes.items()]
+    f.update({
+        "tags": [{"name":tag.name} for tag in face.tags],
+        "image": face.image.url,
+        "resizes": [{"size":size, "image": image} for size, image in face.resizes.items()]})
 
     artist, title, description = face.getMeta()
 
@@ -143,81 +113,66 @@ def single(request, face_id):
         # Avoid error when no thumb has been generated:
         "thumb": getattr(face.thumb, "url", None),
         "image": image,
-        "static_prefix": STATIC_PREFIX,
+        "static_prefix": settings.STATIC_URL,
         "image_service": imageurl,
         "alt": f["description"]}
 
     to_template = {
         "content": "single.mustache",
         "content_data": to_content,
-        "updated": UPDATED,
         "metadata": {
             "title": title,
             "description": description,
-            "static_prefix": STATIC_PREFIX,
+            "static_prefix": settings.STATIC_URL,
             "default_image": imageurl + f["image"],
             "path": request.path,
             "alt_image": True,
             "canonical": "http://mylittlefacewhen.com/f/%s/" % str(f["id"])}}
 
-    return render_to_response(
-        "backbone.html",
-        to_template,
-        context_instance=RequestContext(request))
+    return "backbone.html", to_template
 
 
+@standard_r2r
 def develop(request):
     """
     Info page about the site.
     """
-
-    meta = DEFAULT_META.copy()
-    meta["path"] = request.path
-    meta["title"] = "Information"
-    meta["description"] = \
-        "Details about mylittlefacewhen.com development and future"
-
     to_template = {
         "content": "develop.mustache",
         "content_data": {},
-        "updated": UPDATED,
-        "metadata": meta}
+        "metadata": get_meta(
+            request,
+            "Information",
+            "Details about mylittlefacewhen.com development and future.")}
 
-    return render_to_response(
-        "backbone.html",
-        to_template,
-        context_instance=RequestContext(request))
+    return "backbone.html", to_template
 
 
+@standard_r2r
 def api(request):
     """
     API documentation
     """
-    meta = DEFAULT_META.copy()
-    meta["path"] = request.path
-    meta["title"] = "API documentation"
-    meta["description"] = "Most of the site can be created using only this API"
     to_template = {
         "content": "apidoc-v3.mustache",
         "content_data": {},
-        "updated": UPDATED,
-        "metadata": meta}
+        "metadata": get_meta(
+            request,
+            "API documentation",
+            "Most of the site can be created using only this API.")}
 
-    return render_to_response(
-        "backbone.html",
-        to_template,
-        context_instance=RequestContext(request))
+    return "backbone.html", to_template
 
 
 def rand(request):
     """
     Redirect to random face.
     """
-    face = models.Face.random()
-    return redirect("/f/%d/" % face.id)
+    return redirect("/f/%d/" % models.Face.random().id)
 
 
 @csrf_exempt
+@standard_r2r
 def feedback(request):
     if request.method == "POST":
         form = forms.FeedbackForm(request.POST, request.FILES)
@@ -237,92 +192,66 @@ def feedback(request):
         message = "Submit feedback:"
         form = forms.FeedbackForm()
 
-    meta = DEFAULT_META.copy()
-    meta["path"] = request.path
-    meta["title"] = "Feedback"
-    meta["description"] = \
-        "Any feedback is welcome, bug reports are highly appreciated"
     to_template = {
         "content": "feedback.mustache",
         "content_data": {"message": message},
-        "updated": UPDATED,
-        "metadata": meta}
+        "metadata": get_meta(
+            request,
+            "Feedback",
+            "Any feedback is welcome, bug reports are highly appreciated")}
 
-    return render_to_response(
-        "backbone.html",
-        to_template,
-        context_instance=RequestContext(request))
+    return "backbone.html", to_template
 
 
+@standard_r2r
 def submit(request):
-    meta = DEFAULT_META.copy()
-    meta["path"] = request.path
-    meta["title"] = "Upload ponies!"
-    meta["description"] = "Sharing is caring!"
     to_template = {
         "content": "submit.mustache",
-        "content_data": {"static_prefix": STATIC_PREFIX},
-        "updated": UPDATED,
-        "metadata": meta}
+        "content_data": {"static_prefix": settings.STATIC_URL},
+        "metadata": get_meta(
+            request,
+            "Upload ponies!",
+            "Sharing is caring!")}
 
-    return render_to_response(
-        "backbone.html",
-        to_template,
-        context_instance=RequestContext(request))
+    return "backbone.html", to_template
 
 
+@standard_r2r
 def tags(request):
     """
     View all tags
     """
-    meta = DEFAULT_META.copy()
-    meta["path"] = request.path
-    meta["title"] = "Tags"
-    meta["description"] = \
-        "Some popular tags with random images and all the tags as links"
     to_template = {
         "content": "tags.mustache",
         "content_data": {
-            "models": [{"name":tag.name} for tag in models.Face.tags.all()]},
-        "updated": UPDATED,
-        "metadata": meta}
+            "models": [{"name": tag} for tag in models.Face.tags.values_list("name", flat=True)]},
+        "metadata": get_meta(
+            request,
+            "Tags",
+            "Some popular tags with random images and all the tags as links")}
 
-    return render_to_response(
-        "backbone.html",
-        to_template,
-        context_instance=RequestContext(request))
+    return "backbone.html", to_template
 
 
+@standard_r2r
 def changelog(request):
-    meta = DEFAULT_META.copy()
-    meta["path"] = request.path
-    meta["title"] = "Changelog"
-    meta["description"] = "We've come a long way. Another day another release."
     to_template = {
         "content": "changelog.mustache",
         "content_data": {},
-        "updated": UPDATED,
-        "metadata": meta}
+        "metadata": get_meta(
+            request,
+            "Changelog",
+            "We've come a long way. Another day another release.")}
 
-    return render_to_response(
-        "backbone.html",
-        to_template,
-        context_instance=RequestContext(request))
+    return "backbone.html", to_template
 
 
+@standard_r2r
 def notfound(request):
-    to_template = {}
-    return render_to_response(
-        "404.html",
-        to_template,
-        context_instance=RequestContext(request))
+    return "404.html", {}
 
 
+@standard_r2r
 def error(request):
     raise Exception("Test error")
-    to_template = {"form": forms.FeedbackForm()}
-
-    return render_to_response(
-        "500.html",
-        to_template,
-        context_instance=RequestContext(request))
+    return "500.html", {"form": forms.FeedbackForm()}

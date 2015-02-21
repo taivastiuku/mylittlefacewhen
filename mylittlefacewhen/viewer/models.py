@@ -1,6 +1,7 @@
 #from cStringIO import StringIO
 from datetime import datetime
 import hashlib
+import json
 import os
 import random
 import re
@@ -8,14 +9,12 @@ import re
 from django.db import models
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.mail import send_mail
-try:
-    import simplejson as json
-except:
-    import json  # NOQA
+
 try:
     import Image
 except:
     from PIL import Image  # NOQA
+
 import requests
 import tagging
 
@@ -436,7 +435,7 @@ class Face(models.Model):
         if form.is_valid():
             tags = form.cleaned_data.get("tags")
             source = form.cleaned_data.get("source")
-            print form.cleaned_data
+            #print form.cleaned_data
             if tags:
                 self.tags = tags
 
@@ -445,10 +444,11 @@ class Face(models.Model):
 
             ChangeLog.new_edit(self)
             self.save()
-            print self.source
-            print self.tags
+            #print self.source
+            #print self.tags
         else:
-            print "not valid"
+            pass
+            #print "not valid"
         return self
 
     def update(self, data):
@@ -970,7 +970,7 @@ class UserComment(models.Model):
                     else:
                         colors.append(str(hex(random.randint(0x00, 0x99))[2:]).zfill(2))
                 colors = "".join(colors)
-                print colors, colors == "ffffff"
+               # print colors, colors == "ffffff"
                 if colors == "aaaaaa":
                     return get_color()
                 else:

@@ -3,7 +3,7 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.conf.urls.static import static
 
-from viewer import feeds
+from viewer import feeds, views
 
 from viewer.api import v2
 from viewer.api import v3
@@ -15,37 +15,37 @@ admin.autodiscover()
 urlpatterns = patterns(
     '',
     #PAGE
-    (r'^$', "viewer.views.main"),
-    (r'^new/?$', "viewer.views.main", {"listing": "new"}),
-    (r'^hot/?$', "viewer.views.main", {"listing": "hot"}),
-    (r'^popular/?$', "viewer.views.main", {"listing": "popular"}),
-    (r'^unreviewed/?$', "viewer.views.main", {"listing": "unreviewed"}),
-    (r'^search/$', "viewer.views.search"),
-    (r'^s/$', "viewer.views.search"),
+    url(r'^$', views.main, name="index"),
+    url(r'^new/?$', views.main, {"listing": "new"}, name="new"),
+    url(r'^hot/?$', views.main, {"listing": "hot"}, name="hot"),
+    url(r'^popular/?$', views.main, {"listing": "popular"}, name="popular"),
+    url(r'^unreviewed/?$', views.main, {"listing": "unreviewed"}, name="unreviewed"),
+    url(r'^search/$', views.search, name="search"),
+    url(r'^s/$', views.search, name="s"),
     # (r'^(f|face)/(?P<face_id>\d+)/qr/$', "viewer.views.qr"),
-    (r'^f/(?P<face_id>\d+)/?', "viewer.views.single"),
-    (r'^face/(?P<face_id>\d+)/?', "viewer.views.single"),
-    (r'^randoms/?$', "viewer.views.randoms"),
+    url(r'^f/(?P<face_id>\d+)/?', views.single, name="f"),
+    url(r'^face/(?P<face_id>\d+)/?', views.single, name="face"),
+    url(r'^randoms/?$', views.randoms, name="randoms"),
     # I wanted to do (f|face|random) but it had some problem.
-    (r'^random/?$', "viewer.views.rand"),
-    (r'^face/?$', "viewer.views.rand"),
-    (r'^f/?$', "viewer.views.rand"),
+    url(r'^random/?$', views.rand, name="random"),
+    url(r'^face/?$', views.rand),
+    url(r'^f/?$', views.rand),
     # (r'^salute/(?P<salute_id>\d+)/$', "viewer.views.salute"),
     # (r'^salute/$', "viewer.views.salute"),
-    (r'^develop/?$', "viewer.views.develop"),
-    (r'^develop/api', "viewer.views.api"),
-    (r'^feedback/?$', "viewer.views.feedback"),
-    (r'^submit/?$', "viewer.views.submit"),
-    (r'^tags/?$', "viewer.views.tags"),
-    # (r'^toplist/$', "viewer.views.main", {"listing":"toplist"}),
+    url(r'^develop/?$', views.develop, name="develop"),
+    url(r'^develop/api', views.api, name="api"),
+    url(r'^feedback/?$', views.feedback, name="feedback"),
+    url(r'^submit/?$', views.submit, name="submit"),
+    url(r'^tags/?$', views.tags, name="tags"),
+    # (r'^toplist/$', views.main", {"listing":"toplist"}),
     # (r'^toplist/(?P<page>\d+)/$', "viewer.views.main",{"listing":"toplist"}),
-    (r'^changelog/?$', "viewer.views.changelog"),
+    url(r'^changelog/?$', views.changelog, name="changelog"),
 
     # (r'^errors/500/$', "viewer.views.error"),
     # (r'^errors/404/$', "viewer.views.notfound"),
 
     #RSS
-    (r'^feed/$', feeds.LatestAcceptedImages()),
+    url(r'^feed/$', feeds.LatestAcceptedImages(), name="feed"),
 
     #Django registration
     #(r'^accounts/', include('registration.urls')),

@@ -21,26 +21,33 @@ window.Face = Backbone.Model.extend
     return thumbs.jpg if thumbs.jpg
     return null
 
+
 window.FaceCollection = Backbone.Collection.extend
   model: Face
   url: "/api/v3/face/"
 
+
 window.Feedback = Backbone.Model.extend
   urlRoot:"/api/v3/feedback/"
 
+
 window.Tag = Backbone.Model.extend
   urlRoot: "/api/v3/tag/"
+
 
 window.TagCollection = Backbone.Collection.extend
   model: Tag
   url: "/api/v3/tag/"
 
+
 window.Advert = Backbone.Model.extend
   urlRoot: "/api/v3/ad/"
+
 
 window.AdvertCollection = Backbone.Collection.extend
   model: Tag
   url: "/api/v3/ad/"
+
 
 window.Comment = Backbone.Model.extend
   urlRoot: "/api/v3/usercomment/"

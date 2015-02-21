@@ -105,6 +105,7 @@ window.SubmitView = Backbone.View.extend
   disableShortcuts: (event) ->
     event.stopPropagation()
 
+
 window.SubmitItemView = Backbone.View.extend
   tagName: "li"
 
@@ -122,4 +123,3 @@ window.SubmitItemView = Backbone.View.extend
         $(@el).find(".source").val(data.source)
 
     return @
-

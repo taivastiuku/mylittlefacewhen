@@ -1,9 +1,0 @@
-[
-  {
-    "pk": 1,
-    "model": "viewer.advert",
-    "fields": {
-      "htmlad": "<a href=\"http://facebook.com/mylittlefacewhen\">Come visit us at Facebook</a>"
-    }
-  }
-]

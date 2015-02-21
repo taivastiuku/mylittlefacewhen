@@ -1,3 +1,4 @@
+# Allow global access to app
 app = undefined
 
 # Some views need to clean up before close.
@@ -6,6 +7,7 @@ Backbone.View::close = ->
   @beforeClose() if @beforeClose
 #  @remove()
   @undelegateEvents()
+
 
 Backbone.View::updateMeta = (title, description) ->
     $("title").html title
@@ -21,21 +23,19 @@ Backbone.View::navigateAnchor = (event) ->
   event.preventDefault()
   app.navigate(event.currentTarget.getAttribute("href"), {trigger: true})
 
+
 AppRouter = Backbone.Router.extend
   initialize: ->
     # for some reason this tracks all pages twice
-    #@bind 'all', @_trackPageview
+    # @bind 'all', @_trackPageview
 
-    #TODO Could these infused as one?
-    @faceList = new FaceCollection() #loaded from main view
-    @randFaceList = new FaceCollection() #loaded from randoms
-    @randomQueue = new FaceCollection() #cache for randomly loaded images
+    # TODO Could these infused as one?
+    @faceList = new FaceCollection()      # loaded from main view
+    @randFaceList = new FaceCollection()  # loaded from randoms
+    @randomQueue = new FaceCollection()   # cache for randomly loaded images
 
     @tagList = new TagCollection()
-    if window.location.hash
-      @firstLoad = false
-    else
-      @firstLoad = true
+    @firstLoad = if window.location.hash then false else true
 
     # Client-side load balancing, list services and pick the fastest one.
     # All image services have 2kB file for speed testing and allow main site
@@ -101,50 +101,41 @@ AppRouter = Backbone.Router.extend
     "submit": "submit"
     "tags": "tags"
 
-
   hot: -> @main("-hotness")
 
   new: -> @main("-id")
 
   popular: -> @main("-views")
 
-
   main: (ordering) ->
-    @before =>
-      @select("#m_posts")
+    @before "#m_posts", =>
       params =
         collection: @faceList
         order_by: ordering
       return new MainView(params).render()
 
   unreviewed: ->
-    @before =>
-      @select("none")
+    @before "none", =>
       @randFaceList = new FaceCollection()
-      return new UnreviewedView(collection:@randFaceList).render()
+      return new UnreviewedView(collection: @randFaceList).render()
 
   apidoc: (version) ->
-    @before =>
-      version = "v3" if version == undefined
-      @select("#m_api")
+    @before "#m_api", =>
+      version = "v3" if version == null
+      console.log version
       return @pageload new APIDocView(version: version)
 
   changes: ->
-    @before =>
-      @select("none")
-      return @pageload new ChangesView()
+    @before "none", => @pageload(new ChangesView())
 
   develop: ->
-    @before =>
-      @select("#m_develop")
-      return @pageload new DevelopView()
+    @before "#m_develop", => @pageload(new DevelopView())
 
   face: (id) ->
-    @before =>
-      @select("none")
+    @before "none", =>
       model = @faceList.get(id)
-      r = @randFaceList.get(id)
-      model = r if r
+      random = @randFaceList.get(id)
+      model = random if random
       unless model
         page = new SingleView({model: new Face({id:id}), firstLoad: @firstLoad})
       else
@@ -152,9 +143,7 @@ AppRouter = Backbone.Router.extend
       return @pageload page
 
   feedback: ->
-    @before =>
-      @select("#m_feedback")
-      return @pageload new FeedbackView()
+    @before "#m_feedback", => @pageload(new FeedbackView())
 
   random: ->
     if @randomQueue.length < 1
@@ -172,48 +161,37 @@ AppRouter = Backbone.Router.extend
       @randFaceList.add face unless @randFaceList.get(face.id)
       app.navigate "f/#{face.get("id")}/", trigger:true
 
-
   randoms: ->
-    @before =>
-      @select("#m_randoms")
-      return new RandomsView().render()
+    @before "#m_randoms", => new RandomsView().render()
 
   submit: ->
-    @before =>
-      @select("#m_submit")
-      return @pageload new SubmitView()
+    @before "#m_submit", => @pageload(new SubmitView())
 
   search: ->
-    @before =>
-      @select("none")
-      return new SearchView().render()
+    @before "none", => new SearchView().render()
 
   tags: ->
-    @before =>
-      @select("#m_tags")
-      return @pageload new TagsView(collection:@tagList)
-
+    @before "#m_tags", => @pageload(new TagsView(collection: @tagList))
 
   pageload: (page) ->
     # Don't redraw the page if it's rendered by the server
-    if @firstLoad
-      return page
-    else
-      return page.render()
+    return if @firstLoad then page else page.render()
 
   select: (item) ->
     # Move the selected menu item indicator
     $("#topmenu div").removeClass("selected")
     $("#{item} div").addClass("selected")
 
-  before: (callback) ->
+  before: (select, callback) ->
+    @select(select)
     @_trackPageview()  # use analytics
     # close old page before opening new one, this takes care of the event listeners.
     @currentPage.close() if @currentPage
     @currentPage = callback()
     # First load is handeled differently due to server generated template
     @firstLoad = false if @firstLoad
-    @topView.updateAd()
+    # @topView.updateAd()
+
 
 # Templates that are loaded during development mode.
 # Release version has all of these already loaded in app.js
@@ -227,4 +205,3 @@ tpl.loadTemplates [ "main", "thumbnail", "top", "single", "tag", "randoms", "ran
   app = new AppRouter()
 
   Backbone.history.start {pushState: true}
-

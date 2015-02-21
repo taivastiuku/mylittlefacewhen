@@ -26,10 +26,12 @@ tpl =
   get: (name) ->
     @templates[name]
 
+
 atBottom = (offset) ->
     # Is the user at the bottom of the page ?
     offset = 0 unless offset
     return $(document).height() - (window.pageYOffset + window.innerHeight) < offset
+
 
 getUrlParam = (name) ->
     # Get get-parameter from url.
@@ -38,10 +40,10 @@ getUrlParam = (name) ->
     return undefined unless results
     return decodeURI(results[1])
 
+
 splitter = (urli) ->
     # Get the script part from url.
     # TODO: I think this is part of some utility
     result = urli.split(/com(.+)?/)[1]
     return undefined unless result
     return result
-

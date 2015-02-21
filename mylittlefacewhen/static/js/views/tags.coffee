@@ -78,6 +78,7 @@ window.TagsView = Backbone.View.extend
           imgs = $('.lazy')
           imgs.removeClass('lazy').lazyload()
 
+
 window.TagView = Backbone.View.extend
   tagName: "span"
   initialize: -> @template = tpl.get("tag")

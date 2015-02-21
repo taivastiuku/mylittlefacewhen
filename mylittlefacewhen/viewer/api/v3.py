@@ -209,7 +209,7 @@ Tags should be separated by comma eg, 'yes, rainbow dash' """
         self.is_valid(bundle)
         if bundle.errors:
             self.error_response(request, bundle.errors)
-            raise
+            raise Exception()
         bundle.obj = models.Face.submit(**bundle.data)
         return bundle
 
