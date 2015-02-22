@@ -2,9 +2,9 @@
 MyLittleFaceWhen
 ================
 
-MyLittleFaceWhen is a simple booru-like image sharing web-application. It 
-contains a backend with rest api interface and a javascript frontend. 
-Developed for fun and learning.
+MyLittleFaceWhen is a simple image sharing web-application. It contains a 
+backend with rest api interface and a javascript frontend. Developed for fun
+and learning.
 
 Used to power http://mylittlefacewhen.com/
 
@@ -31,9 +31,6 @@ Backend
 -------
 See requirements.txt
 
-ATTN! I may have made some modifications to django-piston to make it work. 
-      If you're going to use this codebase for something you should just 
-      scrap the django-piston API. It is included only for legacy support.
 
 Frontend
 --------
@@ -63,4 +60,3 @@ Contents
 /resizor/   
             Generates thumbnails. Can be used as a standalone service with
             small modifications.
-
