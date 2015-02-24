@@ -4,11 +4,11 @@
     <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <link rel="shortcut icon" href="{% get_static_prefix %}favicon.ico">
-        <link rel="stylesheet" href="{% get_static_prefix %}css/normalize.css" type="text/css">
-        <link rel="stylesheet" href="{% get_static_prefix %}css/responsive.css" type="text/css">
-        <link rel="stylesheet" href="{% get_static_prefix %}css/rainbow_dash_always_dresses_in.css" type="text/css">
+        <link rel="stylesheet" href="{% get_static_prefix %}css/normalize.css?{{ updated }}" type="text/css">
+        <link rel="stylesheet" href="{% get_static_prefix %}css/responsive.css?{{ updated }}" type="text/css">
+        <link rel="stylesheet" href="{% get_static_prefix %}css/rainbow_dash_always_dresses_in.css?{{ updated }}" type="text/css">
         <!--        <link rel="stylesheet" href="{% get_static_prefix %}css/{{ request.best_pony }}.css" type="text/css">-->
-        <link rel="stylesheet" href="{% get_static_prefix %}css/rarity.css" type="text/css">
+        <link rel="stylesheet" href="{% get_static_prefix %}css/rarity.css?{{ updated }}" type="text/css">
         <link rel="canonical" href="http://mylittlefacewhen.com{% firstof path request.path '/' %}">
         <title>MyLittleFaceWhen - {% block title %}Pony Reaction Pictures{% endblock %}</title>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8">
@@ -22,7 +22,6 @@
         <meta property="og:image" content="{% block default_image %}http://mylittlefacewhen.com/static/cheerilee-square-300.png{% endblock %}">
         <meta property="og:site_name" content="MyLittleFaceWhen.com">
         <meta property="cd:layout" content="banner">
-        <script src="{% get_static_prefix %}lib/jquery-1.10.2.min.js"></script>
         {% block head %}
         {% endblock %}
 	<!-- Google analytics -->

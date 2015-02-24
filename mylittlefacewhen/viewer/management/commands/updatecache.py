@@ -28,7 +28,8 @@ class Command(BaseCommand):
             "/static/app.js"]
 
         for index in xrange(0, len(files)):
-            files[index] = files[index] + "?" + str(UPDATED)
+            if files[index].endswith("js") or files[index].endswith("css"):
+                files[index] = files[index] + "?" + str(UPDATED)
 
 #        pages = [
 #            "/submit/",
